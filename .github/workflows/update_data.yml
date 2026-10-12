@@ -2,13 +2,11 @@ name: Update SCHD Radar Data
 
 on:
   schedule:
-    # 1. 미국장 개장 30분 후 (서머타임 EDT: UTC 14:00 / 겨울 EST: UTC 15:00 대응을 위해 2회 체크)
     - cron: '0 14 * * 1-5'
     - cron: '0 15 * * 1-5'
-    # 2. 미국장 마감 직후 (서머타임 EDT: UTC 20:15 / 겨울 EST: UTC 21:15)
     - cron: '15 20 * * 1-5'
     - cron: '15 21 * * 1-5'
-  workflow_dispatch: # 수동 즉시 실행 지원
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -24,7 +22,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
+          # cache: 'pip' 라인 제거
 
       - name: Install Dependencies
         run: |
