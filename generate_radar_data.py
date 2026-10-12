@@ -1,6 +1,6 @@
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import pandas as pd
 import requests
 import yfinance as yf
@@ -62,8 +62,12 @@ def fetch_data():
     yields = [round(float(y), 2) for y in hist['Yield']]
     fed_rates = [round(float(r), 2) for r in hist['Fed_Rate']]
 
+    KST = timezone(timedelta(hours=9))
+    now_kst = datetime.now(KST)
+    updated_at_str = now_kst.strftime('%Y년 %m월 %d일 %H시 %M분 (한국시간)')
+
     output_data = {
-        "updated_at": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        "updated_at": updated_at_str,
         "latest": {
             "price": prices[-1],
             "yield": yields[-1],
