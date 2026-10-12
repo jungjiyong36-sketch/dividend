@@ -350,7 +350,13 @@
             document.getElementById('curr-fed').innerText = `${fed.toFixed(2)}%`;
             document.getElementById('fed-match-score').innerText = `${fed_score}점`;
             document.getElementById('kr-guide-text').innerHTML = krGuideText;
-            document.getElementById('meta-info').innerText = `최종 갱신 기준일: ${date} | 선택 기간: ${selectedPeriodDays === 0 ? '전체' : (selectedPeriodDays/252) + '년'}`;
+            
+            // JSON에서 파이썬이 구워준 한국 시간 문자열 가져오기
+            const updatedAtStr = globalRawData.updated_at || "업데이트 정보 없음";
+            
+            document.getElementById('meta-info').innerHTML = 
+                `📡 <b style="color: #475569;">최종 데이터 수집: ${updatedAtStr}</b><br><br>` +
+                `최근 반영 영업일: ${date} | 분석 기간: ${selectedPeriodDays === 0 ? '전체' : (selectedPeriodDays/252) + '년'}`;
         }
 
         // 5. 배당수익률 밴드 주가 차트 렌더링
