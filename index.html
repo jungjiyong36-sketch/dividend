@@ -2,166 +2,143 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SCHD 배당수익률 RADAR | 배당투자 최적 매수 타이밍</title>
     <!-- 구글 애드센스 자동 광고 스크립트 start -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2894031755177844"
-     crossorigin="anonymous"></script>
-    <meta name="description" content="SCHD 역대 배당수익률과 배당수익률 밴드 차트로 포착하는 적립식 매수 타이밍 레이더">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2894031755177844" crossorigin="anonymous"></script>
+    <meta name="description" content="SCHD 역대 배당수익률과 배당수익률 밴드 차트로 포착하는 적립식 매수 타이밍 레이더 및 연금저축 배당 시뮬레이터">
     <!-- Plotly.js CDN -->
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap');
         
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         html, body { 
             font-family: 'Pretendard', sans-serif; 
-            margin: 0; 
-            padding: 20px; 
-            background-color: #f8fafc; 
-            color: #1e293b;
+            margin: 0; padding: 0;
+            background-color: #f8fafc; color: #1e293b;
+            overflow-x: hidden;
         }
         
-        .container { 
-            max-width: 1100px; 
-            margin: 0 auto; 
-        }
+        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
 
-        /* 애드센스 영역 최적화 (CLS 방지용 최소 높이 지정) */
+        header h1 { font-size: 1.8rem; margin: 10px 0 5px 0; letter-spacing: -0.5px; }
+        header p { color: #64748b; font-size: 0.95rem; margin: 0; }
+
+        /* 애드센스 상단 영역 */
         .ad-banner-top {
-            width: 100%;
-            min-height: 90px;
-            margin: 15px 0 30px 0;
-            background: rgba(0, 0, 0, 0.02);
-            border: 1px dashed #cbd5e1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .main-card {
-            padding: 35px 25px; 
-            border-radius: 28px; 
-            text-align: center;
+            width: 100%; min-height: 90px;
+            margin: 20px 0; border-radius: 12px;
             background: #ffffff;
-            border: 1px solid #e2e8f0; 
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
-        }
-        
-        .score-value { 
-            font-size: 5rem; 
-            font-weight: 800; 
-            line-height: 1; 
-            margin: 10px 0;
-        }
-        
-        .status-badge {
-            font-size: 1.2rem; 
-            font-weight: 700; 
-            padding: 8px 22px; 
-            border-radius: 50px;
-            display: inline-block; 
-            margin-top: 10px; 
-            border: 1.5px solid;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            display: flex; align-items: center; justify-content: center;
         }
 
-        /* 국내 상장 3대장 가이드 배너 */
-        .kr-guide-card {
-            background: #eff6ff;
-            border: 1.5px solid #bfdbfe;
-            border-radius: 18px;
-            padding: 20px 24px;
-            margin-top: 25px;
-            text-align: left;
-            display: flex;
-            gap: 15px;
-            align-items: flex-start;
+        /* 메인 점수 카드 */
+        .main-card {
+            padding: 30px 20px; border-radius: 24px; text-align: center;
+            background: #ffffff; border: 1px solid #e2e8f0; 
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); margin-bottom: 25px;
+        }
+        
+        .score-value { font-size: 4.5rem; font-weight: 800; line-height: 1; margin: 10px 0; }
+        .status-badge {
+            font-size: 1.1rem; font-weight: 700; padding: 8px 20px; 
+            border-radius: 50px; display: inline-block; margin-top: 5px; border: 1.5px solid;
         }
 
         .data-row {
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
-            gap: 15px;
-            margin-top: 30px; 
-            background: #f1f5f9; 
-            padding: 20px; 
-            border-radius: 20px;
+            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
+            margin-top: 25px; background: #f1f5f9; padding: 15px; border-radius: 16px;
         }
+        .data-item p { margin: 0; color: #64748b; font-size: 0.8rem; font-weight: 600; }
+        .data-item b { font-size: 1.3rem; }
 
-        /* 기간 필터 토글 바 */
-        .filter-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin: 40px 0 20px 0;
-        }
+        .meta-info { font-size: 0.8rem; color: #64748b; margin-top: 20px; line-height: 1.5; }
 
-        .btn-group {
-            display: inline-flex;
-            background: #e2e8f0;
-            padding: 4px;
-            border-radius: 12px;
+        /* 배당 복리 시뮬레이터 (신규) */
+        .sim-card {
+            background: linear-gradient(135deg, #1e3a8a, #312e81);
+            color: white; padding: 25px; border-radius: 24px; margin-bottom: 25px;
+            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.3);
         }
-
-        .filter-btn {
-            border: none;
-            background: transparent;
-            padding: 8px 18px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: #64748b;
-            cursor: pointer;
-            border-radius: 9px;
-            transition: all 0.2s ease;
-        }
-
-        .filter-btn.active {
-            background: #ffffff;
-            color: #0f172a;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-        }
-
-        .section-header {
-            font-size: 1.4rem; 
-            font-weight: 800; 
-            margin: 45px 0 20px 0;
-            padding-left: 12px; 
-            border-left: 5px solid #10b981;
-        }
+        .sim-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
         
+        .slider-group { margin-bottom: 20px; }
+        .slider-label { display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
+        .slider-label span b { color: #ffffff; font-size: 1.1rem; }
+        
+        input[type=range] {
+            width: 100%; -webkit-appearance: none; background: transparent;
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%;
+            background: #38bdf8; cursor: pointer; margin-top: -6px; box-shadow: 0 0 10px rgba(56,189,248,0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%; height: 8px; cursor: pointer; background: #475569; border-radius: 10px;
+        }
+
+        .sim-result-box {
+            display: flex; gap: 10px; margin-top: 15px;
+        }
+        .sim-result-item {
+            flex: 1; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 16px; text-align: center;
+        }
+        .sim-result-item p { margin: 0; font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px; }
+        .sim-result-item b { font-size: 1.4rem; color: #38bdf8; }
+
+        /* 차트 영역 */
+        .section-header { font-size: 1.2rem; font-weight: 800; margin: 35px 0 15px 0; padding-left: 10px; border-left: 4px solid #10b981; }
         .chart-container {
-            width: 100%;
-            height: 480px;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 25px;
+            width: 100%; height: 400px; background: #ffffff; border: 1px solid #e2e8f0;
+            border-radius: 20px; padding: 10px; margin-bottom: 20px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.02);
         }
+        
+        .btn-group { display: flex; background: #e2e8f0; padding: 4px; border-radius: 12px; margin-bottom: 15px; }
+        .filter-btn {
+            flex: 1; border: none; background: transparent; padding: 8px 0; font-size: 0.9rem;
+            font-weight: 700; color: #64748b; cursor: pointer; border-radius: 9px; transition: 0.2s;
+        }
+        .filter-btn.active { background: #ffffff; color: #0f172a; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
 
-        .meta-info { 
-            font-size: 0.85rem; 
-            color: #64748b; 
-            margin-top: 15px; 
+        /* SEO 텍스트 아코디언 (신규) */
+        .seo-accordion { margin-top: 40px; }
+        details {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02); overflow: hidden;
+        }
+        summary {
+            padding: 18px 20px; font-weight: 700; font-size: 1rem; color: #1e293b;
+            cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;
+        }
+        summary::-webkit-details-marker { display: none; }
+        summary::after { content: '+'; font-size: 1.5rem; color: #94a3b8; transition: transform 0.3s; }
+        details[open] summary::after { transform: rotate(45deg); }
+        .details-content {
+            padding: 0 20px 20px 20px; font-size: 0.9rem; line-height: 1.7; color: #475569;
+        }
+        .details-content h4 { color: #0f172a; margin: 15px 0 5px 0; font-size: 0.95rem;}
+
+        /* 모바일 최적화 미디어 쿼리 */
+        @media (max-width: 480px) {
+            .score-value { font-size: 4rem; }
+            .data-item b { font-size: 1.1rem; }
+            .sim-result-box { flex-direction: column; }
+            .chart-container { height: 350px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header style="margin-top: 20px;">
-            <h1 style="margin: 0; font-size: 2rem;">📊 SCHD 배당수익률 RADAR</h1>
-            <p style="color: #64748b; margin: 8px 0 0 0;">과거 배당수익률 및 밴드 분석으로 포착하는 최적의 분할 매수 타이밍</p>
+        <header>
+            <h1>📊 SCHD 배당수익률 RADAR</h1>
+            <p>데이터 기반 미국배당다우존스 최적 매수 타점 분석기</p>
         </header>
 
-        <!-- [구글 애드센스 상단 반응형 영역] -->
+        <!-- [수동 광고 배너 영역] -->
         <div class="ad-banner-top">
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2894031755177844" crossorigin="anonymous"></script>
             <!-- 최상단 광고_[디스플레이, 사각형, 반응형] -->
             <ins class="adsbygoogle"
                  style="display:block"
@@ -174,93 +151,166 @@
             </script>
         </div>
 
-            
-                                </div>
-
         <!-- [메인 매수 매력 점수 카드] -->
         <div class="main-card">
-            <p style="letter-spacing: 1.5px; font-weight: 700; font-size: 0.9rem; color: #64748b; margin: 0;">SCHD 종합 매수 매력 점수</p>
+            <p style="letter-spacing: 1.5px; font-weight: 700; font-size: 0.85rem; color: #64748b; margin: 0;">현재 SCHD 매수 매력 점수</p>
             <div id="score-value-container" class="score-value">
-                <span id="score-value">--</span><span style="font-size: 1.5rem; color: #94a3b8;"> / 100</span>
+                <span id="score-value">--</span><span style="font-size: 1.2rem; color: #94a3b8;"> / 100</span>
             </div>
-            <div id="status-badge" class="status-badge">분석 중...</div>
+            <div id="status-badge" class="status-badge">데이터 분석 중...</div>
 
-            <!-- 국내 상장 미국배당다우존스 3대장 가이드 -->
-            <div id="kr-guide-box" class="kr-guide-card">
-                <div style="font-size: 1.6rem;">💡</div>
-                <div>
-                    <strong style="color: #1e3a8a; font-size: 0.95rem;">연금저축 · IRP · ISA 절세 투자자 가이드</strong>
-                    <p id="kr-guide-text" style="margin: 4px 0 0 0; font-size: 0.88rem; color: #1e40af; line-height: 1.5;">
-                        현재 지표를 기반으로 국내 상장 3대장 매수 적합성을 계산하고 있습니다.
-                    </p>
-                </div>
-            </div>
-            
             <div class="data-row">
-                <div>
-                    <p style="margin:0; color:#64748b; font-size:0.85rem;">현재 주가</p>
-                    <b id="curr-price" style="font-size:1.6rem;">\$--</b>
-                </div>
-                <div>
-                    <p style="margin:0; color:#64748b; font-size:0.85rem;">배당수익률 (TTM)</p>
-                    <b id="curr-yield" style="font-size:1.6rem;">--%</b>
-                </div>
-                <div>
-                    <p style="margin:0; color:#64748b; font-size:0.85rem;">미국 기준금리</p>
-                    <b id="curr-fed" style="font-size:1.6rem;">--%</b>
-                </div>
-                <div>
-                    <p style="margin:0; color:#64748b; font-size:0.85rem;">동일 금리 시기 매력도</p>
-                    <b id="fed-match-score" style="font-size:1.6rem; color:#2563eb;">--점</b>
-                </div>
+                <div class="data-item"><p>현재 주가</p><b id="curr-price">$--</b></div>
+                <div class="data-item"><p>배당수익률(TTM)</p><b id="curr-yield">--%</b></div>
+                <div class="data-item"><p>현재 기준금리</p><b id="curr-fed">--%</b></div>
+                <div class="data-item"><p>금리 보정 점수</p><b id="fed-match-score" style="color:#2563eb;">--점</b></div>
             </div>
-            <div id="meta-info" class="meta-info">데이터 로딩 중...</div>
+            <div id="meta-info" class="meta-info"></div>
         </div>
 
-        <!-- [분석 기간 토글 컨트롤러] -->
-        <div class="filter-container">
-            <div class="section-header" style="margin: 0;">📈 배당수익률 밴드 & 주가 차트</div>
-            <div class="btn-group">
-                <button class="filter-btn" onclick="changePeriod(252)">1년</button>
-                <button class="filter-btn" onclick="changePeriod(756)">3년</button>
-                <button class="filter-btn active" onclick="changePeriod(1260)">5년 (기본)</button>
-                <button class="filter-btn" onclick="changePeriod(0)">전체</button>
+        <!-- [체류시간 폭발: 배당 복리 시뮬레이터] -->
+        <div class="sim-card">
+            <div class="sim-title">🔄 현금흐름 펌핑 시뮬레이터</div>
+            <p style="font-size:0.85rem; color:#94a3b8; margin: -10px 0 20px 0; line-height: 1.4;">
+                * 현재 배당수익률과 연평균 배당성장률 8%(보수적) 가정<br>
+                * 배당 재투자(DRIP) 복리 효과 반영
+            </p>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>초기 목돈 (거치식)</span>
+                    <span><b id="val-lumpsum">1,000</b> 만원</span>
+                </div>
+                <input type="range" id="sim-lumpsum" min="0" max="10000" step="100" value="1000" oninput="updateSimUI()">
+            </div>
+
+            <div class="slider-group">
+                <div class="slider-label">
+                    <span>매월 투자금 (적립식)</span>
+                    <span><b id="val-monthly">50</b> 만원</span>
+                </div>
+                <input type="range" id="sim-monthly" min="0" max="500" step="10" value="50" oninput="updateSimUI()">
+            </div>
+
+            <div class="sim-result-box">
+                <div class="sim-result-item">
+                    <p>5년 뒤 매월 꽂히는 돈</p>
+                    <b id="res-5y">0원</b>
+                </div>
+                <div class="sim-result-item">
+                    <p>10년 뒤 매월 꽂히는 돈</p>
+                    <b id="res-10y">0원</b>
+                </div>
             </div>
         </div>
 
-        <!-- [타임라인 밴드 차트] -->
+        <!-- [차트 영역] -->
+        <div class="section-header">📈 배당수익률 밴드 & 주가 차트</div>
+        <div class="btn-group">
+            <button class="filter-btn" onclick="changePeriod(252)">1년</button>
+            <button class="filter-btn" onclick="changePeriod(756)">3년</button>
+            <button class="filter-btn active" onclick="changePeriod(1260)">5년</button>
+            <button class="filter-btn" onclick="changePeriod(0)">전체</button>
+        </div>
         <div id="timeline-chart" class="chart-container"></div>
 
-        <!-- [히스토그램 차트] -->
-        <div class="section-header">📊 배당수익률 분포 히스토그램</div>
+        <div class="section-header">📊 역사상 배당수익률 분포도</div>
         <div id="hist-chart" class="chart-container"></div>
 
-        <!-- [면책 조항] -->
-        <div style="padding: 16px; border-radius: 12px; background: #fef2f2; border: 1px solid #fee2e2; font-size: 0.8rem; color: #991b1b; margin-top: 30px;">
-            ⚠️ 본 서비스는 과거 통계 데이터 분석을 위한 참고 도구이며 투자 권유가 아닙니다. 모든 투자의 판단과 결과에 대한 책임은 투자자 본인에게 있습니다.
+        <!-- [SEO & 고단가 금융 광고 타겟팅 텍스트 아코디언] -->
+        <div class="seo-accordion">
+            <div class="section-header" style="border-left-color: #3b82f6;">💡 연금저축/IRP 배당투자 필수 가이드</div>
+            
+            <details>
+                <summary>TIGER, ACE, SOL 미국배당다우존스 전격 비교</summary>
+                <div class="details-content">
+                    SCHD(Schwab US Dividend Equity ETF)와 완벽하게 동일한 'Dow Jones U.S. Dividend 100' 지수를 추종하는 한국판 상장 ETF입니다.<br>
+                    <h4>1. 환율 노출에 따른 전략 (어제/오늘 주가 변동의 핵심)</h4>
+                    최근 원달러 환율이 요동치면서 어제와 오늘 주가가 다르게 움직이는 경험을 하셨을 겁니다. <b>TIGER 미국배당다우존스</b>와 <b>ACE 미국배당다우존스</b>, <b>SOL 미국배당다우존스</b>는 모두 '환노출(UH)' 상품입니다. 즉, 미국 본장 SCHD 주가가 하락하더라도 달러 환율이 오르면 국내 계좌 수익률은 방어되는 훌륭한 헷지 수단이 됩니다. 반대로 환율 하락 시기를 대비한다면 'TIGER 미국배당+7%프리미엄다우존스' 같은 상품도 고려할 수 있습니다.
+                    <h4>2. 운용 보수(TER)와 분배금 차이</h4>
+                    최근 자산운용사 간의 수수료 경쟁으로 인해 실질 부담 비용(TER)은 3개사 모두 0.1% 내외로 극도로 저렴해졌습니다. 매월 분배금(월배당)이 입금되므로 본 레이더의 '매수 매력 점수'가 70점(맛도리 구간) 이상일 때 기계적으로 재투자하는 것이 핵심입니다.
+                </div>
+            </details>
+
+            <details>
+                <summary>연금저축펀드 및 IRP 계좌의 압도적 절세 효과</summary>
+                <div class="details-content">
+                    일반 주식 계좌에서 SCHD 본주를 매수하면 매번 배당금을 받을 때마다 15.4%의 배당소득세를 미국 정부에 떼이게 됩니다. 하지만 <b>연금저축펀드</b>나 <b>IRP(개인형 퇴직연금)</b>, <b>ISA(개인종합자산관리계좌)</b>에서 한국판 SCHD를 모아가면 이야기가 달라집니다.
+                    <h4>과세이연과 복리의 마법</h4>
+                    배당소득세 15.4%를 전혀 떼지 않고 세전 금액 그대로 계좌에 입금됩니다. 이 아낀 세금을 바탕으로 주식을 단 1주라도 더 사서 굴리는 '과세이연' 효과가 장기투자 10년, 20년 뒤에는 엄청난 복리 눈덩이(Snowball)를 만들어 냅니다. 추후 만 55세 이후 연금으로 수령할 때 3.3% ~ 5.5%의 저율 연금소득세만 내면 되기 때문에 금융소득종합과세 폭탄을 피하는 최고의 은퇴 준비 전략입니다.
+                </div>
+            </details>
+
+            <details>
+                <summary>배당수익률 밴드를 활용한 멘탈 관리 매매법</summary>
+                <div class="details-content">
+                    주식 시장이 폭락하여 어제 대비 오늘 주가가 급락했을 때, 일반적인 투자자들은 공포에 질려 패닉 셀을 합니다. 하지만 배당 투자자에게 주가 하락은 곧 <b>'시가 배당수익률의 급등'</b>을 의미합니다.<br><br>
+                    이 페이지에서 제공하는 <b>'배당수익률 밴드'</b>는 과거 10년 치 데이터 통계를 백분위(Percentile)로 역산한 가격선입니다. 현재 주가가 초록색 꿀통 밴드(역사적 상위 10% 배당률)에 근접하거나 뚫고 내려왔다면, 이는 시장의 공포가 만든 일시적 저평가 상태입니다. 이때 연금저축 계좌에 비축해 둔 현금으로 국내 상장 미국배당다우존스를 과감하게 쓸어 담는 것이 워런 버핏식 가치투자의 핵심입니다.
+                </div>
+            </details>
         </div>
-        <p style="text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 40px 0;">© SCHD Investing RADAR | Data provided by Yahoo Finance & FRED</p>
+
+        <p style="text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 30px 0;">© SCHD Investing RADAR | Data by Yahoo Finance & FRED</p>
     </div>
 
     <script>
-        // 전역 데이터 캐시
         let globalRawData = null;
-        let selectedPeriodDays = 1260; // 기본값 5년 (약 1,260 영업일)
+        let selectedPeriodDays = 1260; // 5년
 
-        // 1. 데이터 로드 및 초기화
+        // [시뮬레이터 로직]
+        let currentYield = 0.035; // 초기 임시값
+
+        function updateSimUI() {
+            let lumpsum = parseInt(document.getElementById('sim-lumpsum').value);
+            let monthly = parseInt(document.getElementById('sim-monthly').value);
+            
+            document.getElementById('val-lumpsum').innerText = lumpsum.toLocaleString();
+            document.getElementById('val-monthly').innerText = monthly.toLocaleString();
+
+            // 계산 편의를 위해 만원 단위 -> 원 단위로 환산
+            let principal = lumpsum * 10000;
+            let m_add = monthly * 10000;
+            
+            // 시뮬레이터 함수: 연 8% 배당성장(YOC) + 배당 재투자 가정
+            function calcDiv(years) {
+                let total = principal;
+                let yoc = currentYield;
+                
+                for(let i=0; i<years; i++) {
+                    total += (m_add * 12);
+                    total += (total * yoc); // 배당 재투자(DRIP)
+                    yoc *= 1.08; // 연 8% 배당 성장 (보수적)
+                }
+                return (total * yoc) / 12;
+            }
+
+            let div5 = calcDiv(5);
+            let div10 = calcDiv(10);
+
+            // 원 단위 포맷팅 (만원 단위로 변환해 깔끔하게 표시)
+            const formatWon = (num) => {
+                if(num >= 10000) return Math.floor(num/10000).toLocaleString() + '만 원';
+                return Math.floor(num).toLocaleString() + '원';
+            };
+
+            document.getElementById('res-5y').innerText = formatWon(div5);
+            document.getElementById('res-10y').innerText = formatWon(div10);
+        }
+
+
+        // [메인 데이터 로드 및 렌더링]
         async function initApp() {
             try {
                 const response = await fetch('schd_data.json');
                 if (!response.ok) throw new Error("JSON 파일을 찾을 수 없습니다.");
                 globalRawData = await response.json();
             } catch (err) {
-                console.warn("로컬 테스트용 더미 데이터를 생성합니다:", err);
+                console.warn("로컬 테스트용 더미 생성");
                 globalRawData = generateFallbackData();
             }
             renderDashboard();
         }
 
-        // 2. 기간 변경 핸들러
         function changePeriod(days) {
             selectedPeriodDays = days;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -268,7 +318,6 @@
             renderDashboard();
         }
 
-        // 3. 메인 렌더링 파이프라인
         function renderDashboard() {
             if (!globalRawData) return;
 
@@ -278,7 +327,6 @@
             const allDivs = globalRawData.ttm_dividends;
             const allFedRates = globalRawData.fed_rates;
 
-            // 기간 슬라이싱
             const startIndex = selectedPeriodDays === 0 ? 0 : Math.max(0, allDates.length - selectedPeriodDays);
             const dates = allDates.slice(startIndex);
             const prices = allPrices.slice(startIndex);
@@ -291,19 +339,20 @@
             const curr_fed = fedRates[fedRates.length - 1];
             const lastDate = dates[dates.length - 1];
 
-            // 매수 매력 점수 계산 (선택 기간 기준)
-            const cheaperDays = yields.filter(y => y > curr_y).length;
-            const cheaper_days_pct = (cheaperDays / yields.length) * 100;
-            const buy_score = Math.round(100 - cheaper_days_pct);
+            // 시뮬레이터 전역 변수 업데이트
+            currentYield = curr_y / 100;
+            updateSimUI(); 
 
-            // 동일 기준금리 구간(현재 금리 ± 0.5%p) 점수 계산
+            // 점수 계산
+            const cheaperDays = yields.filter(y => y > curr_y).length;
+            const cheaperPct = (cheaperDays / yields.length) * 100;
+            const buy_score = Math.round(100 - cheaperPct);
+
+            let fed_score = buy_score;
             const similarFedIndices = [];
             for (let i = 0; i < fedRates.length; i++) {
-                if (Math.abs(fedRates[i] - curr_fed) <= 0.5) {
-                    similarFedIndices.push(i);
-                }
+                if (Math.abs(fedRates[i] - curr_fed) <= 0.5) similarFedIndices.push(i);
             }
-            let fed_score = buy_score;
             if (similarFedIndices.length > 20) {
                 const similarYields = similarFedIndices.map(idx => yields[idx]);
                 const fedCheaper = similarYields.filter(y => y > curr_y).length;
@@ -311,155 +360,100 @@
             }
 
             // UI 바인딩
-            updateUI(buy_score, fed_score, curr_p, curr_y, curr_fed, lastDate, cheaper_days_pct);
-
-            // 차트 렌더링
-            renderTimelineWithBands(dates, prices, ttmDivs, yields);
-            renderHistogram(yields, curr_y);
-        }
-
-        // 4. UI 텍스트 및 국내 상장 가이드 업데이트
-        function updateUI(buy_score, fed_score, price, yld, fed, date, cheaperPct) {
             let status, color;
-            let krGuideText = "";
-
-            if (buy_score >= 90) {
-                status = "🍯 전설의 꿀통 매수"; color = "#b45309";
-                krGuideText = `현재 SCHD가 역사적 상위 ${cheaperPct.toFixed(1)}% 수준의 극단적 저평가 상태입니다. 연금 계좌의 <b>TIGER · ACE · SOL 미국배당다우존스</b>를 적극적으로 분할 매수하기에 매우 유리한 시점입니다.`;
-            } else if (buy_score >= 70) {
-                status = "😋 맛도리 적립 구간"; color = "#15803d";
-                krGuideText = `배당 매력도가 높은 할인 구간입니다. 매달 연금저축/IRP에 납입하는 적립식 투자자라면 <b>국내 상장 3대장</b>의 적립 비중을 높여가기 좋은 타이밍입니다.`;
-            } else if (buy_score >= 40) {
-                status = "⚖️ 합리적 정가 매수"; color = "#b45309";
-                krGuideText = `역사적 평균치에 수렴하는 적정 가치 구간입니다. 무리한 몰빵 매수보다는 계획된 원칙대로 <b>국내 상장 3대장</b>을 기계식 분할 매수하는 것을 권장합니다.`;
-            } else {
-                status = "🚨 고평가 주의 / 관망"; color = "#b91c1c";
-                krGuideText = `배당수익률 대비 주가가 다소 높아진 구간입니다. 신규 진입보다는 보유 배당금 재투자 정도로 속도를 조절하며 관망하는 것이 현명합니다.`;
-            }
+            if (buy_score >= 90) { status = "🍯 전설의 꿀통 매수"; color = "#b45309"; } 
+            else if (buy_score >= 70) { status = "😋 맛도리 적립 구간"; color = "#15803d"; } 
+            else if (buy_score >= 40) { status = "⚖️ 합리적 정가 매수"; color = "#b45309"; } 
+            else { status = "🚨 고평가 주의 / 관망"; color = "#b91c1c"; }
 
             document.getElementById('score-value').innerText = buy_score;
             document.getElementById('score-value-container').style.color = color;
             
             const badge = document.getElementById('status-badge');
-            badge.innerText = status;
-            badge.style.color = color;
-            badge.style.borderColor = color;
+            badge.innerText = status; badge.style.color = color; badge.style.borderColor = color;
 
-            document.getElementById('curr-price').innerText = `$${price.toFixed(2)}`;
-            document.getElementById('curr-yield').innerText = `${yld.toFixed(2)}%`;
-            document.getElementById('curr-fed').innerText = `${fed.toFixed(2)}%`;
+            document.getElementById('curr-price').innerText = `$${curr_p.toFixed(2)}`;
+            document.getElementById('curr-yield').innerText = `${curr_y.toFixed(2)}%`;
+            document.getElementById('curr-fed').innerText = `${curr_fed.toFixed(2)}%`;
             document.getElementById('fed-match-score').innerText = `${fed_score}점`;
-            document.getElementById('kr-guide-text').innerHTML = krGuideText;
-            
-            // JSON에서 파이썬이 구워준 한국 시간 문자열 가져오기
+
             const updatedAtStr = globalRawData.updated_at || "업데이트 정보 없음";
-            
             document.getElementById('meta-info').innerHTML = 
-                `📡 <b style="color: #475569;">최종 데이터 수집: ${updatedAtStr}</b><br><br>` +
-                `최근 반영 영업일: ${date} | 분석 기간: ${selectedPeriodDays === 0 ? '전체' : (selectedPeriodDays/252) + '년'}`;
+                `📡 <b style="color: #475569;">데이터 갱신: ${updatedAtStr}</b><br>` +
+                `최근 반영일: ${lastDate} | 상위 ${cheaperPct.toFixed(1)}% 저렴함`;
+
+            renderTimeline(dates, prices, ttmDivs, yields);
+            renderHist(yields, curr_y);
         }
 
-        // 5. 배당수익률 밴드 주가 차트 렌더링
-        function renderTimelineWithBands(dates, prices, ttmDivs, yields) {
-            // 선택 기간 내 배당수익률 분위수 계산
+        // [모바일 최적화 Plotly 차트]
+        function renderTimeline(dates, prices, ttmDivs, yields) {
             const sorted = [...yields].sort((a, b) => a - b);
-            const yield_P10 = sorted[Math.floor(sorted.length * 0.10)]; // 고평가선 (낮은 배당률)
-            const yield_P50 = sorted[Math.floor(sorted.length * 0.50)]; // 적정선 (중간 배당률)
-            const yield_P90 = sorted[Math.floor(sorted.length * 0.90)]; // 꿀통선 (높은 배당률)
+            const yP10 = sorted[Math.floor(sorted.length * 0.10)];
+            const yP50 = sorted[Math.floor(sorted.length * 0.50)];
+            const yP90 = sorted[Math.floor(sorted.length * 0.90)];
 
-            // 각 일자별 TTM 배당금을 분위수 배당률로 나누어 역산 주가 계산
-            const honeyPrices = ttmDivs.map(d => Number((d / (yield_P90 / 100)).toFixed(2)));
-            const fairPrices = ttmDivs.map(d => Number((d / (yield_P50 / 100)).toFixed(2)));
-            const riskPrices = ttmDivs.map(d => Number((d / (yield_P10 / 100)).toFixed(2)));
+            const hPrices = ttmDivs.map(d => Number((d / (yP90 / 100)).toFixed(2)));
+            const fPrices = ttmDivs.map(d => Number((d / (yP50 / 100)).toFixed(2)));
+            const rPrices = ttmDivs.map(d => Number((d / (yP10 / 100)).toFixed(2)));
 
             const traces = [
-                {
-                    x: dates, y: prices,
-                    name: '실제 주가 (\$)',
-                    type: 'scatter', mode: 'lines',
-                    line: { color: '#0f172a', width: 2.5 }
-                },
-                {
-                    x: dates, y: honeyPrices,
-                    name: `🍯 꿀통 매수가격선 (${yield_P90.toFixed(2)}%)`,
-                    type: 'scatter', mode: 'lines',
-                    line: { color: '#16a34a', width: 1.5, dash: 'dash' }
-                },
-                {
-                    x: dates, y: fairPrices,
-                    name: `⚖️ 적정 가격선 (${yield_P50.toFixed(2)}%)`,
-                    type: 'scatter', mode: 'lines',
-                    line: { color: '#eab308', width: 1.2, dash: 'dot' }
-                },
-                {
-                    x: dates, y: riskPrices,
-                    name: `🚨 고평가 가격선 (${yield_P10.toFixed(2)}%)`,
-                    type: 'scatter', mode: 'lines',
-                    line: { color: '#ef4444', width: 1.2, dash: 'dash' }
-                }
+                { x: dates, y: prices, name: '실제 주가($)', type: 'scatter', mode: 'lines', line: { color: '#0f172a', width: 2 } },
+                { x: dates, y: hPrices, name: `꿀통선(${yP90.toFixed(2)}%)`, type: 'scatter', mode: 'lines', line: { color: '#16a34a', width: 1.5, dash: 'dash' } },
+                { x: dates, y: fPrices, name: `정가선(${yP50.toFixed(2)}%)`, type: 'scatter', mode: 'lines', line: { color: '#eab308', width: 1.2, dash: 'dot' } },
+                { x: dates, y: rPrices, name: `고평가선(${yP10.toFixed(2)}%)`, type: 'scatter', mode: 'lines', line: { color: '#ef4444', width: 1.2, dash: 'dash' } }
             ];
 
             const layout = {
-                margin: { l: 50, r: 20, t: 30, b: 40 },
+                margin: { l: 30, r: 15, t: 30, b: 30 }, // 모바일 여백 극대화
                 hovermode: "x unified",
-                legend: { orientation: "h", y: 1.12, x: 0.5, xanchor: 'center' },
-                xaxis: { showgrid: false },
-                yaxis: { title: '주가 (\$)', showgrid: true, gridcolor: '#f1f5f9' }
+                dragmode: false, // 모바일 스크롤 시 화면 찌그러짐 방지
+                hoverlabel: { bgcolor: "#fff", font: { size: 12, family: "Pretendard" } },
+                legend: { orientation: "h", y: 1.15, x: 0.5, xanchor: 'center', font: {size: 10} },
+                xaxis: { showgrid: false, fixedrange: true }, // 모바일 줌인 방지
+                yaxis: { showgrid: true, gridcolor: '#f1f5f9', fixedrange: true } // 모바일 줌인 방지
             };
-
-            Plotly.react('timeline-chart', traces, layout, { responsive: true, displayModeBar: false });
+            const config = { responsive: true, displayModeBar: false };
+            Plotly.react('timeline-chart', traces, layout, config);
         }
 
-        // 6. 히스토그램 렌더링
-        function renderHistogram(yields, curr_y) {
+        function renderHist(yields, curr_y) {
             const trace = {
-                x: yields,
-                type: 'histogram',
+                x: yields, type: 'histogram',
                 marker: { color: '#3b82f6', line: { color: 'white', width: 0.5 } },
                 xbins: { size: 0.05 }
             };
 
             const layout = {
-                margin: { l: 40, r: 20, t: 40, b: 40 },
-                xaxis: { title: '배당수익률 (%)', tickformat: '.2f' },
-                yaxis: { title: '거래일 수' },
+                margin: { l: 30, r: 20, t: 30, b: 30 },
+                dragmode: false,
+                xaxis: { title: '배당수익률 (%)', tickformat: '.2f', fixedrange: true },
+                yaxis: { fixedrange: true },
                 shapes: [{
-                    type: 'line',
-                    x0: curr_y, x1: curr_y,
-                    y0: 0, y1: 1, yref: 'paper',
+                    type: 'line', x0: curr_y, x1: curr_y, y0: 0, y1: 1, yref: 'paper',
                     line: { color: '#dc2626', width: 2.5, dash: 'dash' }
                 }],
                 annotations: [{
-                    x: curr_y, y: 1, yref: 'paper',
-                    text: `오늘 (${curr_y.toFixed(2)}%)`,
-                    showarrow: true, arrowhead: 2, arrowcolor: '#dc2626',
-                    ax: 0, ay: -35,
-                    font: { color: 'white', size: 12 },
-                    bgcolor: '#dc2626', borderpad: 4
+                    x: curr_y, y: 1, yref: 'paper', text: `오늘(${curr_y.toFixed(2)}%)`,
+                    showarrow: true, arrowhead: 2, arrowcolor: '#dc2626', ax: 0, ay: -25,
+                    font: { color: 'white', size: 11 }, bgcolor: '#dc2626', borderpad: 3
                 }]
             };
-
-            Plotly.react('hist-chart', [trace], layout, { responsive: true, displayModeBar: false });
+            const config = { responsive: true, displayModeBar: false };
+            Plotly.react('hist-chart', [trace], layout, config);
         }
 
-        // 로컬 테스트용 더미 생성기
         function generateFallbackData() {
             const dates = [], prices = [], ttm_dividends = [], yields = [], fed_rates = [];
-            let p = 25.0, d = 0.85;
-            const now = new Date();
+            let p = 25.0, d = 0.85; const now = new Date();
             for (let i = 2500; i >= 0; i--) {
-                const day = new Date(now);
-                day.setDate(day.getDate() - i);
+                const day = new Date(now); day.setDate(day.getDate() - i);
                 p = p * (1 + (Math.random() - 0.496) * 0.012);
                 d = d * (1 + 0.00015);
-                const y = (d / p) * 100;
-                dates.push(day.toISOString().split('T')[0]);
-                prices.push(Number(p.toFixed(2)));
-                ttm_dividends.push(Number(d.toFixed(4)));
-                yields.push(Number(y.toFixed(2)));
-                fed_rates.push(4.75);
+                dates.push(day.toISOString().split('T')[0]); prices.push(Number(p.toFixed(2)));
+                ttm_dividends.push(Number(d.toFixed(4))); yields.push(Number((d/p*100).toFixed(2))); fed_rates.push(4.75);
             }
-            return { dates, prices, ttm_dividends, yields, fed_rates };
+            return { dates, prices, ttm_dividends, yields, fed_rates, updated_at: "로컬 테스트 모드" };
         }
 
         window.onload = initApp;
