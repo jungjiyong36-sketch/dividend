@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>SCHD 역사적 백테스팅 & 월 배당 은퇴 타임머신 | dividend.besmelt.com</title>
+  <meta name="description" content="과거에 SCHD를 샀더라면 지금 배당금이 얼마일까? 실제 역사적 데이터 기반 백테스터 및 월 배당 파이어(FIRE) 은퇴 시뮬레이터" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2894031755177844" crossorigin="anonymous"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <header id="appHeader" class="app-header"></header>
+
+  <main class="app-container">
+    <!-- 1. "그때 샀더라면" 실전 역사적 데이터 백테스터 -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h1 class="card-title">⏳ "그때 샀더라면" 실전 백테스팅 타임머신</h1>
+          <p class="card-subtitle">가상 수치가 아닌 실제 SCHD 과거 주가·배당 성장 데이터로 검증합니다.</p>
+        </div>
+      </div>
+
+      <div class="hero-grid" style="grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="btStartYear">매수 시작 연도 선택</label>
+          <select id="btStartYear" class="form-input" onchange="runHistoricalBacktest()">
+            <option value="2013">2013년 초 매수 (13년 보유)</option>
+            <option value="2015">2015년 초 매수 (11년 보유)</option>
+            <option value="2017" selected>2017년 초 매수 (9년 보유)</option>
+            <option value="2019">2019년 초 매수 (7년 보유)</option>
+            <option value="2020">2020년 초 매수 (코로나 직전)</option>
+            <option value="2022">2022년 초 매수 (금리인상기)</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="btInitUsd">초기 거치 원금 ($)</label>
+          <input type="number" id="btInitUsd" class="form-input" value="10000" min="1000" step="1000" oninput="runHistoricalBacktest()" />
+        </div>
+      </div>
+
+      <div class="band-legend-grid" style="margin-top: 14px;">
+        <div class="band-item">
+          <div class="band-item-title">현재 평가 자산 (배당 재투자)</div>
+          <div id="btFinalAsset" class="band-item-val" style="color: var(--score-diamond);">$--</div>
+          <div id="btTotalReturn" style="font-size: 0.72rem; color: var(--text-secondary);">총 수익률 --%</div>
+        </div>
+        <div class="band-item">
+          <div class="band-item-title">원금 대비 현재 배당률(YOC)</div>
+          <div id="btFinalYoc" class="band-item-val" style="color: var(--accent-primary);">--%</div>
+          <div id="btEntryPrice" style="font-size: 0.72rem; color: var(--text-secondary);">당시 매수가 $--</div>
+        </div>
+        <div class="band-item">
+          <div class="band-item-title">현재 연간 수령 배당금</div>
+          <div id="btAnnualDiv" class="band-item-val" style="color: var(--score-neutral);">$--</div>
+          <div id="btShareIncrease" style="font-size: 0.72rem; color: var(--text-secondary);">수량 --주 → --주</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. 상단 애드센스 슬롯 -->
+    <div class="ad-slot-wrapper">
+      <div class="ad-label">Sponsored</div>
+      <ins class="adsbygoogle"
+           style="display:block; width:100%;"
+           data-ad-client="ca-pub-2894031755177844"
+           data-ad-slot="3305729383"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- 3. 파이어(FIRE) 월 배당 은퇴 목표 시뮬레이터 -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">🚀 월 배당 은퇴(FIRE) 스노우볼 계산기</h2>
+          <p class="card-subtitle">적립식 투자 + 배당금 재투자(DRIP) + 배당성장률이 만드는 미래 현금흐름</p>
+        </div>
+      </div>
+
+      <div class="hero-grid" style="grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="simStartKrw">현재 시작 자산 (만 원)</label>
+          <input type="number" id="simStartKrw" class="form-input" value="3000" step="500" oninput="runFireSimulator()" />
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="simMonthlyKrw">월 추가 적립금 (만 원)</label>
+          <input type="number" id="simMonthlyKrw" class="form-input" value="150" step="10" oninput="runFireSimulator()" />
+        </div>
+      </div>
+
+      <div class="hero-grid" style="grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="simDivCagr">예상 연평균 배당성장률 (%)</label>
+          <input type="number" id="simDivCagr" class="form-input" value="9.5" step="0.5" min="1" max="20" oninput="runFireSimulator()" />
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="simTargetMonthly">목표 월 배당금 (만 원)</label>
+          <input type="number" id="simTargetMonthly" class="form-input" value="200" step="10" min="10" oninput="runFireSimulator()" />
+        </div>
+      </div>
+
+      <div id="fireSummaryBanner" class="quant-insight-box" style="margin-top: 14px;">
+        목표 월 배당금 달성 시점을 계산 중입니다...
+      </div>
+
+      <div class="chart-container" style="height: 290px;">
+        <canvas id="fireChartCanvas"></canvas>
+      </div>
+    </section>
+
+    <!-- 4. 홈 및 평단 진단 이동 CTA -->
+    <a href="index.html" class="cta-next-card">
+      <div>
+        <div class="cta-title">📊 오늘 SCHD 7단계 멀티 타임프레임 점수 다시 보기</div>
+        <div class="cta-desc">1달 · 3달 · 1년 · 3년 · 5년 · 10년 · 전체 기간 매수 매력도 레이더 홈으로 이동</div>
+      </div>
+      <div class="cta-arrow">→</div>
+    </a>
+
+    <footer class="app-footer">
+      <p>© 2026 dividend.besmelt.com · 은퇴 백테스팅 시뮬레이터</p>
+    </footer>
+  </main>
+
+  <nav id="bottomNav" class="bottom-nav"></nav>
+
+  <script src="common.js"></script>
+  <script>
+    let globalData = null;
+    let fireChartInstance = null;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      renderAppShell("simulator");
+      triggerAdSense();
+
+      window.addEventListener("themeChanged", () => {
+        if (globalData) runFireSimulator();
+      });
+
+      try {
+        globalData = await loadSchdData();
+        runHistoricalBacktest();
+        runFireSimulator();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    function runHistoricalBacktest() {
+      if (!globalData) return;
+
+      const startYear = parseInt(document.getElementById("btStartYear").value, 10) || 2017;
+      const initUsd = parseFloat(document.getElementById("btInitUsd").value) || 10000;
+
+      // 선택한 연도의 첫 영업일 인덱스 탐색
+      let startIdx = globalData.dates.findIndex(d => d.startsWith(String(startYear)));
+      if (startIdx === -1) startIdx = 0;
+
+      const entryPrice = globalData.prices[startIdx];
+      const initialShares = initUsd / entryPrice;
+      let dripShares = initialShares;
+
+      // 연도별 배당 재투자(DRIP) 근사 시뮬레이션 (실제 일별 TTM 배당금과 주가 활용)
+      let currentYear = startYear;
+      for (let i = startIdx; i < globalData.dates.length; i++) {
+        const y = parseInt(globalData.dates[i].slice(0, 4), 10);
+        if (y > currentYear) {
+          const yearEndPrice = globalData.prices[i];
+          const yearTtmDiv = globalData.ttm_dividends[i];
+          const annualDivReceived = dripShares * yearTtmDiv * 0.85; // 세후 재투자 가정
+          dripShares += annualDivReceived / yearEndPrice;
+          currentYear = y;
+        }
+      }
+
+      const latestPrice = globalData.latest.price;
+      const latestDiv = globalData.latest.ttm_dividend;
+
+      const finalAssetUsd = dripShares * latestPrice;
+      const totalReturnPct = ((finalAssetUsd - initUsd) / initUsd) * 100;
+      const currentAnnualDivUsd = dripShares * latestDiv;
+      const finalYoc = (currentAnnualDivUsd / initUsd) * 100;
+
+      document.getElementById("btFinalAsset").textContent =
+        `$${Math.round(finalAssetUsd).toLocaleString()}`;
+      document.getElementById("btTotalReturn").textContent =
+        `총 수익률 +${totalReturnPct.toFixed(1)}%`;
+
+      document.getElementById("btFinalYoc").textContent = `${finalYoc.toFixed(2)}%`;
+      document.getElementById("btEntryPrice").textContent = `당시 매수가 $${entryPrice.toFixed(2)}`;
+
+      document.getElementById("btAnnualDiv").textContent =
+        `$${Math.round(currentAnnualDivUsd).toLocaleString()}/년`;
+      document.getElementById("btShareIncrease").textContent =
+        `${Math.round(initialShares)}주 → ${Math.round(dripShares)}주`;
+    }
+
+    function runFireSimulator() {
+      if (!globalData) return;
+
+      const startMan = parseFloat(document.getElementById("simStartKrw").value) || 3000;
+      const monthlyMan = parseFloat(document.getElementById("simMonthlyKrw").value) || 150;
+      const divCagr = (parseFloat(document.getElementById("simDivCagr").value) || 9.5) / 100;
+      const targetMonthlyMan = parseFloat(document.getElementById("simTargetMonthly").value) || 200;
+
+      const baseYield = (globalData.latest.yield || 3.5) / 100;
+      const priceCagr = 0.065; // 보수적 연 주가상승률 6.5%
+
+      const years = [];
+      const monthlyDivSeries = [];
+      let portfolioMan = startMan;
+      let currentAnnualDivMan = portfolioMan * baseYield;
+      let hitYear = null;
+
+      for (let yr = 1; yr <= 20; yr++) {
+        // 기존 배당금이 배당성장률만큼 증가 + 신규 적립금 및 배당재투자로 늘어나는 배당금 합산
+        const annualContributionMan = monthlyMan * 12;
+        const reinvestedDivMan = currentAnnualDivMan;
+        const newCapitalMan = annualContributionMan + reinvestedDivMan;
+
+        currentAnnualDivMan = (currentAnnualDivMan * (1 + divCagr)) + (newCapitalMan * baseYield);
+        portfolioMan = (portfolioMan * (1 + priceCagr)) + newCapitalMan;
+
+        const monthlyDivMan = +(currentAnnualDivMan / 12).toFixed(1);
+        years.push(`${yr}년차`);
+        monthlyDivSeries.push(monthlyDivMan);
+
+        if (hitYear === null && monthlyDivMan >= targetMonthlyMan) {
+          hitYear = yr;
+        }
+      }
+
+      const bannerEl = document.getElementById("fireSummaryBanner");
+      if (hitYear !== null) {
+        bannerEl.innerHTML =
+          `🎉 <strong>시뮬레이션 결과:</strong> 월 <strong>${monthlyMan.toLocaleString()}만 원</strong> 적립 및 배당 재투자를 유지하면 약 <strong>${hitYear}년차(${2026 + hitYear}년)</strong>에 목표인 <strong>월 배당 ${targetMonthlyMan.toLocaleString()}만 원</strong>을 돌파합니다! (15년차 예상 월 배당: <strong>${monthlyDivSeries[14]}만 원</strong>)`;
+      } else {
+        bannerEl.innerHTML =
+          `📈 <strong>시뮬레이션 결과:</strong> 20년차 예상 월 배당금은 <strong>${monthlyDivSeries[19]}만 원</strong>입니다. 목표 달성 시점을 앞당기려면 월 적립금을 늘리거나 고배당 저평가 구간(80점 이상)에서 수량을 적극적으로 모아보세요.`;
+      }
+
+      const ctx = document.getElementById("fireChartCanvas").getContext("2d");
+      if (fireChartInstance) fireChartInstance.destroy();
+
+      const isLight = document.documentElement.getAttribute("data-theme") === "light";
+      const tickColor = isLight ? "#475569" : "#94a3b8";
+      const gridColor = isLight ? "rgba(15, 23, 42, 0.07)" : "rgba(148, 163, 184, 0.1)";
+
+      fireChartInstance = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: years,
+          datasets: [
+            {
+              label: "예상 월 배당금 (만 원)",
+              data: monthlyDivSeries,
+              backgroundColor: monthlyDivSeries.map(v =>
+                v >= targetMonthlyMan ? "rgba(16, 185, 129, 0.8)" : "rgba(59, 130, 246, 0.7)"
+              ),
+              borderRadius: 5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { labels: { color: tickColor } }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: tickColor, maxTicksLimit: 10 } },
+            y: {
+              grid: { color: gridColor },
+              ticks: { color: tickColor, callback: v => `${v}만` }
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
