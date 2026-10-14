@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SCHD 퀀트 레이더 PRO | 미국배당다우존스 매수 타이밍 & 연금 솔루션</title>
+    <title>SCHD 퀀트 레이더 PRO | 미국배당다우존스 매수 타이밍 & 연금저축 솔루션</title>
     <!-- 구글 애드센스 자동 광고 스크립트 -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2894031755177844" crossorigin="anonymous"></script>
-    <meta name="description" content="SCHD 4분기 확정 배당수익률 백분위, Yield Band 내재가치 채널, 내 평단가 YOC 진단 및 국내 상장 미국배당다우존스(TIGER, ACE, SOL) 환율 매트릭스">
+    <meta name="description" content="SCHD 4분기 확정 배당수익률 백분위, 적정 주가 Yield Band, 국내 상장 미국배당다우존스(TIGER, ACE, SOL) 원화 평단가 진단 및 연금저축 복리 시뮬레이터">
     <!-- Plotly.js CDN -->
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
@@ -36,29 +36,29 @@
         
         .container { max-width: 880px; margin: 0 auto; padding: 14px 16px; }
 
-        /* 심플하고 깔끔한 상단 헤더 (불필요한 버튼 제거 완료) */
+        /* 심플 상단 헤더 & 초보자 온보딩 요약 칩 */
         .top-nav {
-            display: flex; flex-direction: column; gap: 4px;
+            display: flex; flex-direction: column; gap: 6px;
             padding: 8px 0 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 14px;
         }
-        .brand-row {
-            display: flex; align-items: center; gap: 8px;
-        }
-        .brand-title {
-            font-size: 1.3rem; font-weight: 800; letter-spacing: -0.4px; margin: 0;
-            white-space: nowrap;
-        }
+        .brand-row { display: flex; align-items: center; gap: 8px; }
+        .brand-title { font-size: 1.32rem; font-weight: 800; letter-spacing: -0.4px; margin: 0; white-space: nowrap; }
         .pro-badge {
             background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff;
             font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 6px;
         }
-        .brand-sub {
-            font-size: 0.8rem; color: var(--text-muted); margin: 0;
+        .brand-sub { font-size: 0.82rem; color: var(--text-muted); margin: 0; line-height: 1.4; }
+        .onboarding-chips {
+            display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px;
+        }
+        .chip {
+            background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #93c5fd; font-size: 0.72rem; font-weight: 600; padding: 4px 9px; border-radius: 20px;
         }
 
-        /* 애드센스 컨테이너 (CLS 원천 차단) */
+        /* 애드센스 컨테이너 (CLS 방지 고정 높이) */
         .ad-slot-box {
-            width: 100%; min-height: 92px; margin: 12px 0 18px 0;
+            width: 100%; min-height: 95px; margin: 12px 0 18px 0;
             border-radius: 14px; background: var(--bg-card); border: 1px solid var(--border);
             display: flex; align-items: center; justify-content: center; overflow: hidden;
         }
@@ -78,7 +78,7 @@
         .card-header-sub { margin: 0 0 16px 0; font-size: 0.82rem; color: var(--text-muted); line-height: 1.45; }
 
         /* 메인 점수 히어로 섹션 */
-        .score-hero { text-align: center; padding: 6px 0 14px 0; }
+        .score-hero { text-align: center; padding: 6px 0 12px 0; }
         .score-value { font-size: 4.5rem; font-weight: 800; line-height: 1; margin: 10px 0; letter-spacing: -2px; }
         .status-badge {
             font-size: 1rem; font-weight: 700; padding: 7px 18px; 
@@ -86,10 +86,27 @@
         }
         .score-plain-summary {
             margin: 12px auto 0 auto; font-size: 0.86rem; color: #cbd5e1;
-            line-height: 1.5; max-width: 560px;
+            line-height: 1.5; max-width: 580px;
         }
 
-        /* 직관적인 비교 기간 선택 박스 (초보자 친화형 UI) */
+        /* 실전 행동 지침(Action Plan) 카드 */
+        .action-plan-box {
+            margin-top: 14px; padding: 14px 16px; border-radius: 14px;
+            background: rgba(34, 197, 94, 0.08); border: 1px solid rgba(34, 197, 94, 0.3);
+            text-align: left; font-size: 0.82rem; color: #e2e8f0; line-height: 1.6;
+        }
+        .action-plan-title { font-weight: 800; font-size: 0.88rem; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+
+        /* 배당락일 D-Day 바 */
+        .dday-bar {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
+            margin-top: 12px; padding: 11px 14px; border-radius: 12px;
+            background: var(--bg-sub); border: 1px solid var(--border); font-size: 0.78rem;
+        }
+        .dday-item { display: flex; justify-content: space-between; align-items: center; }
+        .dday-badge { background: #1e3a8a; color: #93c5fd; font-weight: 800; padding: 2px 8px; border-radius: 6px; font-size: 0.74rem; }
+
+        /* 직관적인 비교 기간 선택 박스 */
         .period-selector-wrap {
             background: var(--bg-sub); border: 1px solid var(--border);
             border-radius: 16px; padding: 14px; margin: 16px 0;
@@ -98,12 +115,8 @@
             display: flex; justify-content: space-between; align-items: center;
             margin-bottom: 10px; font-size: 0.82rem; font-weight: 700; color: #e2e8f0;
         }
-        .period-selector-header span.hint {
-            font-size: 0.74rem; font-weight: 500; color: var(--text-muted);
-        }
-        .period-group {
-            display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
-        }
+        .period-selector-header span.hint { font-size: 0.74rem; font-weight: 500; color: var(--text-muted); }
+        .period-group { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; }
         .filter-btn {
             border: 1px solid #1e293b; background: #151f32; padding: 8px 4px;
             border-radius: 10px; cursor: pointer; transition: 0.15s;
@@ -118,7 +131,6 @@
         }
         .filter-btn.active .p-main, .filter-btn.active .p-sub { color: #ffffff; }
 
-        /* 선택 기간 실시간 해설 배너 */
         .period-guide-banner {
             margin-top: 10px; padding: 10px 12px; border-radius: 10px;
             background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25);
@@ -137,13 +149,20 @@
         .metric-box b { font-size: 1.28rem; color: var(--text-main); display: block; margin-top: 3px; }
         .metric-box .sub-tag { font-size: 0.7rem; color: #64748b; margin-top: 2px; display: block; }
 
+        /* 내부 탭 유도 CTA 버튼 그리드 (체류시간 증대용) */
+        .cta-btn-grid {
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px;
+        }
+        .cta-nav-btn {
+            background: #1e293b; border: 1px solid #3b82f6; color: #93c5fd;
+            padding: 11px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;
+            cursor: pointer; transition: 0.2s; font-family: inherit; text-align: center;
+        }
+        .cta-nav-btn:hover { background: #3b82f6; color: #ffffff; }
+
         /* 7대 기간 멀티 매트릭스 테이블 */
-        .matrix-table {
-            width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px;
-        }
-        .matrix-table th, .matrix-table td {
-            padding: 9px 6px; text-align: center; border-bottom: 1px solid var(--border);
-        }
+        .matrix-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
+        .matrix-table th, .matrix-table td { padding: 9px 6px; text-align: center; border-bottom: 1px solid var(--border); }
         .matrix-table th { color: var(--text-muted); font-weight: 600; background: var(--bg-sub); }
         .matrix-table tr.active-row { background: rgba(59, 130, 246, 0.12); font-weight: 700; }
 
@@ -235,12 +254,13 @@
         .nav-tab .icon { font-size: 1.2rem; }
         .nav-tab.active { color: #38bdf8; }
 
-        /* 모바일 화면(640px 이하) 기간 버튼 최적화: 4열 + 3열 구조로 찌그러짐 방지 */
         @media (max-width: 640px) {
             .score-value { font-size: 3.8rem; }
             .period-group { grid-template-columns: repeat(4, 1fr); }
             .period-selector-header { flex-direction: column; align-items: flex-start; gap: 3px; }
             .band-summary-grid { grid-template-columns: 1fr; }
+            .dday-bar { grid-template-columns: 1fr; }
+            .cta-btn-grid { grid-template-columns: 1fr; }
             .chart-container { height: 320px; }
             .input-grid { grid-template-columns: 1fr; }
         }
@@ -248,16 +268,21 @@
 </head>
 <body>
     <div class="container">
-        <!-- 깔끔하게 정리된 상단 헤더 (스레드/공유 버튼 제거 완료) -->
+        <!-- 상단 헤더 & 초보자용 SCHD 핵심 요약 칩 -->
         <header class="top-nav">
             <div class="brand-row">
                 <h1 class="brand-title">📈 SCHD 퀀트 레이더</h1>
                 <span class="pro-badge">PRO</span>
             </div>
-            <p class="brand-sub">과거 배당수익률 백분위 기반 매수 타이밍 판독 솔루션</p>
+            <p class="brand-sub">미국배당다우존스(SCHD · TIGER · ACE · SOL) 배당수익률 백분위 기반 매수 타이밍 판독기</p>
+            <div class="onboarding-chips">
+                <span class="chip">✔️ 10년 연속 배당지급 우량주 100선</span>
+                <span class="chip">✔️ 연 0.06% 초저보수</span>
+                <span class="chip">✔️ 5년 평균 연 11%대 배당성장</span>
+            </div>
         </header>
 
-        <!-- [구글 애드센스 상단 고정 슬롯] -->
+        <!-- [구글 애드센스 상단 고정 슬롯 #1] -->
         <div class="ad-slot-box">
             <ins class="adsbygoogle"
                  style="display:block; width:100%;"
@@ -271,7 +296,7 @@
         </div>
 
         <!-- ================================================================= -->
-        <!-- [TAB 1] 레이더 홈 (핵심 백분위 점수 + 직관적 기간 선택 + Yield Band) -->
+        <!-- [TAB 1] 레이더 홈 (핵심 백분위 점수 + 실전 행동 지침 + Yield Band) -->
         <!-- ================================================================= -->
         <div id="tab-home" class="tab-pane active">
             <div class="card">
@@ -286,6 +311,24 @@
                     <p id="score-plain-desc" class="score-plain-summary">
                         점수가 <b>100점에 가까울수록</b> 과거보다 배당률이 높아진 <b>바겐세일(저평가) 구간</b>입니다.
                     </p>
+                </div>
+
+                <!-- 점수 구간별 구체적 행동 지침 (Action Plan) -->
+                <div id="action-plan-box" class="action-plan-box">
+                    <div id="action-plan-title" class="action-plan-title">💡 오늘의 실전 매수 & 현금 비중 가이드</div>
+                    <div id="action-plan-text">데이터를 바탕으로 최적의 매수 비중을 계산 중입니다...</div>
+                </div>
+
+                <!-- 다음 배당락일 D-Day 안내 바 -->
+                <div class="dday-bar">
+                    <div class="dday-item">
+                        <span>🇺🇸 <b>SCHD 본주</b> 다음 예상 배당락일</span>
+                        <span id="us-dday-badge" class="dday-badge">계산 중</span>
+                    </div>
+                    <div class="dday-item">
+                        <span>🇰🇷 <b>국내 월배당(TIGER·ACE·SOL)</b> 배당락</span>
+                        <span id="kr-dday-badge" class="dday-badge">계산 중</span>
+                    </div>
                 </div>
 
                 <!-- 초보자 친화형 비교 기간 선택 컨트롤러 -->
@@ -322,11 +365,10 @@
                         </button>
                         <button class="filter-btn" onclick="changePeriod(0, '상장 이후 전체', this)">
                             <span class="p-main">전체</span>
-                            <span class="p-sub">2011년~현재</span>
+                            <span class="p-sub">2011년 ~ 현재</span>
                         </button>
                     </div>
 
-                    <!-- 선택한 기간의 의미를 즉시 설명해 주는 가이드 배너 -->
                     <div id="period-guide-banner" class="period-guide-banner">
                         💬 <b>최근 5년(표준 권장) 기준:</b> 중장기 적립식 투자자가 가장 많이 참고하는 표준 기준입니다. 지난 5년 치 영업일 중 오늘의 배당 매력이 상위 몇 %인지 판독합니다.
                     </div>
@@ -336,23 +378,33 @@
                     <div class="metric-box">
                         <p>현재 주가 (SCHD)</p>
                         <b id="curr-price">$--</b>
-                        <span id="curr-div-sub" class="sub-tag">연 배당금(4Q): $--</span>
+                        <span id="curr-div-sub" class="sub-tag">직전 4분기 배당합: $--</span>
                     </div>
                     <div class="metric-box">
-                        <p>확정 시가배당률 (TTM)</p>
+                        <p>확정 시가배당률 (최근 1년 합산)</p>
                         <b id="curr-yield" style="color: #4ade80;">--%</b>
                         <span id="fwd-yield-sub" class="sub-tag">최근 분기 연환산: --%</span>
                     </div>
                     <div class="metric-box">
                         <p>미국 실효 기준금리</p>
                         <b id="curr-fed">--%</b>
-                        <span class="sub-tag">FRED DFF 기준</span>
+                        <span class="sub-tag">연준(FRED DFF) 기준</span>
                     </div>
                     <div class="metric-box">
                         <p>동일 금리(±0.5%p) 매력도</p>
                         <b id="fed-match-score" style="color: #38bdf8;">--점</b>
-                        <span id="fed-sample-sub" class="sub-tag">유사 금리 표본 비교</span>
+                        <span id="fed-sample-sub" class="sub-tag">유사 금리 시기 비교</span>
                     </div>
+                </div>
+
+                <!-- 내부 탭 이동 유도 CTA 버튼 (체류시간 증대) -->
+                <div class="cta-btn-grid">
+                    <button class="cta-nav-btn" onclick="triggerTabFromCta('myprice', 1)">
+                        🎯 내 평단가($ · 원) 물타기 계산기 이동 →
+                    </button>
+                    <button class="cta-nav-btn" onclick="triggerTabFromCta('timemachine', 3)">
+                        🚀 5년 · 10년 뒤 내 연금 월배당 계산하기 →
+                    </button>
                 </div>
 
                 <!-- 데이터 최신화 스케줄 및 퀀트 산출 주석 -->
@@ -420,37 +472,64 @@
         </div>
 
         <!-- ================================================================= -->
-        <!-- [TAB 2] 내 평단 진단 (개인화 YOC 진단 + 물타기/추매 타점 계산기) -->
+        <!-- [TAB 2] 내 평단 진단 (미국 직투 $ vs 국내 상장 ETF 원화 듀얼 모드) -->
         <!-- ================================================================= -->
         <div id="tab-myprice" class="tab-pane">
             <div class="card">
-                <h2 class="card-header-title">🎯 내 평단가 YOC 진단 & 추매 시뮬레이터</h2>
+                <h2 class="card-header-title">🎯 내 평단가 진단 & 물타기 시뮬레이터</h2>
                 <p class="card-header-sub">
-                    입력하신 평단가와 보유 수량은 현재 브라우저에 자동 저장되어 다음 접속 시에도 그대로 유지됩니다.
+                    미국 직투(SCHD)는 물론 연금저축 · IRP · ISA에서 모아가는 국내 상장 ETF(원화) 평단가까지 완벽 지원합니다. 입력값은 브라우저에 자동 저장됩니다.
                 </p>
 
-                <div class="input-grid">
-                    <div class="input-group">
-                        <label>내 평균 매수단가 ($)</label>
-                        <input type="number" id="my-avg-price" class="input-field" step="0.1" value="28.50" oninput="runMyPriceDiagnosis()">
+                <!-- 통화/시장 선택 스위치 -->
+                <div class="mode-switch" style="margin-bottom: 16px;">
+                    <button id="btn-my-us" class="mode-btn active" onclick="switchMyPriceMarket('US')">🇺🇸 미국 직투 (SCHD, $)</button>
+                    <button id="btn-my-kr" class="mode-btn" onclick="switchMyPriceMarket('KR')">🇰🇷 국내 상장 3대장 (원화)</button>
+                </div>
+
+                <!-- [미국 직투($) 입력 영역] -->
+                <div id="my-us-inputs">
+                    <div class="input-grid">
+                        <div class="input-group">
+                            <label>내 SCHD 평균 매수단가 ($)</label>
+                            <input type="number" id="my-avg-price" class="input-field" step="0.1" value="28.50" oninput="runMyPriceDiagnosis()">
+                        </div>
+                        <div class="input-group">
+                            <label>현재 보유 수량 (주)</label>
+                            <input type="number" id="my-shares" class="input-field" step="1" value="100" oninput="runMyPriceDiagnosis()">
+                        </div>
                     </div>
-                    <div class="input-group">
-                        <label>현재 보유 수량 (주)</label>
-                        <input type="number" id="my-shares" class="input-field" step="1" value="100" oninput="runMyPriceDiagnosis()">
+                </div>
+
+                <!-- [국내 상장 ETF(원) 입력 영역] -->
+                <div id="my-kr-inputs" style="display: none;">
+                    <div class="input-grid" style="grid-template-columns: repeat(3, 1fr);">
+                        <div class="input-group">
+                            <label>내 국내 ETF 평단가 (원)</label>
+                            <input type="number" id="my-kr-avg" class="input-field" step="50" value="13200" oninput="runMyPriceDiagnosis()">
+                        </div>
+                        <div class="input-group">
+                            <label>현재 국내 ETF 주가 (원)</label>
+                            <input type="number" id="my-kr-curr" class="input-field" step="50" value="13800" oninput="runMyPriceDiagnosis()">
+                        </div>
+                        <div class="input-group">
+                            <label>현재 보유 수량 (주)</label>
+                            <input type="number" id="my-kr-shares" class="input-field" step="10" value="500" oninput="runMyPriceDiagnosis()">
+                        </div>
                     </div>
                 </div>
 
                 <div class="slider-group">
                     <div class="slider-label">
-                        <span>오늘 현재가(<span id="sim-curr-p-label">$--</span>)로 추가 매수할 수량</span>
+                        <span>현재가(<span id="sim-curr-p-label">$--</span>)로 추가 매수할 수량</span>
                         <span><b id="add-shares-label">20</b> 주 추매</span>
                     </div>
-                    <input type="range" id="add-shares-slider" min="0" max="500" step="5" value="20" oninput="runMyPriceDiagnosis()">
+                    <input type="range" id="add-shares-slider" min="0" max="1000" step="5" value="20" oninput="runMyPriceDiagnosis()">
                 </div>
 
                 <div class="metric-grid">
                     <div class="metric-box">
-                        <p>내 평단 배당률 (YOC)</p>
+                        <p>내 투자원금 대비 배당률 (YOC)</p>
                         <b id="my-yoc-val" style="color: #4ade80;">--%</b>
                         <span id="my-rank-sub" class="sub-tag">역사적 상위 --% 경쟁력</span>
                     </div>
@@ -546,13 +625,13 @@
         </div>
 
         <!-- ================================================================= -->
-        <!-- [TAB 4] 은퇴 타임머신 (배당 재투자 DRIP + 과세이연 비교 시뮬레이터) -->
+        <!-- [TAB 4] 은퇴 타임머신 (수식 무결성 교정 완료 DRIP 시뮬레이터) -->
         <!-- ================================================================= -->
         <div id="tab-timemachine" class="tab-pane">
             <div class="card">
-                <h2 class="card-header-title">🚀 은퇴 타임머신 (DRIP 복리 시뮬레이터)</h2>
+                <h2 class="card-header-title">🚀 은퇴 타임머신 (정밀 DRIP 복리 시뮬레이터)</h2>
                 <p class="card-header-sub">
-                    현재 시가배당률과 배당성장률, 그리고 연금계좌 과세이연(배당세 15.4% 재투자) 유무에 따른 미래 월 배당금을 비교합니다.
+                    기존 보유분의 배당성장과 매년 신규 투입되는 적립금의 시가배당률을 분리 계산하여 과대계상 왜곡을 제거한 정밀 퀀트 모델입니다.
                 </p>
 
                 <div class="slider-group">
@@ -593,13 +672,30 @@
                 </div>
 
                 <div id="drip-chart" class="chart-container" style="height: 300px; margin-top: 16px;"></div>
+
+                <div class="quant-trust-box">
+                    📐 <b>시뮬레이션 수식 검증:</b> 매년 발생하는 배당금 $D_t = D_{t-1} \times (1 + g) + (\text{연간 신규 적립금} + \text{재투자 배당금}) \times Y_{\text{current}}$ 모델을 적용해, 신규 적립금이 당해 시가배당률로 주식을 매수하는 실제 시장 메커니즘을 정확히 반영합니다.
+                </div>
             </div>
+        </div>
+
+        <!-- [구글 애드센스 하단 공통 슬롯 #2 (탭 전환 시에도 상시 노출)] -->
+        <div class="ad-slot-box">
+            <ins class="adsbygoogle"
+                 style="display:block; width:100%;"
+                 data-ad-client="ca-pub-2894031755177844"
+                 data-ad-slot="3305729383"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
         </div>
 
         <!-- ================================================================= -->
         <!-- [공통 하단] 데이터 무결성 원장 검증표 & 고단가 SEO 가이드 아코디언 -->
         <!-- ================================================================= -->
-        <div style="margin-top: 24px;">
+        <div style="margin-top: 20px;">
             <h3 style="font-size: 1rem; margin-bottom: 10px; color: #e2e8f0;">🔍 퀀트 데이터 무결성 검증 & 연금 투자 가이드</h3>
             
             <details>
@@ -631,13 +727,13 @@
             </details>
 
             <details>
-                <summary>🏦 연금저축펀드 · IRP · ISA 계좌 활용 절세 및 세액공제 전략</summary>
+                <summary>🏦 연금저축펀드 · IRP · ISA 계좌 활용 절세 및 파킹통장 운용 전략</summary>
                 <div class="details-content">
-                    국내 상장 미국배당다우존스(TIGER, ACE, SOL)를 <b>연금저축펀드</b>와 <b>IRP(개인형 퇴직연금)</b>에서 적립할 경우 두 가지 핵심 재무 이득이 발생합니다.
+                    국내 상장 미국배당다우존스(TIGER, ACE, SOL)를 <b>연금저축펀드</b>와 <b>IRP(개인형 퇴직연금)</b>, <b>ISA(중개형 개인종합자산관리계좌)</b>에서 적립할 경우 강력한 세제 혜택이 발생합니다.
                     <h4>1. 연말정산 세액공제 (최대 900만 원 한도)</h4>
                     연금저축(연 600만 원)과 IRP를 합산해 연간 최대 900만 원까지 납입액의 13.2% ~ 16.5%를 연말정산 시 현금으로 환급받습니다.
-                    <h4>2. 과세이연과 저율 분리과세</h4>
-                    일반 계좌에서는 배당금 수령 즉시 15.4%를 원천징수당하고 연간 금융소득이 2,000만 원을 초과하면 금융소득종합과세 대상이 됩니다. 반면 연금계좌에서는 배당세가 즉시 부과되지 않아 세전 배당금 100%를 재투자할 수 있으며, 만 55세 이후 연금 수령 시 3.3% ~ 5.5%의 낮은 연금소득세로 종결됩니다.
+                    <h4>2. 과세이연과 현금 파킹(외화 RP · CMA) 병행</h4>
+                    배당 매력 점수가 0 ~ 39점(고평가 구간)일 때는 무리하게 전액 매수하기보다, 대기 자금을 증권사 <b>외화 RP</b>나 <b>CMA 파킹통장</b>, 또는 연금계좌 내 <b>단기채권/파킹형 ETF(KOFR, CD금리 ETF)</b>에 보관해 이자 수익을 챙기다가 레이더 점수가 70 ~ 100점 구간에 진입했을 때 분할 전환 매수하면 장기 수익률을 극대화할 수 있습니다.
                 </div>
             </details>
         </div>
@@ -675,9 +771,9 @@
         let selectedPeriodDays = 1260;
         let selectedPeriodLabel = '최근 5년';
         let currentChartMode = 'band';
+        let currentMyPriceMarket = 'US'; // 'US' 또는 'KR'
         let currentYieldDecimal = 0.035;
 
-        // 기간별 초보자 맞춤 해설 문구 사전
         const periodGuideMessages = {
             21: "💬 <b>최근 1개월(21 영업일) 기준:</b> 한 달 이내에 단기 급락(눌림목)이 나왔는지 확인합니다. 단기 타이밍을 노리는 분들에게 적합합니다.",
             63: "💬 <b>최근 3개월(63 영업일) 기준:</b> 이번 분기 배당락 전후의 주가 흐름 속에서 오늘 가격이 유리한지 파악합니다.",
@@ -685,10 +781,10 @@
             756: "💬 <b>최근 3년(756 영업일) 기준:</b> 미국 고금리 환경이 본격화된 최근 3년 동안의 평균 배당률과 오늘을 비교합니다.",
             1260: "💬 <b>최근 5년(표준 권장) 기준:</b> 중장기 적립식 투자자가 가장 많이 참고하는 표준 기준입니다. 지난 5년 치 영업일 중 오늘의 배당 매력이 상위 몇 %인지 판독합니다.",
             2520: "💬 <b>최근 10년(2,520 영업일) 기준:</b> 금리 인하기와 인상기를 모두 포함한 10년 장기 경제 사이클 속에서 현재 가치 위치를 진단합니다.",
-            0: "💬 <b>상장 이후 전체(2011년~현재) 기준:</b> SCHD가 세상에 나온 이후 모든 거래일과 비교해 역사적 바겐세일 구간인지 판독합니다."
+            0: "💬 <b>상장 이후 전체(2011년 ~ 현재) 기준:</b> SCHD가 세상에 나온 이후 모든 거래일과 비교해 역사적 바겐세일 구간인지 판독합니다."
         };
 
-        // 1. 스파이크 자동 평활화 필터 (구버전 JSON 데이터 로드 시에도 365일 윈도우 스파이크 즉시 제거)
+        // 1. 스파이크 자동 평활화 필터
         function sanitizeSpikes(data) {
             const divs = [...data.ttm_dividends];
             const prices = data.prices;
@@ -713,9 +809,37 @@
             return data;
         }
 
-        // 2. 초기 데이터 로드 및 LocalStorage 복원
+        // 2. 다음 배당락일 D-Day 계산기 (외부 이탈 방지)
+        function updateDividendDday() {
+            const now = new Date();
+            const year = now.getFullYear();
+            
+            // SCHD 본주 예상 배당락일 (3, 6, 9, 12월 20일경 기준)
+            const usMonths = [2, 5, 8, 11]; // 0-indexed: 3월, 6월, 9월, 12월
+            let nextUsDate = null;
+            for (let m of usMonths) {
+                const candidate = new Date(year, m, 20);
+                if (candidate >= now) { nextUsDate = candidate; break; }
+            }
+            if (!nextUsDate) nextUsDate = new Date(year + 1, 2, 20);
+            const usDiff = Math.ceil((nextUsDate - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('us-dday-badge').innerText = `약 D-${usDiff} (${nextUsDate.getMonth() + 1}월 중순)`;
+
+            // 국내 월배당 ETF 배당락일 (매월 말일 2일 전 기준)
+            let lastDayOfMonth = new Date(year, now.getMonth() + 1, 0);
+            let krExDate = new Date(year, now.getMonth(), lastDayOfMonth.getDate() - 2);
+            if (krExDate < now) {
+                let nextMonthLast = new Date(year, now.getMonth() + 2, 0);
+                krExDate = new Date(nextMonthLast.getFullYear(), nextMonthLast.getMonth(), nextMonthLast.getDate() - 2);
+            }
+            const krDiff = Math.ceil((krExDate - now) / (1000 * 60 * 60 * 24));
+            document.getElementById('kr-dday-badge').innerText = `D-${krDiff} (매월 말 기준)`;
+        }
+
+        // 3. 초기 데이터 로드 및 LocalStorage 복원
         async function initApp() {
             loadSavedUserInputs();
+            updateDividendDday();
             try {
                 const response = await fetch('schd_data.json?v=' + new Date().getTime());
                 if (!response.ok) throw new Error("JSON 로드 실패");
@@ -732,19 +856,26 @@
             renderAll();
         }
 
-        // 3. 사용자 입력값 LocalStorage 저장/복원
+        // 4. 사용자 입력값 LocalStorage 저장/복원
         function loadSavedUserInputs() {
-            const savedAvg = localStorage.getItem('schd_my_avg');
-            const savedShares = localStorage.getItem('schd_my_shares');
-            const savedLump = localStorage.getItem('schd_sim_lump');
-            const savedMonthly = localStorage.getItem('schd_sim_monthly');
-            if (savedAvg) document.getElementById('my-avg-price').value = savedAvg;
-            if (savedShares) document.getElementById('my-shares').value = savedShares;
-            if (savedLump) document.getElementById('sim-lumpsum').value = savedLump;
-            if (savedMonthly) document.getElementById('sim-monthly').value = savedMonthly;
+            const keys = [
+                ['schd_my_avg', 'my-avg-price'],
+                ['schd_my_shares', 'my-shares'],
+                ['schd_my_kr_avg', 'my-kr-avg'],
+                ['schd_my_kr_curr', 'my-kr-curr'],
+                ['schd_my_kr_shares', 'my-kr-shares'],
+                ['schd_sim_lump', 'sim-lumpsum'],
+                ['schd_sim_monthly', 'sim-monthly']
+            ];
+            keys.forEach(([storageKey, domId]) => {
+                const val = localStorage.getItem(storageKey);
+                if (val !== null && document.getElementById(domId)) {
+                    document.getElementById(domId).value = val;
+                }
+            });
         }
 
-        // 4. 하단 메인 탭 전환
+        // 5. 탭 전환 함수
         function switchMainTab(tabId, btnEl) {
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
@@ -752,6 +883,11 @@
             if (btnEl) btnEl.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
             renderAll();
+        }
+
+        function triggerTabFromCta(tabId, navIndex) {
+            const navBtns = document.querySelectorAll('.nav-tab');
+            switchMainTab(tabId, navBtns[navIndex]);
         }
 
         function changePeriod(days, label, btnEl) {
@@ -775,7 +911,16 @@
             renderAll();
         }
 
-        // 5. 전체 대시보드 통합 렌더링
+        function switchMyPriceMarket(market) {
+            currentMyPriceMarket = market;
+            document.getElementById('btn-my-us').classList.toggle('active', market === 'US');
+            document.getElementById('btn-my-kr').classList.toggle('active', market === 'KR');
+            document.getElementById('my-us-inputs').style.display = market === 'US' ? 'block' : 'none';
+            document.getElementById('my-kr-inputs').style.display = market === 'KR' ? 'block' : 'none';
+            runMyPriceDiagnosis();
+        }
+
+        // 6. 전체 대시보드 통합 렌더링
         function renderAll() {
             if (!globalRawData) return;
 
@@ -826,11 +971,29 @@
             const currFairPrice = curr_div / (yP50 / 100);
             const currRiskPrice = curr_div / (yP10 / 100);
 
-            let status, color;
-            if (buy_score >= 90) { status = "🍯 전설의 꿀통 매수 구간"; color = "#4ade80"; }
-            else if (buy_score >= 70) { status = "😋 맛도리 분할 적립 구간"; color = "#34d399"; }
-            else if (buy_score >= 40) { status = "⚖️ 합리적 정가 매수 구간"; color = "#facc15"; }
-            else { status = "🚨 고평가 주의 / 관망 구간"; color = "#f87171"; }
+            // 점수 구간별 상태 및 구체적 Action Plan 설정
+            let status, color, actionTitle, actionText;
+            if (buy_score >= 90) {
+                status = "🍯 전설의 꿀통 매수 구간 (90 ~ 100점)";
+                color = "#4ade80";
+                actionTitle = "🔥 [적극 매수 권장] 파킹통장 대기 현금 집중 투입 구간";
+                actionText = `역사적 상위 ${cheaperPct.toFixed(1)}% 이내의 초특가 할인 상태입니다. 이번 달 정기 적립금 <b>100% 매수</b>는 물론, 증권사 CMA · 외화 RP · 연금계좌 내 파킹형 ETF에 비축해 둔 <b>대기 현금을 적극적으로 분할 투입</b>해 보유 주식 수를 늘리기 가장 좋은 시점입니다.`;
+            } else if (buy_score >= 70) {
+                status = "😋 맛도리 분할 적립 구간 (70 ~ 89점)";
+                color = "#34d399";
+                actionTitle = "✅ [비중 확대 권장] 정기 적립금 100% + 여유자금 분할 매수";
+                actionText = `평균보다 배당 매력이 뚜렷하게 높은 할인 구간입니다. 매월 투자하는 정기 적립금 <b>100%를 정상 매수</b>하고, 대기 현금의 <b>20 ~ 30%를 추가 투입</b>하여 평균 매수단가를 낮추는 전략이 유리합니다.`;
+            } else if (buy_score >= 40) {
+                status = "⚖️ 합리적 정가 매수 구간 (40 ~ 69점)";
+                color = "#facc15";
+                actionTitle = "⚖️ [표준 적립 권장] 계획된 월 적립금의 80 ~ 100% 기계적 매수";
+                actionText = `과거 평균치에 수렴하는 적정 가격 구간입니다. 목돈 거치식 매수는 자제하되, 연금저축 · IRP · ISA 계좌에서 매월 정해진 날짜에 <b>월 적립금의 80 ~ 100%를 흔들림 없이 정액 적립</b>하십시오.`;
+            } else {
+                status = "🚨 고평가 주의 / 속도 조절 구간 (0 ~ 39점)";
+                color = "#f87171";
+                actionTitle = "🛡️ [현금 비중 확대] 월 적립금 50%만 매수 + 50%는 외화 RP · 파킹 대기";
+                actionText = `주가 상승으로 시가배당률이 낮아진 상태입니다. 적립식 투자를 아예 멈추면 장기 복리가 끊기므로, <b>이번 달 적립금의 50%만 기본 매수</b>하고 나머지 <b>50%는 증권사 외화 RP나 파킹형 ETF(KOFR · CD금리)에 보관</b>했다가 70점 이상 조정장이 올 때 투입하십시오.`;
+            }
 
             document.getElementById('period-label-title').innerText = `${selectedPeriodLabel}(${yields.length.toLocaleString()} 영업일) 데이터와 비교한 매수 매력도`;
             document.getElementById('band-card-title').innerText = `📈 ${selectedPeriodLabel} 적정 주가 Yield Band`;
@@ -842,17 +1005,22 @@
             badge.style.color = color;
             badge.style.borderColor = color;
 
-            // 초보자용 한 줄 점수 풀이 업데이트
             document.getElementById('score-plain-desc').innerHTML = 
                 `${selectedPeriodLabel} 동안 오늘보다 배당수익률이 더 높았던(더 저렴했던) 날은 전체의 <b style="color:${color};">${cheaperPct.toFixed(1)}%</b>였습니다.`;
 
+            const actionBox = document.getElementById('action-plan-box');
+            actionBox.style.borderColor = color;
+            document.getElementById('action-plan-title').style.color = color;
+            document.getElementById('action-plan-title').innerText = actionTitle;
+            document.getElementById('action-plan-text').innerHTML = actionText;
+
             document.getElementById('curr-price').innerText = `$${curr_p.toFixed(2)}`;
-            document.getElementById('curr-div-sub').innerText = `4분기 합산 배당: $${curr_div.toFixed(4)}`;
+            document.getElementById('curr-div-sub').innerText = `직전 4분기 배당합: $${curr_div.toFixed(4)}`;
             document.getElementById('curr-yield').innerText = `${curr_y.toFixed(2)}%`;
             document.getElementById('fwd-yield-sub').innerText = `최근 분기 연환산: ${fwdYield.toFixed(2)}%`;
             document.getElementById('curr-fed').innerText = `${curr_fed.toFixed(2)}%`;
             document.getElementById('fed-match-score').innerText = `${fed_score}점`;
-            document.getElementById('fed-sample-sub').innerText = `표본 ${similarFedYields.length.toLocaleString()}일 비교`;
+            document.getElementById('fed-sample-sub').innerText = `유사 금리 ${similarFedYields.length.toLocaleString()}일 비교`;
 
             document.getElementById('updated-at-text').innerText = globalRawData.updated_at || "동기화 완료";
             document.getElementById('ref-date-text').innerText = lastDate;
@@ -872,7 +1040,7 @@
             updateSimUI();
         }
 
-        // 6. 메인 차트 렌더링
+        // 7. 메인 차트 렌더링
         function renderMainChart(dates, prices, ttmDivs, yields, fedRates, yP10, yP50, yP90, curr_y) {
             if (currentChartMode === 'band') {
                 const hPrices = ttmDivs.map(d => Number((d / (yP90 / 100)).toFixed(2)));
@@ -945,7 +1113,7 @@
             }
         }
 
-        // 7. 7대 기간 멀티 매트릭스 테이블 생성
+        // 8. 7대 기간 멀티 매트릭스 테이블
         function renderMultiPeriodMatrix(allYields, curr_y, curr_div) {
             const periods = [
                 { days: 21, label: '최근 1개월 (단기)' },
@@ -984,7 +1152,7 @@
             document.getElementById('multi-matrix-tbody').innerHTML = html;
         }
 
-        // 8. 배당 원장 검증 테이블 렌더링
+        // 9. 배당 원장 검증 테이블
         function renderDivLedgerTable(curr_div) {
             const tbody = document.getElementById('div-ledger-tbody');
             if (globalRawData.div_ledger && globalRawData.div_ledger.length >= 4) {
@@ -1002,54 +1170,97 @@
             }
         }
 
-        // 9. [탭 2] 내 평단 진단 및 물타기 시뮬레이터
+        // 10. [탭 2] 내 평단 진단 (미국 직투 $ & 국내 상장 ETF 원화 통합 지원)
         function runMyPriceDiagnosis() {
             if (!globalRawData) return;
-            const myAvg = parseFloat(document.getElementById('my-avg-price').value) || 28.0;
-            const myShares = parseFloat(document.getElementById('my-shares').value) || 0;
-            const addShares = parseFloat(document.getElementById('add-shares-slider').value) || 0;
 
-            localStorage.setItem('schd_my_avg', myAvg);
-            localStorage.setItem('schd_my_shares', myShares);
+            const curr_p_us = globalRawData.prices[globalRawData.prices.length - 1];
+            const curr_div_us = globalRawData.ttm_dividends[globalRawData.ttm_dividends.length - 1];
+            const curr_yield_pct = globalRawData.yields[globalRawData.yields.length - 1];
+            const fxRate = parseFloat(document.getElementById('fx-rate-slider').value) || 1380;
+            const addShares = parseFloat(document.getElementById('add-shares-slider').value) || 0;
 
             document.getElementById('add-shares-label').innerText = addShares.toLocaleString();
 
-            const curr_p = globalRawData.prices[globalRawData.prices.length - 1];
-            const curr_div = globalRawData.ttm_dividends[globalRawData.ttm_dividends.length - 1];
-            const fxRate = parseFloat(document.getElementById('fx-rate-slider').value) || 1380;
-
-            document.getElementById('sim-curr-p-label').innerText = `$${curr_p.toFixed(2)}`;
-
-            const myYoc = (curr_div / myAvg) * 100;
-            const totalShares = myShares + addShares;
-            const newAvg = totalShares > 0 ? ((myAvg * myShares) + (curr_p * addShares)) / totalShares : curr_p;
-            const newYoc = (curr_div / newAvg) * 100;
-
             const startIndex = selectedPeriodDays === 0 ? 0 : Math.max(0, globalRawData.yields.length - selectedPeriodDays);
             const subYields = globalRawData.yields.slice(startIndex);
-            const betterDays = subYields.filter(y => y > myYoc).length;
-            const myPercentile = (betterDays / subYields.length) * 100;
 
-            const currAnnualDiv = myShares * curr_div;
-            const newAnnualDiv = totalShares * curr_div;
-            const monthlyKrw = Math.round((currAnnualDiv * fxRate) / 12);
+            if (currentMyPriceMarket === 'US') {
+                const myAvg = parseFloat(document.getElementById('my-avg-price').value) || 28.0;
+                const myShares = parseFloat(document.getElementById('my-shares').value) || 0;
+                localStorage.setItem('schd_my_avg', myAvg);
+                localStorage.setItem('schd_my_shares', myShares);
 
-            document.getElementById('my-yoc-val').innerText = `${myYoc.toFixed(2)}%`;
-            document.getElementById('my-rank-sub').innerText = `선택 기간 상위 ${myPercentile.toFixed(1)}% 배당률`;
-            document.getElementById('new-avg-val').innerText = `$${newAvg.toFixed(2)}`;
-            document.getElementById('new-yoc-sub').innerText = `추매 후 YOC: ${newYoc.toFixed(2)}%`;
-            document.getElementById('my-annual-div').innerText = `$${currAnnualDiv.toFixed(2)}`;
-            document.getElementById('my-monthly-krw').innerText = `월평균 약 ${monthlyKrw.toLocaleString()}원`;
-            document.getElementById('new-annual-div').innerText = `$${newAnnualDiv.toFixed(2)}`;
-            document.getElementById('div-diff-sub').innerText = `연 +$${(newAnnualDiv - currAnnualDiv).toFixed(2)} 증가`;
+                document.getElementById('sim-curr-p-label').innerText = `$${curr_p_us.toFixed(2)}`;
 
-            const diffP = curr_p - myAvg;
-            document.getElementById('my-diagnosis-comment').innerHTML = diffP >= 0
-                ? `💡 <b>진단 결과:</b> 현재 시장가($${curr_p.toFixed(2)})가 보유 평단가($${myAvg.toFixed(2)})보다 <b>+${((diffP/myAvg)*100).toFixed(1)}%</b> 높습니다. 이미 유리한 평단가를 확보하셨으므로, 매수 매력 점수가 70점 이상일 때만 분할 추매하여 평단가 상승 폭을 제어하는 전략이 유효합니다.`
-                : `💡 <b>진단 결과:</b> 현재 시장가($${curr_p.toFixed(2)})가 보유 평단가($${myAvg.toFixed(2)})보다 <b>${((diffP/myAvg)*100).toFixed(1)}%</b> 낮아 <b>평단가를 낮추면서 YOC를 ${myYoc.toFixed(2)}% → ${newYoc.toFixed(2)}%로 끌어올릴 수 있는 물타기 구간</b>입니다.`;
+                const myYoc = (curr_div_us / myAvg) * 100;
+                const totalShares = myShares + addShares;
+                const newAvg = totalShares > 0 ? ((myAvg * myShares) + (curr_p_us * addShares)) / totalShares : curr_p_us;
+                const newYoc = (curr_div_us / newAvg) * 100;
+
+                const betterDays = subYields.filter(y => y > myYoc).length;
+                const myPercentile = (betterDays / subYields.length) * 100;
+
+                const currAnnualDiv = myShares * curr_div_us;
+                const newAnnualDiv = totalShares * curr_div_us;
+                const monthlyKrw = Math.round((currAnnualDiv * fxRate) / 12);
+
+                document.getElementById('my-yoc-val').innerText = `${myYoc.toFixed(2)}%`;
+                document.getElementById('my-rank-sub').innerText = `선택 기간 상위 ${myPercentile.toFixed(1)}% 배당률`;
+                document.getElementById('new-avg-val').innerText = `$${newAvg.toFixed(2)}`;
+                document.getElementById('new-yoc-sub').innerText = `추매 후 YOC: ${newYoc.toFixed(2)}%`;
+                document.getElementById('my-annual-div').innerText = `$${currAnnualDiv.toFixed(2)}`;
+                document.getElementById('my-monthly-krw').innerText = `세전 월평균 약 ${monthlyKrw.toLocaleString()}원`;
+                document.getElementById('new-annual-div').innerText = `$${newAnnualDiv.toFixed(2)}`;
+                document.getElementById('div-diff-sub').innerText = `연 +$${(newAnnualDiv - currAnnualDiv).toFixed(2)} 증가`;
+
+                const diffP = curr_p_us - myAvg;
+                document.getElementById('my-diagnosis-comment').innerHTML = diffP >= 0
+                    ? `💡 <b>미국 직투 평단 진단:</b> 현재 주가($${curr_p_us.toFixed(2)})가 내 평단가($${myAvg.toFixed(2)})보다 <b>+${((diffP/myAvg)*100).toFixed(1)}%</b> 높습니다. 이미 상위 ${myPercentile.toFixed(1)}%의 우수한 평단가를 보유 중이시므로, 레이더 점수가 70점 이상일 때만 분할 추매하시기 바랍니다.`
+                    : `💡 <b>미국 직투 평단 진단:</b> 현재 주가($${curr_p_us.toFixed(2)})가 내 평단가($${myAvg.toFixed(2)})보다 <b>${((diffP/myAvg)*100).toFixed(1)}%</b> 낮아 <b>추매 시 평단가를 낮추면서 YOC를 ${myYoc.toFixed(2)}% → ${newYoc.toFixed(2)}%로 높일 수 있는 물타기 구간</b>입니다.`;
+            } else {
+                // 국내 상장 미국배당다우존스(원화) 계산 모드
+                const krAvg = parseFloat(document.getElementById('my-kr-avg').value) || 13200;
+                const krCurr = parseFloat(document.getElementById('my-kr-curr').value) || 13800;
+                const krShares = parseFloat(document.getElementById('my-kr-shares').value) || 0;
+
+                localStorage.setItem('schd_my_kr_avg', krAvg);
+                localStorage.setItem('schd_my_kr_curr', krCurr);
+                localStorage.setItem('schd_my_kr_shares', krShares);
+
+                document.getElementById('sim-curr-p-label').innerText = `${krCurr.toLocaleString()}원`;
+
+                // 국내 ETF 1주당 연간 예상 분배금 = 현재 국내 ETF 주가 × 기초지수 시가배당률
+                const estKrDivPerShare = krCurr * (curr_yield_pct / 100);
+                const myYoc = (estKrDivPerShare / krAvg) * 100;
+                const totalShares = krShares + addShares;
+                const newAvg = totalShares > 0 ? ((krAvg * krShares) + (krCurr * addShares)) / totalShares : krCurr;
+                const newYoc = (estKrDivPerShare / newAvg) * 100;
+
+                const betterDays = subYields.filter(y => y > myYoc).length;
+                const myPercentile = (betterDays / subYields.length) * 100;
+
+                const currAnnualKrw = Math.round(krShares * estKrDivPerShare);
+                const newAnnualKrw = Math.round(totalShares * estKrDivPerShare);
+                const monthlyKrw = Math.round(currAnnualKrw / 12);
+
+                document.getElementById('my-yoc-val').innerText = `${myYoc.toFixed(2)}%`;
+                document.getElementById('my-rank-sub').innerText = `선택 기간 상위 ${myPercentile.toFixed(1)}% 경쟁력`;
+                document.getElementById('new-avg-val').innerText = `${Math.round(newAvg).toLocaleString()}원`;
+                document.getElementById('new-yoc-sub').innerText = `추매 후 YOC: ${newYoc.toFixed(2)}%`;
+                document.getElementById('my-annual-div').innerText = `${currAnnualKrw.toLocaleString()}원`;
+                document.getElementById('my-monthly-krw').innerText = `월배당 약 ${monthlyKrw.toLocaleString()}원`;
+                document.getElementById('new-annual-div').innerText = `${newAnnualKrw.toLocaleString()}원`;
+                document.getElementById('div-diff-sub').innerText = `연 +${(newAnnualKrw - currAnnualKrw).toLocaleString()}원 증가`;
+
+                const diffKr = krCurr - krAvg;
+                document.getElementById('my-diagnosis-comment').innerHTML = diffKr >= 0
+                    ? `💡 <b>국내 ETF(연금저축 · IRP · ISA) 진단:</b> 현재가(${krCurr.toLocaleString()}원)가 내 평단가(${krAvg.toLocaleString()}원) 대비 <b>+${((diffKr/krAvg)*100).toFixed(1)}%</b> 수익 구간입니다. 내 원금 대비 분배율(YOC)은 약 <b>${myYoc.toFixed(2)}%</b>로 추산됩니다.`
+                    : `💡 <b>국내 ETF(연금저축 · IRP · ISA) 진단:</b> 현재가(${krCurr.toLocaleString()}원)가 내 평단가(${krAvg.toLocaleString()}원)보다 <b>${((diffKr/krAvg)*100).toFixed(1)}%</b> 낮아 <b>${addShares}주 추매 시 평단가를 ${Math.round(newAvg).toLocaleString()}원으로 낮출 수 있는 기회</b>입니다.`;
+            }
         }
 
-        // 10. [탭 3] 국내 ETF & 환율 2x2 매트릭스 판독
+        // 11. [탭 3] 국내 ETF & 환율 2x2 매트릭스 판독
         function runKrEtfAnalysis() {
             if (!globalRawData) return;
             const currFx = parseFloat(document.getElementById('fx-rate-slider').value) || 1380;
@@ -1076,14 +1287,14 @@
             } else if (schdScore >= 60 && fxScore < 50) {
                 verdict = `🟡 <b>[주가 저평가 + 고환율 구간]</b><br>SCHD 자체는 저렴하지만 원/달러 환율이 높은 부담 구간입니다. 달러 신규 환전보다는 <b>연금저축/ISA 내 기존 원화 예수금을 활용한 분할 적립</b>이나 <b>환헤지형(H) ETF</b> 병행을 권장합니다.`;
             } else if (schdScore < 60 && fxScore >= 50) {
-                verdict = `🔵 <b>[주가 고평가 + 환율 저렴 구간]</b><br>SCHD 주가는 다소 높으나 달러 환율이 저렴합니다. 주식을 바로 추격 매수하기보다 <b>달러(USD)를 미리 환전해 외화 RP에 보관</b>하며 SCHD 매수 점수가 70점 이상으로 올라올 때를 대기하는 전략이 유리합니다.`;
+                verdict = `🔵 <b>[주가 고평가 + 환율 저렴 구간]</b><br>SCHD 주가는 다소 높으나 달러 환율이 저렴합니다. 주식을 바로 추격 매수하기보다 <b>달러(USD)를 미리 환전해 증권사 외화 RP에 보관</b>하며 SCHD 매수 점수가 70점 이상으로 올라올 때를 대기하는 전략이 유리합니다.`;
             } else {
-                verdict = `🔴 <b>[관망 권장: 주가 고평가 + 고환율 구간]</b><br>배당수익률 매력도가 낮고 환율도 높습니다. 거치식 목돈 투입은 자제하고, 연금계좌 내 기존 배당금(분배금) 재투자 정도로만 속도를 조절하십시오.`;
+                verdict = `🔴 <b>[속도 조절 구간: 주가 고평가 + 고환율]</b><br>배당수익률 매력도가 낮고 환율도 높습니다. 거치식 목돈 투입은 자제하고, 연금계좌 내 기존 분배금 재투자와 파킹형 ETF 대기로 속도를 조절하십시오.`;
             }
             document.getElementById('kr-matrix-verdict').innerHTML = verdict;
         }
 
-        // 11. [탭 4] 은퇴 타임머신 시뮬레이터 & 차트
+        // 12. [탭 4] 은퇴 타임머신 시뮬레이터 (신규 적립금 YOC 분리 수식 교정 완료)
         function updateSimUI() {
             const lumpsum = parseInt(document.getElementById('sim-lumpsum').value);
             const monthly = parseInt(document.getElementById('sim-monthly').value);
@@ -1100,29 +1311,40 @@
             }
 
             const principal = lumpsum * 10000;
-            const m_add = monthly * 10000;
+            const annualAdd = monthly * 12 * 10000;
             const gRate = cagr / 100;
+            const marketYield = currentYieldDecimal; // 당해 시가배당률 (예: 0.032)
 
             let yearsArr = [], taxFreeMonthly = [], taxedMonthly = [];
-            let assetFree = principal, assetTaxed = principal;
-            let yocFree = currentYieldDecimal, yocTaxed = currentYieldDecimal;
+            
+            // 초기 거치금이 첫해 창출하는 연간 배당금
+            let annualDivFree = principal * marketYield;
+            let annualDivTaxed = principal * marketYield;
 
             for (let y = 1; y <= 15; y++) {
-                assetFree += (m_add * 12);
-                assetTaxed += (m_add * 12);
+                if (y > 1) {
+                    // 기존 보유 주식에서 나오는 배당금은 배당성장률(gRate)만큼 증가
+                    annualDivFree = annualDivFree * (1 + gRate);
+                    annualDivTaxed = annualDivTaxed * (1 + gRate);
+                }
 
-                const annualDivFree = assetFree * yocFree;
-                const annualDivTaxed = assetTaxed * yocTaxed * (1 - 0.154);
+                // 당해 신규 적립금(연중 균등 투입 고려 0.5년 치 선반영 후 익년 온기 반영)이 창출하는 신규 배당
+                const newContribDiv = annualAdd * marketYield;
+                annualDivFree += newContribDiv;
+                annualDivTaxed += newContribDiv;
 
-                assetFree += annualDivFree;
-                assetTaxed += annualDivTaxed;
+                // 당해 발생한 배당금을 재투자(DRIP)하여 추가로 늘어나는 배당금
+                const reinvestDivFree = annualDivFree * marketYield;
+                const netDivTaxed = annualDivTaxed * (1 - 0.154); // 일반계좌 15.4% 배당세 원천징수
+                const reinvestDivTaxed = netDivTaxed * marketYield;
 
-                yocFree *= (1 + gRate);
-                yocTaxed *= (1 + gRate);
+                annualDivFree += reinvestDivFree;
+                annualDivTaxed += reinvestDivTaxed;
 
                 yearsArr.push(y + '년 후');
-                taxFreeMonthly.push(Math.round((assetFree * yocFree) / 12 / 10000));
-                taxedMonthly.push(Math.round(((assetTaxed * yocTaxed) * (1 - 0.154)) / 12 / 10000));
+                // 연금계좌 세전 월 배당금 vs 일반계좌 세후(15.4% 차감) 월 배당금
+                taxFreeMonthly.push(Math.round(annualDivFree / 12 / 10000));
+                taxedMonthly.push(Math.round((annualDivTaxed * (1 - 0.154)) / 12 / 10000));
             }
 
             document.getElementById('res-5y').innerText = `${taxFreeMonthly[4].toLocaleString()}만 원/월`;
@@ -1146,7 +1368,7 @@
             Plotly.react('drip-chart', traces, layout, { responsive: true, displayModeBar: false });
         }
 
-        // 12. 폴백 데이터 생성기
+        // 13. 폴백 데이터 생성기
         function generateFallbackData() {
             const dates = [], prices = [], ttm_dividends = [], yields = [], fed_rates = [], fx_rates = [];
             let p = 24.0, d = 0.78;
