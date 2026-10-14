@@ -1,40 +1,39 @@
-name: Update SCHD Radar Data
+name: Update SCHD Quant Data
 
 on:
   schedule:
-    - cron: '0 14 * * 1-5'
-    - cron: '0 15 * * 1-5'
-    - cron: '15 20 * * 1-5'
+    # 하루 2회 자동 실행 (UTC 기준: 한국시간 밤 11시 10분 & 오전 6시 15분)
+    - cron: '10 14 * * 1-5'
     - cron: '15 21 * * 1-5'
-  workflow_dispatch:
+  workflow_dispatch: # GitHub 웹/앱에서 언제든 즉시 수동 실행 가능하게 해주는 옵션
 
 permissions:
   contents: write
 
 jobs:
-  update-radar:
+  update-data:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          # cache: 'pip' 라인 제거
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
-          pip install yfinance pandas requests
+          python -m pip install --upgrade pip
+          pip install yfinance pandas numpy pandas_datareader
 
-      - name: Run Data Engine
-        run: |
-          python generate_radar_data.py
+      - name: Run generate_radar_data.py
+        run: python generate_radar_data.py
 
-      - name: Commit and Push Changes
+      - name: Commit and Push updated schd_data.json
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add schd_data.json
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto Update SCHD Radar Data [skip ci]" && git push)
+          git diff --staged --quiet || git commit -m "chore: auto-update schd_data.json (max period & fx)"
+          git push
