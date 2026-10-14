@@ -1,39 +1,51 @@
-name: Update SCHD Quant Data
+name: Update SCHD Radar Data
+
+# ============================================================================
+# [스케줄링 및 비용 최적화 정책 주석]
+# 1. 갱신 주기: 평일(월~금) 일 5회 자동 실행 (미국 정규장 개장~마감 집중 커버)
+# 2. 시간대 기준 (UTC 기준 -> 한국 시간 KST = UTC + 9시간):
+#    - 14:00 UTC (23:00 KST): 미국 서머타임 개장 30분 후 / 표준시 개장 30분 전
+#    - 16:00 UTC (01:00 KST): 미국 장중 초반 (국내 투자자 취침 전 확인 시간대)
+#    - 18:00 UTC (03:00 KST): 미국 장중 중반 (FOMC 등 주요 매크로 이벤트 반영)
+#    - 20:15 UTC (05:15 KST): 미국 서머타임(EDT) 장 마감 15분 후 최종 확정 종가
+#    - 21:15 UTC (06:15 KST): 미국 표준시(EST) 장 마감 15분 후 최종 확정 종가
+# 3. GitHub 무료 한도 검증:
+#    - Public 저장소: 무제한 무료 ($0/월)
+#    - 1회 실행 약 30초 소요 × 일 5회 × 월 22일 = 월 약 55분 (Private 한도 2,000분의 2.7% 수준)
+# ============================================================================
 
 on:
   schedule:
-    # 하루 2회 자동 실행 (UTC 기준: 한국시간 밤 11시 10분 & 오전 6시 15분)
-    - cron: '10 14 * * 1-5'
-    - cron: '15 21 * * 1-5'
-  workflow_dispatch: # GitHub 웹/앱에서 언제든 즉시 수동 실행 가능하게 해주는 옵션
+    - cron: '0 14,16,18 * * 1-5'
+    - cron: '15 20,21 * * 1-5'
+  workflow_dispatch: # 수동 즉시 실행 버튼 활성화
 
 permissions:
   contents: write
 
 jobs:
-  update-data:
+  update-radar:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install yfinance pandas numpy pandas_datareader
+          pip install yfinance pandas requests
 
-      - name: Run generate_radar_data.py
-        run: python generate_radar_data.py
-
-      - name: Commit and Push updated schd_data.json
+      - name: Run Quant Data Engine
         run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
+          python generate_radar_data.py
+
+      - name: Commit and Push Updated JSON
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add schd_data.json
-          git diff --staged --quiet || git commit -m "chore: auto-update schd_data.json (max period & fx)"
-          git push
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: auto-update SCHD quant data [skip ci]" && git push)
