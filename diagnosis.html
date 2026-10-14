@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>내 SCHD 평단가 YOC 티어 진단기 & 물타기 계산기 | dividend.besmelt.com</title>
+  <meta name="description" content="내 SCHD 평균단가는 상장 이후 상위 몇 % 타점일까? 투자원금 대비 배당수익률(YOC) 티어 판독 및 추매 물타기 시뮬레이터" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2894031755177844" crossorigin="anonymous"></script>
+  <!-- html2canvas (바이럴 공유 이미지 캡처용) -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+
+  <header id="appHeader" class="app-header"></header>
+
+  <main class="app-container">
+    <!-- 1. 내 평단가 & 보유 수량 입력 카드 -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h1 class="card-title">🎯 내 SCHD 평단가 YOC 티어 판독기</h1>
+          <p class="card-subtitle">입력한 정보는 내 브라우저에만 안전하게 자동 저장됩니다.</p>
+        </div>
+      </div>
+
+      <div class="hero-grid" style="grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="myAvgPrice">내 평균 매수단가 ($)</label>
+          <input type="number" id="myAvgPrice" class="form-input" step="0.01" min="1" max="100" value="26.80" />
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label" for="myShares">현재 보유 수량 (주)</label>
+          <input type="number" id="myShares" class="form-input" step="1" min="1" max="1000000" value="300" />
+        </div>
+      </div>
+
+      <div style="margin-top: 12px;">
+        <button class="btn-primary" onclick="runDiagnosis()">🔍 내 평단가 상위 몇 %인지 진단하기</button>
+      </div>
+    </section>
+
+    <!-- 2. 상단 애드센스 광고 슬롯 (진단 입력부와 결과 카드 사이 샌드위치 배치) -->
+    <div class="ad-slot-wrapper">
+      <div class="ad-label">Sponsored</div>
+      <ins class="adsbygoogle"
+           style="display:block; width:100%;"
+           data-ad-client="ca-pub-2894031755177844"
+           data-ad-slot="3305729383"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- 3. 바이럴 캡처 대상: 내 배당 성적표 카드 -->
+    <section id="viralShareCard" class="card" style="position: relative; overflow: hidden;">
+      <div class="card-header">
+        <div>
+          <div class="card-title">🏆 나의 SCHD 배당 퀀트 성적표</div>
+          <div id="diagDateSub" class="card-subtitle">2012년 10월 이후 전체 영업일 데이터 대조 결과</div>
+        </div>
+        <span class="brand-badge" style="font-size: 0.72rem; padding: 4px 8px;">dividend.besmelt.com</span>
+      </div>
+
+      <div class="hero-grid">
+        <div class="score-display-box">
+          <div id="myScoreRing" class="score-ring">
+            <span id="myScoreNum" class="score-number">--</span>
+            <span class="score-unit">/ 100점</span>
+          </div>
+          <div>
+            <span id="myTierBadge" class="status-pill">티어 산출 중</span>
+            <div id="myTopPercentText" style="font-size: 1.05rem; font-weight: 800; margin-bottom: 3px;">
+              역사상 상위 --% 타점
+            </div>
+            <div id="myTierComment" style="font-size: 0.82rem; color: var(--text-secondary);">
+              평단가를 입력하면 분석 결과가 표시됩니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-mini-grid">
+          <div class="kpi-mini-box">
+            <div class="kpi-label">내 투자원금 배당률(YOC)</div>
+            <div id="myYocVal" class="kpi-val" style="color: var(--score-diamond);">--%</div>
+          </div>
+          <div class="kpi-mini-box">
+            <div class="kpi-label">현재 시가배당률 대비</div>
+            <div id="myYieldDiffVal" class="kpi-val">--%p</div>
+          </div>
+          <div class="kpi-mini-box">
+            <div class="kpi-label">연간 세전 배당금</div>
+            <div id="myAnnualDivUsd" class="kpi-val">$--</div>
+          </div>
+          <div class="kpi-mini-box">
+            <div class="kpi-label">월평균 세후 배당금(원화)</div>
+            <div id="myMonthlyDivKrw" class="kpi-val">약 --원</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="capitalGainBar" class="quant-insight-box" style="margin-top: 14px;">
+        현재 주가 대비 평가손익 계산 중...
+      </div>
+    </section>
+
+    <!-- 스레드/인스타 공유 이미지 저장 버튼 -->
+    <div style="margin-bottom: 16px;">
+      <button class="btn-primary" style="background: #10b981;" onclick="downloadShareCard()">
+        📸 스레드·인스타 공유용 성적표 이미지 저장하기
+      </button>
+    </div>
+
+    <!-- 4. 실시간 추매(물타기/불타기) 타점 시뮬레이터 -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">💧 실시간 추매(물타기·불타기) 시뮬레이터</h2>
+          <p class="card-subtitle">오늘 현재가(<span id="curPriceInline">$--</span>)로 추가 매수할 때 내 평단가와 YOC 변화를 미리 확인하세요.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span class="form-label" style="margin-bottom: 0;">오늘 추가 매수할 수량</span>
+          <strong id="addSharesLabel" style="color: var(--accent-primary); font-size: 0.95rem;">+50주 추매</strong>
+        </div>
+        <input type="range" id="addSharesSlider" min="0" max="1000" step="5" value="50" style="width: 100%; accent-color: var(--accent-primary); cursor: pointer;" oninput="updateWateringSim()" />
+        <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted); margin-top: 4px;">
+          <span>0주</span>
+          <span>250주</span>
+          <span>500주</span>
+          <span>750주</span>
+          <span>1,000주</span>
+        </div>
+      </div>
+
+      <div class="band-legend-grid">
+        <div class="band-item">
+          <div class="band-item-title">변경 후 새 평단가</div>
+          <div id="simNewAvgPrice" class="band-item-val">$--</div>
+          <div id="simAvgDiff" style="font-size: 0.72rem; color: var(--text-secondary);">기존 대비 --</div>
+        </div>
+        <div class="band-item">
+          <div class="band-item-title">변경 후 새 YOC · 점수</div>
+          <div id="simNewYoc" class="band-item-val" style="color: var(--score-diamond);">--%</div>
+          <div id="simNewScore" style="font-size: 0.72rem; color: var(--text-secondary);">매력도 --점</div>
+        </div>
+        <div class="band-item">
+          <div class="band-item-title">필요 추매 자금</div>
+          <div id="simNeedUsd" class="band-item-val">$--</div>
+          <div id="simNeedKrw" style="font-size: 0.72rem; color: var(--text-secondary);">약 --만 원</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 다음 페이지 이동 네이티브 CTA -->
+    <a href="kschd.html" class="cta-next-card">
+      <div>
+        <div class="cta-title">🇰🇷 연금저축·ISA에서 모으는 국내 미국배당다우존스 투자자라면?</div>
+        <div class="cta-desc">원/달러 환율 반영 체감 매수 점수 & 일반계좌 vs ISA vs 연금계좌 세후 배당금 비교하기</div>
+      </div>
+      <div class="cta-arrow">→</div>
+    </a>
+
+    <a href="simulator.html" class="cta-next-card">
+      <div>
+        <div class="cta-title">🚀 이 수량 그대로 10년 뒤면 월 배당 얼마를 받을까?</div>
+        <div class="cta-desc">과거 실전 백테스팅("그때 샀더라면") & 파이어족 은퇴 목표 시뮬레이터 돌리기</div>
+      </div>
+      <div class="cta-arrow">→</div>
+    </a>
+
+    <footer class="app-footer">
+      <p>© 2026 dividend.besmelt.com · SCHD 배당 퀀트 솔루션</p>
+    </footer>
+  </main>
+
+  <nav id="bottomNav" class="bottom-nav"></nav>
+
+  <script src="common.js"></script>
+  <script>
+    let globalData = null;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      renderAppShell("diagnosis");
+      triggerAdSense();
+
+      // 저장된 내 평단가·수량 불러오기
+      const savedAvg = localStorage.getItem("MY_SCHD_AVG");
+      const savedShares = localStorage.getItem("MY_SCHD_SHARES");
+      if (savedAvg) document.getElementById("myAvgPrice").value = savedAvg;
+      if (savedShares) document.getElementById("myShares").value = savedShares;
+
+      try {
+        globalData = await loadSchdData();
+        runDiagnosis();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    function runDiagnosis() {
+      if (!globalData) return;
+
+      const avgPrice = parseFloat(document.getElementById("myAvgPrice").value) || 26.8;
+      const shares = parseFloat(document.getElementById("myShares").value) || 100;
+
+      localStorage.setItem("MY_SCHD_AVG", avgPrice);
+      localStorage.setItem("MY_SCHD_SHARES", shares);
+
+      const { price: curPrice, yield: curYield, ttm_dividend: ttmDiv, date } = globalData.latest;
+      const usdkrw = globalData.latest.usdkrw || 1380;
+
+      document.getElementById("curPriceInline").textContent = `$${curPrice.toFixed(2)}`;
+      document.getElementById("diagDateSub").textContent =
+        `기준일: ${date} (전체 ${globalData.yields.length.toLocaleString()}영업일 대비)`;
+
+      // 내 YOC 및 역사적 백분위 점수 산출
+      const myYoc = (ttmDiv / avgPrice) * 100;
+      const myScore = calcAttractivenessScore(globalData.yields, myYoc);
+      const topPct = Math.max(1, 100 - myScore);
+      const meta = getScoreMeta(myScore);
+
+      const ringEl = document.getElementById("myScoreRing");
+      const numEl = document.getElementById("myScoreNum");
+      const badgeEl = document.getElementById("myTierBadge");
+
+      numEl.textContent = myScore;
+      numEl.style.color = meta.color;
+      ringEl.style.borderColor = meta.color;
+      ringEl.style.background = meta.bg;
+
+      badgeEl.textContent = meta.tier;
+      badgeEl.style.background = meta.bg;
+      badgeEl.style.color = meta.color;
+
+      document.getElementById("myTopPercentText").textContent =
+        `SCHD 역사상 상위 ${topPct}% 타점`;
+      document.getElementById("myTierComment").textContent =
+        `내 평단가($${avgPrice.toFixed(2)})는 현재 연간 배당금 기준 연 ${myYoc.toFixed(2)}%의 배당수익률(YOC)을 창출합니다.`;
+
+      // 우측 미니 KPI 4종 업데이트
+      document.getElementById("myYocVal").textContent = `${myYoc.toFixed(2)}%`;
+      const diffYield = myYoc - curYield;
+      const diffEl = document.getElementById("myYieldDiffVal");
+      diffEl.textContent = `${diffYield >= 0 ? "+" : ""}${diffYield.toFixed(2)}%p`;
+      diffEl.style.color = diffYield >= 0 ? "var(--score-diamond)" : "var(--score-hot)";
+
+      const annualUsd = shares * ttmDiv;
+      const monthlyAfterTaxKrw = Math.round(((annualUsd * 0.846) / 12) * usdkrw);
+      document.getElementById("myAnnualDivUsd").textContent = `$${annualUsd.toFixed(2)}`;
+      document.getElementById("myMonthlyDivKrw").textContent = `약 ${monthlyAfterTaxKrw.toLocaleString()}원`;
+
+      // 시세차익 요약 바
+      const priceReturnPct = ((curPrice - avgPrice) / avgPrice) * 100;
+      const totalGainUsd = (curPrice - avgPrice) * shares;
+      const sign = priceReturnPct >= 0 ? "+" : "";
+      document.getElementById("capitalGainBar").innerHTML =
+        `💼 <strong>보유 자산 브리핑:</strong> 총 <strong>${shares.toLocaleString()}주</strong> 보유 중 · 현재가($${curPrice.toFixed(2)}) 기준 평가손익 <strong>${sign}$${totalGainUsd.toFixed(2)} (${sign}${priceReturnPct.toFixed(2)}%)</strong>`;
+
+      updateWateringSim();
+    }
+
+    function updateWateringSim() {
+      if (!globalData) return;
+
+      const avgPrice = parseFloat(document.getElementById("myAvgPrice").value) || 26.8;
+      const shares = parseFloat(document.getElementById("myShares").value) || 100;
+      const addShares = parseFloat(document.getElementById("addSharesSlider").value) || 0;
+
+      const { price: curPrice, ttm_dividend: ttmDiv } = globalData.latest;
+      const usdkrw = globalData.latest.usdkrw || 1380;
+
+      document.getElementById("addSharesLabel").textContent = `+${addShares.toLocaleString()}주 추매`;
+
+      const totalCost = (avgPrice * shares) + (curPrice * addShares);
+      const newTotalShares = shares + addShares;
+      const newAvgPrice = newTotalShares > 0 ? totalCost / newTotalShares : avgPrice;
+      const avgDiff = newAvgPrice - avgPrice;
+
+      const newYoc = (ttmDiv / newAvgPrice) * 100;
+      const newScore = calcAttractivenessScore(globalData.yields, newYoc);
+
+      const needUsd = addShares * curPrice;
+      const needKrwMan = Math.round((needUsd * usdkrw) / 10000);
+
+      document.getElementById("simNewAvgPrice").textContent = `$${newAvgPrice.toFixed(2)}`;
+      document.getElementById("simAvgDiff").textContent =
+        `기존 대비 ${avgDiff >= 0 ? "+" : ""}$${avgDiff.toFixed(2)}`;
+
+      document.getElementById("simNewYoc").textContent = `${newYoc.toFixed(2)}%`;
+      document.getElementById("simNewScore").textContent = `역사적 매력도 ${newScore}점`;
+
+      document.getElementById("simNeedUsd").textContent = `$${needUsd.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
+      document.getElementById("simNeedKrw").textContent = `약 ${needKrwMan.toLocaleString()}만 원`;
+    }
+
+    async function downloadShareCard() {
+      const target = document.getElementById("viralShareCard");
+      const bg = getComputedStyle(document.documentElement).getPropertyValue("--bg-card").trim() || "#151c2c";
+      try {
+        const canvas = await html2canvas(target, {
+          backgroundColor: bg,
+          scale: 2
+        });
+        const link = document.createElement("a");
+        link.download = `schd_my_tier_${Date.now()}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      } catch (e) {
+        alert("이미지 생성 중 오류가 발생했습니다. 화면 캡처를 이용해 주세요.");
+      }
+    }
+  </script>
+</body>
+</html>
