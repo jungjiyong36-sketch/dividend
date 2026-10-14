@@ -31,28 +31,30 @@
             margin: 0; padding: 0;
             background-color: var(--bg-main); color: var(--text-main);
             overflow-x: hidden;
-            padding-bottom: 85px; /* 하단 고정 탭바 여백 */
+            padding-bottom: 85px;
         }
         
         .container { max-width: 880px; margin: 0 auto; padding: 14px 16px; }
 
-        /* 상단 고정 헤더 */
+        /* 심플하고 깔끔한 상단 헤더 (불필요한 버튼 제거 완료) */
         .top-nav {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 10px 0 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 14px;
+            display: flex; flex-direction: column; gap: 4px;
+            padding: 8px 0 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 14px;
         }
-        .brand-title { font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; gap: 7px; letter-spacing: -0.3px; }
+        .brand-row {
+            display: flex; align-items: center; gap: 8px;
+        }
+        .brand-title {
+            font-size: 1.3rem; font-weight: 800; letter-spacing: -0.4px; margin: 0;
+            white-space: nowrap;
+        }
         .pro-badge {
             background: linear-gradient(135deg, #3b82f6, #2563eb); color: #fff;
-            font-size: 0.68rem; font-weight: 800; padding: 3px 7px; border-radius: 6px;
+            font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 6px;
         }
-        .top-actions { display: flex; gap: 6px; align-items: center; }
-        .threads-link, .share-btn {
-            background: var(--bg-card); color: #e2e8f0; border: 1px solid var(--border);
-            padding: 6px 11px; border-radius: 18px; font-size: 0.76rem; font-weight: 600;
-            text-decoration: none; cursor: pointer; transition: 0.2s;
+        .brand-sub {
+            font-size: 0.8rem; color: var(--text-muted); margin: 0;
         }
-        .threads-link:hover, .share-btn:hover { border-color: var(--accent); color: #fff; }
 
         /* 애드센스 컨테이너 (CLS 원천 차단) */
         .ad-slot-box {
@@ -75,25 +77,54 @@
         .card-header-title { margin: 0 0 5px 0; font-size: 1.15rem; font-weight: 800; display: flex; align-items: center; gap: 6px; }
         .card-header-sub { margin: 0 0 16px 0; font-size: 0.82rem; color: var(--text-muted); line-height: 1.45; }
 
-        /* 메인 점수 */
-        .score-hero { text-align: center; padding: 10px 0; }
-        .score-value { font-size: 4.4rem; font-weight: 800; line-height: 1; margin: 10px 0; letter-spacing: -2px; }
+        /* 메인 점수 히어로 섹션 */
+        .score-hero { text-align: center; padding: 6px 0 14px 0; }
+        .score-value { font-size: 4.5rem; font-weight: 800; line-height: 1; margin: 10px 0; letter-spacing: -2px; }
         .status-badge {
             font-size: 1rem; font-weight: 700; padding: 7px 18px; 
             border-radius: 50px; display: inline-block; margin-top: 4px; border: 1.5px solid;
         }
+        .score-plain-summary {
+            margin: 12px auto 0 auto; font-size: 0.86rem; color: #cbd5e1;
+            line-height: 1.5; max-width: 560px;
+        }
 
-        /* 7단계 기간 선택 바 */
+        /* 직관적인 비교 기간 선택 박스 (초보자 친화형 UI) */
+        .period-selector-wrap {
+            background: var(--bg-sub); border: 1px solid var(--border);
+            border-radius: 16px; padding: 14px; margin: 16px 0;
+        }
+        .period-selector-header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 10px; font-size: 0.82rem; font-weight: 700; color: #e2e8f0;
+        }
+        .period-selector-header span.hint {
+            font-size: 0.74rem; font-weight: 500; color: var(--text-muted);
+        }
         .period-group {
-            display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px;
-            background: var(--bg-sub); padding: 5px; border-radius: 12px; margin: 18px 0 14px 0;
-            border: 1px solid var(--border);
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px;
         }
         .filter-btn {
-            border: none; background: transparent; padding: 8px 0; font-size: 0.78rem;
-            font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: 0.15s;
+            border: 1px solid #1e293b; background: #151f32; padding: 8px 4px;
+            border-radius: 10px; cursor: pointer; transition: 0.15s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+            font-family: inherit;
         }
-        .filter-btn.active { background: var(--accent); color: #ffffff; box-shadow: 0 2px 8px rgba(59,130,246,0.35); }
+        .filter-btn .p-main { font-size: 0.84rem; font-weight: 800; color: #e2e8f0; }
+        .filter-btn .p-sub { font-size: 0.66rem; font-weight: 600; color: var(--text-muted); white-space: nowrap; }
+        .filter-btn.active {
+            background: var(--accent); border-color: #60a5fa;
+            box-shadow: 0 3px 10px rgba(59,130,246,0.35);
+        }
+        .filter-btn.active .p-main, .filter-btn.active .p-sub { color: #ffffff; }
+
+        /* 선택 기간 실시간 해설 배너 */
+        .period-guide-banner {
+            margin-top: 10px; padding: 10px 12px; border-radius: 10px;
+            background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.25);
+            font-size: 0.78rem; color: #cbd5e1; line-height: 1.5; text-align: left;
+        }
+        .period-guide-banner b { color: #60a5fa; }
 
         /* 핵심 지표 4분할 그리드 */
         .metric-grid {
@@ -124,7 +155,7 @@
         .mode-btn {
             border: none; background: transparent; padding: 7px 14px;
             font-size: 0.82rem; font-weight: 700; color: var(--text-muted);
-            cursor: pointer; border-radius: 7px; transition: 0.15s;
+            cursor: pointer; border-radius: 7px; transition: 0.15s; font-family: inherit;
         }
         .mode-btn.active { background: var(--accent); color: #ffffff; }
 
@@ -204,16 +235,11 @@
         .nav-tab .icon { font-size: 1.2rem; }
         .nav-tab.active { color: #38bdf8; }
 
-        /* 토스트 알림 */
-        #toast-msg {
-            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
-            background: #22c55e; color: #052e16; font-weight: 800; font-size: 0.82rem;
-            padding: 10px 18px; border-radius: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-            display: none; z-index: 1000;
-        }
-
-        @media (max-width: 600px) {
-            .score-value { font-size: 3.7rem; }
+        /* 모바일 화면(640px 이하) 기간 버튼 최적화: 4열 + 3열 구조로 찌그러짐 방지 */
+        @media (max-width: 640px) {
+            .score-value { font-size: 3.8rem; }
+            .period-group { grid-template-columns: repeat(4, 1fr); }
+            .period-selector-header { flex-direction: column; align-items: flex-start; gap: 3px; }
             .band-summary-grid { grid-template-columns: 1fr; }
             .chart-container { height: 320px; }
             .input-grid { grid-template-columns: 1fr; }
@@ -222,17 +248,13 @@
 </head>
 <body>
     <div class="container">
-        <!-- 상단 네비게이션 -->
+        <!-- 깔끔하게 정리된 상단 헤더 (스레드/공유 버튼 제거 완료) -->
         <header class="top-nav">
-            <div class="brand-title">
-                📈 SCHD 퀀트 레이더 <span class="pro-badge">PRO</span>
+            <div class="brand-row">
+                <h1 class="brand-title">📈 SCHD 퀀트 레이더</h1>
+                <span class="pro-badge">PRO</span>
             </div>
-            <div class="top-actions">
-                <button class="share-btn" onclick="copyTodayReport()">📋 리포트 공유</button>
-                <a href="https://www.threads.net/@dividend_besmelt" target="_blank" rel="noopener" class="threads-link">
-                    @dividend_besmelt
-                </a>
-            </div>
+            <p class="brand-sub">과거 배당수익률 백분위 기반 매수 타이밍 판독 솔루션</p>
         </header>
 
         <!-- [구글 애드센스 상단 고정 슬롯] -->
@@ -249,29 +271,65 @@
         </div>
 
         <!-- ================================================================= -->
-        <!-- [TAB 1] 레이더 홈 (핵심 백분위 점수 + 7대 기간 매트릭스 + Yield Band) -->
+        <!-- [TAB 1] 레이더 홈 (핵심 백분위 점수 + 직관적 기간 선택 + Yield Band) -->
         <!-- ================================================================= -->
         <div id="tab-home" class="tab-pane active">
             <div class="card">
                 <div class="score-hero">
-                    <p id="period-label-title" style="letter-spacing: 0.8px; font-weight: 700; font-size: 0.82rem; color: var(--text-muted); margin: 0;">
-                        최근 5년(1,260 영업일) 기준 SCHD 매수 매력 점수
+                    <p id="period-label-title" style="letter-spacing: 0.5px; font-weight: 700; font-size: 0.84rem; color: var(--text-muted); margin: 0;">
+                        최근 5년 데이터와 비교한 오늘의 매수 매력도
                     </p>
                     <div id="score-value-container" class="score-value">
-                        <span id="score-value">--</span><span style="font-size: 1.25rem; color: #64748b; letter-spacing: 0;"> / 100</span>
+                        <span id="score-value">--</span><span style="font-size: 1.25rem; color: #64748b; letter-spacing: 0;"> / 100점</span>
                     </div>
-                    <div id="status-badge" class="status-badge">데이터 검증 중...</div>
+                    <div id="status-badge" class="status-badge">데이터 분석 중...</div>
+                    <p id="score-plain-desc" class="score-plain-summary">
+                        점수가 <b>100점에 가까울수록</b> 과거보다 배당률이 높아진 <b>바겐세일(저평가) 구간</b>입니다.
+                    </p>
                 </div>
 
-                <!-- 7단계 기간 선택 필터 -->
-                <div class="period-group">
-                    <button class="filter-btn" onclick="changePeriod(21, '1개월', this)">1달</button>
-                    <button class="filter-btn" onclick="changePeriod(63, '3개월', this)">3달</button>
-                    <button class="filter-btn" onclick="changePeriod(252, '1년', this)">1년</button>
-                    <button class="filter-btn" onclick="changePeriod(756, '3년', this)">3년</button>
-                    <button class="filter-btn active" onclick="changePeriod(1260, '5년', this)">5년</button>
-                    <button class="filter-btn" onclick="changePeriod(2520, '10년', this)">10년</button>
-                    <button class="filter-btn" onclick="changePeriod(0, '전체', this)">전체</button>
+                <!-- 초보자 친화형 비교 기간 선택 컨트롤러 -->
+                <div class="period-selector-wrap">
+                    <div class="period-selector-header">
+                        <span>🔎 비교 기준 기간 선택</span>
+                        <span class="hint">오늘 주가를 과거 얼마 동안의 기록과 비교할지 선택하세요</span>
+                    </div>
+
+                    <div class="period-group">
+                        <button class="filter-btn" onclick="changePeriod(21, '최근 1개월', this)">
+                            <span class="p-main">1개월</span>
+                            <span class="p-sub">단기 눌림목</span>
+                        </button>
+                        <button class="filter-btn" onclick="changePeriod(63, '최근 3개월', this)">
+                            <span class="p-main">3개월</span>
+                            <span class="p-sub">분기 추세</span>
+                        </button>
+                        <button class="filter-btn" onclick="changePeriod(252, '최근 1년', this)">
+                            <span class="p-main">1년</span>
+                            <span class="p-sub">연간 위치</span>
+                        </button>
+                        <button class="filter-btn" onclick="changePeriod(756, '최근 3년', this)">
+                            <span class="p-main">3년</span>
+                            <span class="p-sub">고금리 시기</span>
+                        </button>
+                        <button class="filter-btn active" onclick="changePeriod(1260, '최근 5년', this)">
+                            <span class="p-main">5년 ★</span>
+                            <span class="p-sub">표준 권장</span>
+                        </button>
+                        <button class="filter-btn" onclick="changePeriod(2520, '최근 10년', this)">
+                            <span class="p-main">10년</span>
+                            <span class="p-sub">장기 사이클</span>
+                        </button>
+                        <button class="filter-btn" onclick="changePeriod(0, '상장 이후 전체', this)">
+                            <span class="p-main">전체</span>
+                            <span class="p-sub">2011년~현재</span>
+                        </button>
+                    </div>
+
+                    <!-- 선택한 기간의 의미를 즉시 설명해 주는 가이드 배너 -->
+                    <div id="period-guide-banner" class="period-guide-banner">
+                        💬 <b>최근 5년(표준 권장) 기준:</b> 중장기 적립식 투자자가 가장 많이 참고하는 표준 기준입니다. 지난 5년 치 영업일 중 오늘의 배당 매력이 상위 몇 %인지 판독합니다.
+                    </div>
                 </div>
 
                 <div class="metric-grid">
@@ -297,7 +355,7 @@
                     </div>
                 </div>
 
-                <!-- 데이터 최신화 스케줄 및 퀀트 산출 주석 (신뢰성 보장) -->
+                <!-- 데이터 최신화 스케줄 및 퀀트 산출 주석 -->
                 <div class="quant-trust-box">
                     📡 <b>최종 데이터 동기화:</b> <span id="updated-at-text">로딩 중...</span> (기준 영업일: <span id="ref-date-text">--</span>)<br>
                     ⏱️ <b>데이터 갱신 스케줄 (평일 일 5회):</b> 미국 정규장 중 2시간 간격(23:00, 01:00, 03:00 KST) 및 미국장 마감 직후(05:15, 06:15 KST) 자동 최신화됩니다.<br>
@@ -307,9 +365,9 @@
 
             <!-- Yield Band & 배당률 차트 카드 -->
             <div class="card">
-                <h2 id="band-card-title" class="card-header-title">📈 5년 적정 주가 Yield Band</h2>
+                <h2 id="band-card-title" class="card-header-title">📈 최근 5년 적정 주가 Yield Band</h2>
                 <p class="card-header-sub">
-                    과거 배당수익률 분포(상위 10% · 중앙값 · 하위 10%)로 역산한 왜곡 없는 계단식 내재가치 채널
+                    선택한 기간의 배당수익률 분포(상위 10% · 중앙값 · 하위 10%)로 역산한 왜곡 없는 계단식 내재가치 채널
                 </p>
 
                 <div class="mode-switch">
@@ -341,13 +399,13 @@
 
             <!-- 7대 기간 멀티 매트릭스 비교 보드 -->
             <div class="card">
-                <h2 class="card-header-title">🧭 7대 기간 멀티 타임프레임 매트릭스</h2>
-                <p class="card-header-sub">단기(1 ~ 3달) 눌림목인지, 중장기(5 ~ 10년) 저평가 구간인지 한눈에 비교합니다.</p>
+                <h2 class="card-header-title">🧭 기간별 매수 점수 한눈에 비교하기</h2>
+                <p class="card-header-sub">단기(1 ~ 3개월) 눌림목인지, 중장기(5 ~ 10년) 저평가 구간인지 모든 기간을 동시에 대조합니다.</p>
                 <div style="overflow-x: auto;">
                     <table class="matrix-table">
                         <thead>
                             <tr>
-                                <th>분석 기간</th>
+                                <th>비교 기준 기간</th>
                                 <th>매수 점수</th>
                                 <th>평균 배당률</th>
                                 <th>적정 주가(중앙)</th>
@@ -368,7 +426,7 @@
             <div class="card">
                 <h2 class="card-header-title">🎯 내 평단가 YOC 진단 & 추매 시뮬레이터</h2>
                 <p class="card-header-sub">
-                    입력하신 평단가와 보유 수량은 현재 브라우저에 자동 저장되어 내일 접속 시에도 그대로 유지됩니다.
+                    입력하신 평단가와 보유 수량은 현재 브라우저에 자동 저장되어 다음 접속 시에도 그대로 유지됩니다.
                 </p>
 
                 <div class="input-grid">
@@ -612,14 +670,23 @@
         </button>
     </nav>
 
-    <div id="toast-msg">✅ 클립보드에 오늘의 SCHD 리포트가 복사되었습니다!</div>
-
     <script>
         let globalRawData = null;
         let selectedPeriodDays = 1260;
-        let selectedPeriodLabel = '5년';
+        let selectedPeriodLabel = '최근 5년';
         let currentChartMode = 'band';
         let currentYieldDecimal = 0.035;
+
+        // 기간별 초보자 맞춤 해설 문구 사전
+        const periodGuideMessages = {
+            21: "💬 <b>최근 1개월(21 영업일) 기준:</b> 한 달 이내에 단기 급락(눌림목)이 나왔는지 확인합니다. 단기 타이밍을 노리는 분들에게 적합합니다.",
+            63: "💬 <b>최근 3개월(63 영업일) 기준:</b> 이번 분기 배당락 전후의 주가 흐름 속에서 오늘 가격이 유리한지 파악합니다.",
+            252: "💬 <b>최근 1년(252 영업일) 기준:</b> 지난 1년 동안의 주가 등락 폭 안에서 오늘이 얼마나 저렴한 날인지 비교합니다.",
+            756: "💬 <b>최근 3년(756 영업일) 기준:</b> 미국 고금리 환경이 본격화된 최근 3년 동안의 평균 배당률과 오늘을 비교합니다.",
+            1260: "💬 <b>최근 5년(표준 권장) 기준:</b> 중장기 적립식 투자자가 가장 많이 참고하는 표준 기준입니다. 지난 5년 치 영업일 중 오늘의 배당 매력이 상위 몇 %인지 판독합니다.",
+            2520: "💬 <b>최근 10년(2,520 영업일) 기준:</b> 금리 인하기와 인상기를 모두 포함한 10년 장기 경제 사이클 속에서 현재 가치 위치를 진단합니다.",
+            0: "💬 <b>상장 이후 전체(2011년~현재) 기준:</b> SCHD가 세상에 나온 이후 모든 거래일과 비교해 역사적 바겐세일 구간인지 판독합니다."
+        };
 
         // 1. 스파이크 자동 평활화 필터 (구버전 JSON 데이터 로드 시에도 365일 윈도우 스파이크 즉시 제거)
         function sanitizeSpikes(data) {
@@ -627,7 +694,6 @@
             const prices = data.prices;
             const n = divs.length;
             
-            // 15영업일 이내에 배당금이 급등했다가 원래대로 돌아오는 캘린더 드리프트 스파이크 교정
             for (let w = 1; w <= 12; w++) {
                 for (let i = w; i < n - w; i++) {
                     const prev = divs[i - w];
@@ -666,7 +732,7 @@
             renderAll();
         }
 
-        // 3. 사용자 입력값 LocalStorage 저장/복원 (재방문 편의성 극대화)
+        // 3. 사용자 입력값 LocalStorage 저장/복원
         function loadSavedUserInputs() {
             const savedAvg = localStorage.getItem('schd_my_avg');
             const savedShares = localStorage.getItem('schd_my_shares');
@@ -693,6 +759,11 @@
             selectedPeriodLabel = label;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             if (btnEl) btnEl.classList.add('active');
+            
+            const guideBanner = document.getElementById('period-guide-banner');
+            if (guideBanner && periodGuideMessages[days]) {
+                guideBanner.innerHTML = periodGuideMessages[days];
+            }
             renderAll();
         }
 
@@ -761,7 +832,7 @@
             else if (buy_score >= 40) { status = "⚖️ 합리적 정가 매수 구간"; color = "#facc15"; }
             else { status = "🚨 고평가 주의 / 관망 구간"; color = "#f87171"; }
 
-            document.getElementById('period-label-title').innerText = `${selectedPeriodLabel}(${yields.length.toLocaleString()} 영업일) 기준 SCHD 매수 매력 점수`;
+            document.getElementById('period-label-title').innerText = `${selectedPeriodLabel}(${yields.length.toLocaleString()} 영업일) 데이터와 비교한 매수 매력도`;
             document.getElementById('band-card-title').innerText = `📈 ${selectedPeriodLabel} 적정 주가 Yield Band`;
             document.getElementById('score-value').innerText = buy_score;
             document.getElementById('score-value-container').style.color = color;
@@ -770,6 +841,10 @@
             badge.innerText = status;
             badge.style.color = color;
             badge.style.borderColor = color;
+
+            // 초보자용 한 줄 점수 풀이 업데이트
+            document.getElementById('score-plain-desc').innerHTML = 
+                `${selectedPeriodLabel} 동안 오늘보다 배당수익률이 더 높았던(더 저렴했던) 날은 전체의 <b style="color:${color};">${cheaperPct.toFixed(1)}%</b>였습니다.`;
 
             document.getElementById('curr-price').innerText = `$${curr_p.toFixed(2)}`;
             document.getElementById('curr-div-sub').innerText = `4분기 합산 배당: $${curr_div.toFixed(4)}`;
@@ -873,13 +948,13 @@
         // 7. 7대 기간 멀티 매트릭스 테이블 생성
         function renderMultiPeriodMatrix(allYields, curr_y, curr_div) {
             const periods = [
-                { days: 21, label: '1개월 (단기)' },
-                { days: 63, label: '3개월 (분기)' },
-                { days: 252, label: '1년 (연간)' },
-                { days: 756, label: '3년 (중기)' },
-                { days: 1260, label: '5년 (표준)' },
-                { days: 2520, label: '10년 (장기)' },
-                { days: 0, label: '전체 (상장후)' }
+                { days: 21, label: '최근 1개월 (단기)' },
+                { days: 63, label: '최근 3개월 (분기)' },
+                { days: 252, label: '최근 1년 (연간)' },
+                { days: 756, label: '최근 3년 (고금리)' },
+                { days: 1260, label: '최근 5년 ★ (표준)' },
+                { days: 2520, label: '최근 10년 (장기)' },
+                { days: 0, label: '상장 후 전체' }
             ];
             let html = '';
             periods.forEach(p => {
@@ -950,7 +1025,6 @@
             const newAvg = totalShares > 0 ? ((myAvg * myShares) + (curr_p * addShares)) / totalShares : curr_p;
             const newYoc = (curr_div / newAvg) * 100;
 
-            // 내 평단가의 역사적 백분위 경쟁력
             const startIndex = selectedPeriodDays === 0 ? 0 : Math.max(0, globalRawData.yields.length - selectedPeriodDays);
             const subYields = globalRawData.yields.slice(startIndex);
             const betterDays = subYields.filter(y => y > myYoc).length;
@@ -988,7 +1062,6 @@
             const curr_y = subYields[subYields.length - 1];
             const schdScore = Math.round(100 - (subYields.filter(y => y > curr_y).length / subYields.length) * 100);
             
-            // 환율은 낮을수록 달러 매수에 유리
             const cheaperFxDays = subFx.filter(f => f < currFx).length;
             const fxHighPct = (cheaperFxDays / subFx.length) * 100;
             const fxScore = Math.round(100 - fxHighPct);
@@ -1039,7 +1112,7 @@
                 assetTaxed += (m_add * 12);
 
                 const annualDivFree = assetFree * yocFree;
-                const annualDivTaxed = assetTaxed * yocTaxed * (1 - 0.154); // 일반계좌 15.4% 배당세 차감
+                const annualDivTaxed = assetTaxed * yocTaxed * (1 - 0.154);
 
                 assetFree += annualDivFree;
                 assetTaxed += annualDivTaxed;
@@ -1073,23 +1146,7 @@
             Plotly.react('drip-chart', traces, layout, { responsive: true, displayModeBar: false });
         }
 
-        // 12. 리포트 원클릭 복사 (스레드/카톡 공유 바이럴용)
-        function copyTodayReport() {
-            if (!globalRawData) return;
-            const p = document.getElementById('curr-price').innerText;
-            const y = document.getElementById('curr-yield').innerText;
-            const s = document.getElementById('score-value').innerText;
-            const b = document.getElementById('status-badge').innerText;
-            const h = document.getElementById('honey-price-val').innerText;
-            const text = `📊 [SCHD 퀀트 레이더 브리핑]\n• 매수 매력 점수: ${s}점 / 100 (${b})\n• 현재가: ${p} (4분기 확정 배당률 ${y})\n• 상위 10% 꿀통 매수선: ${h}\n👉 실시간 밴드 차트 확인: https://dividend.besmelt.com`;
-            navigator.clipboard.writeText(text).then(() => {
-                const toast = document.getElementById('toast-msg');
-                toast.style.display = 'block';
-                setTimeout(() => { toast.style.display = 'none'; }, 2500);
-            });
-        }
-
-        // 13. 폴백 데이터 생성기
+        // 12. 폴백 데이터 생성기
         function generateFallbackData() {
             const dates = [], prices = [], ttm_dividends = [], yields = [], fed_rates = [], fx_rates = [];
             let p = 24.0, d = 0.78;
