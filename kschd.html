@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>K-SCHD(미국배당다우존스) 환율 반영 매수 판독기 & 절세 계좌 비교 | dividend.besmelt.com</title>
+  <meta name="description" content="TIGER, ACE, SOL 미국배당다우존스 투자자를 위한 원/달러 환율 반영 실질 배당 매력도 및 연금저축·IRP·ISA 세후 배당금 비교" />
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2894031755177844" crossorigin="anonymous"></script>
+</head>
+<body>
+
+  <header id="appHeader" class="app-header"></header>
+
+  <main class="app-container">
+    <!-- 1. 미국 본주 vs 원화 환산(K-SCHD) 체감 매력 비교 히어로 -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h1 class="card-title">🇰🇷 K-SCHD 원화 체감 매수 매력 판독기</h1>
+          <p class="card-subtitle">환노출형 국내 상장 미국배당다우존스(TIGER · ACE · SOL) 매수 타점 진단</p>
+        </div>
+      </div>
+
+      <div class="hero-grid" style="grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="kpi-mini-box" style="text-align: center; padding: 16px;">
+          <div class="kpi-label">🇺🇸 미국 본주 기준 매력도 (5년)</div>
+          <div id="usdBaseScore" style="font-size: 2rem; font-weight: 800; margin: 6px 0;">--점</div>
+          <span id="usdBaseTag" class="status-pill" style="margin-bottom: 0;">분석 중</span>
+        </div>
+
+        <div class="kpi-mini-box" style="text-align: center; padding: 16px; border-color: var(--accent-primary);">
+          <div class="kpi-label">🇰🇷 환율 반영 원화 체감 매력도</div>
+          <div id="krwRealScore" style="font-size: 2rem; font-weight: 800; margin: 6px 0;">--점</div>
+          <span id="krwRealTag" class="status-pill" style="margin-bottom: 0;">분석 중</span>
+        </div>
+      </div>
+
+      <div id="fxCommentaryBox" class="quant-insight-box" style="margin-top: 14px;">
+        환율 데이터와 본주 배당수익률을 결합하여 원화 체감 매력도를 분석 중입니다...
+      </div>
+    </section>
+
+    <!-- 2. 상단 애드센스 슬롯 -->
+    <div class="ad-slot-wrapper">
+      <div class="ad-label">Sponsored</div>
+      <ins class="adsbygoogle"
+           style="display:block; width:100%;"
+           data-ad-client="ca-pub-2894031755177844"
+           data-ad-slot="3305729383"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+    </div>
+
+    <!-- 3. 원/달러 환율 슬라이더 조작부 -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">💱 원/달러 환율 민감도 시뮬레이션</h2>
+          <p class="card-subtitle">현재 환율과 내가 생각하는 적정(또는 내 평균 환전) 환율을 조절해 보세요.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span class="form-label" style="margin-bottom: 0;">현재 원/달러 환율</span>
+          <strong id="curKrwLabel" style="color: var(--accent-primary);">1,380원</strong>
+        </div>
+        <input type="range" id="curKrwSlider" min="1150" max="1550" step="5" value="1380" style="width: 100%; accent-color: var(--accent-primary);" oninput="recalcKschd()" />
+      </div>
+
+      <div class="form-group" style="margin-bottom: 0;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span class="form-label" style="margin-bottom: 0;">기준(최근 1년 평균 또는 내 목표) 환율</span>
+          <strong id="refKrwLabel" style="color: var(--score-diamond);">1,350원</strong>
+        </div>
+        <input type="range" id="refKrwSlider" min="1150" max="1500" step="5" value="1350" style="width: 100%; accent-color: var(--score-diamond);" oninput="recalcKschd()" />
+      </div>
+    </section>
+
+    <!-- 4. 계좌별(일반 vs ISA vs 연금저축/IRP) 세후 실수령 배당금 비교기 -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">🏦 계좌별 세후 실수령 배당금 비교표</h2>
+          <p class="card-subtitle">동일한 투자금을 어느 계좌에 담느냐에 따라 매년 손에 쥐는 현금흐름이 달라집니다.</p>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="investAmountMan">총 투자 원금 입력 (단위: 만 원)</label>
+        <input type="number" id="investAmountMan" class="form-input" value="5000" min="100" max="1000000" step="100" oninput="recalcKschd()" />
+      </div>
+
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.84rem; text-align: left;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border-color); color: var(--text-secondary);">
+              <th style="padding: 10px 8px;">계좌 구분</th>
+              <th style="padding: 10px 8px;">적용 세율</th>
+              <th style="padding: 10px 8px;">연간 세후 배당금</th>
+              <th style="padding: 10px 8px;">월평균 실수령액</th>
+            </tr>
+          </thead>
+          <tbody id="taxTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="quant-insight-box" style="margin-top: 12px; font-size: 0.8rem;">
+        💡 <strong>체크포인트:</strong> 국내 상장 해외 ETF는 2025년 외국납부세액 공제 개편 이후에도 ISA 및 연금계좌 내 과세이연·저율과세(3.3 ~ 5.5%) 복리 효과가 일반 계좌(15.4% 원천징수 및 연 2,000만 원 초과 시 금융소득종합과세) 대비 압도적으로 유리합니다.
+      </div>
+    </section>
+
+    <!-- 5. 다음 페이지 이동 네이티브 CTA -->
+    <a href="simulator.html" class="cta-next-card">
+      <div>
+        <div class="cta-title">🚀 과거에 SCHD를 샀더라면 지금 얼마가 됐을까?</div>
+        <div class="cta-desc">실제 상장 이후 데이터로 돌려보는 백테스팅 & 월 배당 200만 원 은퇴 타임머신</div>
+      </div>
+      <div class="cta-arrow">→</div>
+    </a>
+
+    <footer class="app-footer">
+      <p>© 2026 dividend.besmelt.com · K-SCHD & 환율 퀀트 솔루션</p>
+    </footer>
+  </main>
+
+  <nav id="bottomNav" class="bottom-nav"></nav>
+
+  <script src="common.js"></script>
+  <script>
+    let globalData = null;
+    let fiveYearAnalysis = null;
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      renderAppShell("kschd");
+      triggerAdSense();
+
+      try {
+        globalData = await loadSchdData();
+        fiveYearAnalysis = analyzeTimeframe(globalData, "5Y");
+
+        if (globalData.latest.usdkrw) {
+          document.getElementById("curKrwSlider").value = Math.round(globalData.latest.usdkrw / 5) * 5;
+        }
+        if (globalData.latest.usdkrw_1y_avg) {
+          document.getElementById("refKrwSlider").value = Math.round(globalData.latest.usdkrw_1y_avg / 5) * 5;
+        }
+
+        recalcKschd();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    function recalcKschd() {
+      if (!globalData || !fiveYearAnalysis) return;
+
+      const curKrw = parseFloat(document.getElementById("curKrwSlider").value) || 1380;
+      const refKrw = parseFloat(document.getElementById("refKrwSlider").value) || 1350;
+      const investMan = parseFloat(document.getElementById("investAmountMan").value) || 5000;
+
+      document.getElementById("curKrwLabel").textContent = `${curKrw.toLocaleString()}원`;
+      document.getElementById("refKrwLabel").textContent = `${refKrw.toLocaleString()}원`;
+
+      // 1) 미국 본주 5년 점수
+      const baseScore = fiveYearAnalysis.rawScore;
+      const baseMeta = getScoreMeta(baseScore);
+      const usdScoreEl = document.getElementById("usdBaseScore");
+      const usdTagEl = document.getElementById("usdBaseTag");
+      usdScoreEl.textContent = `${baseScore}점`;
+      usdScoreEl.style.color = baseMeta.color;
+      usdTagEl.textContent = baseMeta.shortTag;
+      usdTagEl.style.background = baseMeta.bg;
+      usdTagEl.style.color = baseMeta.color;
+
+      // 2) 환율 할증/할인 반영 원화 체감 시가배당률 및 점수 산출
+      const fxRatio = curKrw / refKrw;
+      const fxPremiumPct = ((curKrw - refKrw) / refKrw) * 100;
+      const effectiveKrwYield = globalData.latest.yield / fxRatio;
+      const krwScore = calcAttractivenessScore(fiveYearAnalysis.yields, effectiveKrwYield);
+      const krwMeta = getScoreMeta(krwScore);
+
+      const krwScoreEl = document.getElementById("krwRealScore");
+      const krwTagEl = document.getElementById("krwRealTag");
+      krwScoreEl.textContent = `${krwScore}점`;
+      krwScoreEl.style.color = krwMeta.color;
+      krwTagEl.textContent = krwMeta.shortTag;
+      krwTagEl.style.background = krwMeta.bg;
+      krwTagEl.style.color = krwMeta.color;
+
+      const fxSign = fxPremiumPct >= 0 ? "+" : "";
+      document.getElementById("fxCommentaryBox").innerHTML =
+        `📊 <strong>환율 보정 브리핑:</strong> 현재 환율(${curKrw.toLocaleString()}원)은 기준 환율(${refKrw.toLocaleString()}원) 대비 <strong>${fxSign}${fxPremiumPct.toFixed(1)}%</strong> 수준입니다. 환노출 기준 원화 체감 시가배당률은 <strong>${effectiveKrwYield.toFixed(2)}%</strong>로, 원화 투자자 체감 매수 점수는 <strong>${krwScore}점(${krwMeta.tier})</strong>입니다.`;
+
+      // 3) 계좌별 세후 배당금 비교표 렌더링
+      const curYieldRatio = globalData.latest.yield / 100;
+      const preTaxAnnualMan = investMan * curYieldRatio; // 만 원 단위
+
+      const accounts = [
+        {
+          name: "일반 계좌 (직투/일반위탁)",
+          taxLabel: "15.4% 배당소득세",
+          netRatio: 1 - 0.154,
+          badgeColor: "var(--text-secondary)"
+        },
+        {
+          name: "ISA (중개형 · 비과세 한도 내)",
+          taxLabel: "비과세 (초과분 9.9%)",
+          netRatio: 1.0,
+          badgeColor: "var(--score-good)"
+        },
+        {
+          name: "연금저축 · IRP (과세이연 복리)",
+          taxLabel: "연금수령 시 3.3 ~ 5.5%",
+          netRatio: 1 - 0.044, // 평균 4.4% 적용 시뮬레이션
+          badgeColor: "var(--score-diamond)"
+        }
+      ];
+
+      const tbody = document.getElementById("taxTableBody");
+      tbody.innerHTML = accounts.map(acc => {
+        const annualWon = Math.round(preTaxAnnualMan * 10000 * acc.netRatio);
+        const monthlyWon = Math.round(annualWon / 12);
+        return `
+          <tr style="border-bottom: 1px solid var(--border-color);">
+            <td style="padding: 12px 8px; font-weight: 700; color: ${acc.badgeColor};">${acc.name}</td>
+            <td style="padding: 12px 8px; color: var(--text-secondary);">${acc.taxLabel}</td>
+            <td style="padding: 12px 8px; font-weight: 700;">${annualWon.toLocaleString()}원</td>
+            <td style="padding: 12px 8px; font-weight: 800; color: var(--text-primary);">월 ${monthlyWon.toLocaleString()}원</td>
+          </tr>
+        `;
+      }).join("");
+    }
+  </script>
+</body>
+</html>
