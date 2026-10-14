@@ -23,9 +23,10 @@
     <meta property="og:url" content="https://dividend.besmelt.com/">
     <meta property="og:locale" content="ko_KR">
 
-    <!-- [5] 구글 서치 콘솔 & 네이버 서치어드바이저 소유권 확인 메타태그 (발급 후 주석 해제 및 코드 입력) -->
- <meta name="google-site-verification" content="bq_euoP5mkam7cXkBor7iFnUqQUT8Ldr7h31IyYtxzI" />
- <meta name="naver-site-verification" content="d5933c36b5b53d137c0dfa5505af18d3e795d865" />
+    <!-- [5] 구글 서치 콘솔 & 네이버 서치어드바이저 소유권 확인 메타태그 -->
+    <meta name="google-site-verification" content="bq_euoP5mkam7cXkBor7iFnUqQUT8Ldr7h31IyYtxzI" />
+    <meta name="naver-site-verification" content="d5933c36b5b53d137c0dfa5505af18d3e795d865" />
+
     <!-- [6] 구글 리치 스니펫(Rich Results) 점유용 3중 JSON-LD 구조화 데이터 -->
     <script type="application/ld+json">
     [
@@ -234,7 +235,7 @@
         .metric-box b { font-size: 1.28rem; color: var(--text-main); display: block; margin-top: 3px; }
         .metric-box .sub-tag { font-size: 0.7rem; color: #64748b; margin-top: 2px; display: block; }
 
-        /* 내부 탭 유도 CTA 버튼 그리드 */
+        /* 내부 탭 유도 CTA 링크 그리드 (클릭 시 전면광고 트리거) */
         .cta-btn-grid {
             display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px;
         }
@@ -242,6 +243,7 @@
             background: #1e293b; border: 1px solid #3b82f6; color: #93c5fd;
             padding: 11px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;
             cursor: pointer; transition: 0.2s; font-family: inherit; text-align: center;
+            text-decoration: none; display: block;
         }
         .cta-nav-btn:hover { background: #3b82f6; color: #ffffff; }
 
@@ -322,7 +324,7 @@
         }
         .details-content h4 { color: #38bdf8; margin: 12px 0 5px 0; font-size: 0.88rem; }
 
-        /* 하단 고정 4탭 네비게이션 바 */
+        /* 하단 고정 4탭 네비게이션 바 (전면광고 트리거용 a 태그 스타일) */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; z-index: 999;
             background: rgba(15, 23, 42, 0.96); backdrop-filter: blur(10px);
@@ -334,7 +336,7 @@
             flex: 1; border: none; background: transparent; color: var(--text-muted);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             gap: 4px; font-size: 0.72rem; font-weight: 700; cursor: pointer; height: 100%;
-            transition: 0.15s; font-family: inherit;
+            transition: 0.15s; font-family: inherit; text-decoration: none;
         }
         .nav-tab .icon { font-size: 1.2rem; }
         .nav-tab.active { color: #38bdf8; }
@@ -482,14 +484,14 @@
                     </div>
                 </div>
 
-                <!-- 내부 탭 이동 유도 CTA 버튼 (체류시간 증대) -->
+                <!-- 내부 탭 이동 유도 CTA 링크 (클릭 시 실제 페이지 이동으로 애드센스 전면광고 트리거) -->
                 <div class="cta-btn-grid">
-                    <button class="cta-nav-btn" onclick="triggerTabFromCta('myprice', 1)">
+                    <a href="?tab=myprice" class="cta-nav-btn">
                         🎯 내 평단가($ · 원) 물타기 계산기 이동 →
-                    </button>
-                    <button class="cta-nav-btn" onclick="triggerTabFromCta('timemachine', 3)">
+                    </a>
+                    <a href="?tab=timemachine" class="cta-nav-btn">
                         🚀 5년 · 10년 뒤 내 연금 월배당 계산하기 →
-                    </button>
+                    </a>
                 </div>
 
                 <!-- 데이터 최신화 스케줄 및 퀀트 산출 주석 (+ 파이썬 정적 SEO 베이킹 슬롯) -->
@@ -836,24 +838,24 @@
         </p>
     </div>
 
-    <!-- 하단 고정 4탭 네비게이션 바 -->
+    <!-- 하단 고정 4탭 네비게이션 바 (전면광고 트리거용 실제 a 링크 적용) -->
     <nav class="bottom-nav">
-        <button class="nav-tab active" onclick="switchMainTab('home', this)">
+        <a href="?tab=home" id="nav-link-home" class="nav-tab active">
             <span class="icon">📊</span>
             <span>레이더 홈</span>
-        </button>
-        <button class="nav-tab" onclick="switchMainTab('myprice', this)">
+        </a>
+        <a href="?tab=myprice" id="nav-link-myprice" class="nav-tab">
             <span class="icon">🎯</span>
             <span>내 평단 진단</span>
-        </button>
-        <button class="nav-tab" onclick="switchMainTab('kretf', this)">
+        </a>
+        <a href="?tab=kretf" id="nav-link-kretf" class="nav-tab">
             <span class="icon">🇰🇷</span>
             <span>국내ETF·환율</span>
-        </button>
-        <button class="nav-tab" onclick="switchMainTab('timemachine', this)">
+        </a>
+        <a href="?tab=timemachine" id="nav-link-timemachine" class="nav-tab">
             <span class="icon">🚀</span>
             <span>은퇴 타임머신</span>
-        </button>
+        </a>
     </nav>
 
     <script>
@@ -924,8 +926,19 @@
             document.getElementById('kr-dday-badge').innerText = `D-${krDiff} (매월 말 기준)`;
         }
 
-        // 3. 초기 데이터 로드 및 LocalStorage 복원
+        // 3. 초기 데이터 로드, URL 탭 파라미터(?tab=...) 인식 및 LocalStorage 복원
         async function initApp() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const activeTab = urlParams.get('tab') || 'home';
+            if (['home', 'myprice', 'kretf', 'timemachine'].includes(activeTab)) {
+                document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+                const targetPane = document.getElementById('tab-' + activeTab);
+                if (targetPane) targetPane.classList.add('active');
+                document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
+                const activeNav = document.getElementById('nav-link-' + activeTab);
+                if (activeNav) activeNav.classList.add('active');
+            }
+
             loadSavedUserInputs();
             updateDividendDday();
             try {
@@ -963,7 +976,7 @@
             });
         }
 
-        // 5. 탭 전환 함수
+        // 5. 탭 전환 보조 함수
         function switchMainTab(tabId, btnEl) {
             document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
             document.getElementById('tab-' + tabId).classList.add('active');
