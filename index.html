@@ -1,462 +1,466 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SCHD 배당수익률 RADAR | 배당투자 최적 매수 타이밍</title>
-    <!-- 구글 애드센스 자동 광고 스크립트 start -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2894031755177844" crossorigin="anonymous"></script>
-    <meta name="description" content="SCHD 역대 배당수익률과 배당수익률 밴드 차트로 포착하는 적립식 매수 타이밍 레이더 및 연금저축 배당 시뮬레이터">
-    <!-- Plotly.js CDN -->
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Pretendard:wght@400;600;700;800&display=swap');
-        
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        html, body { 
-            font-family: 'Pretendard', sans-serif; 
-            margin: 0; padding: 0;
-            background-color: #f8fafc; color: #1e293b;
-            overflow-x: hidden;
-        }
-        
-        .container { max-width: 900px; margin: 0 auto; padding: 20px; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>SCHD 배당 퀀트 레이더 | 지금 살까 말까? 7단계 매수 타점 판독기</title>
+  <meta name="description" content="SCHD 및 국내 상장 미국배당다우존스(TIGER, ACE, SOL) 투자자를 위한 배당수익률 백분위 매수 매력 점수, Yield Band 적정 주가, 미국 기준금리 보정 레이더" />
+  <meta property="og:title" content="SCHD 배당 퀀트 레이더 | 오늘의 매수 매력 점수" />
+  <meta property="og:description" content="1달부터 상장 이후 전체 기간까지 7단계 타임프레임으로 진단하는 SCHD 저평가 꿀통 판독기" />
+  <meta property="og:url" content="https://dividend.besmelt.com/" />
+  <link rel="stylesheet" href="style.css" />
 
-        header h1 { font-size: 1.8rem; margin: 10px 0 5px 0; letter-spacing: -0.5px; }
-        header p { color: #64748b; font-size: 0.95rem; margin: 0; }
-
-        /* 애드센스 상단 영역 */
-        .ad-banner-top {
-            width: 100%; min-height: 90px;
-            margin: 20px 0; border-radius: 12px;
-            background: #ffffff;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        /* 메인 점수 카드 */
-        .main-card {
-            padding: 30px 20px; border-radius: 24px; text-align: center;
-            background: #ffffff; border: 1px solid #e2e8f0; 
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); margin-bottom: 25px;
-        }
-        
-        .score-value { font-size: 4.5rem; font-weight: 800; line-height: 1; margin: 10px 0; }
-        .status-badge {
-            font-size: 1.1rem; font-weight: 700; padding: 8px 20px; 
-            border-radius: 50px; display: inline-block; margin-top: 5px; border: 1.5px solid;
-        }
-
-        .data-row {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 15px;
-            margin-top: 25px; background: #f1f5f9; padding: 15px; border-radius: 16px;
-        }
-        .data-item p { margin: 0; color: #64748b; font-size: 0.8rem; font-weight: 600; }
-        .data-item b { font-size: 1.3rem; }
-
-        .meta-info { font-size: 0.8rem; color: #64748b; margin-top: 20px; line-height: 1.5; }
-
-        /* 배당 복리 시뮬레이터 (신규) */
-        .sim-card {
-            background: linear-gradient(135deg, #1e3a8a, #312e81);
-            color: white; padding: 25px; border-radius: 24px; margin-bottom: 25px;
-            box-shadow: 0 10px 25px -5px rgba(30, 58, 138, 0.3);
-        }
-        .sim-title { font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; display: flex; align-items: center; gap: 8px;}
-        
-        .slider-group { margin-bottom: 20px; }
-        .slider-label { display: flex; justify-content: space-between; font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; color: #cbd5e1; }
-        .slider-label span b { color: #ffffff; font-size: 1.1rem; }
-        
-        input[type=range] {
-            width: 100%; -webkit-appearance: none; background: transparent;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none; height: 20px; width: 20px; border-radius: 50%;
-            background: #38bdf8; cursor: pointer; margin-top: -6px; box-shadow: 0 0 10px rgba(56,189,248,0.5);
-        }
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%; height: 8px; cursor: pointer; background: #475569; border-radius: 10px;
-        }
-
-        .sim-result-box {
-            display: flex; gap: 10px; margin-top: 15px;
-        }
-        .sim-result-item {
-            flex: 1; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 16px; text-align: center;
-        }
-        .sim-result-item p { margin: 0; font-size: 0.85rem; color: #94a3b8; margin-bottom: 5px; }
-        .sim-result-item b { font-size: 1.4rem; color: #38bdf8; }
-
-        /* 차트 영역 */
-        .section-header { font-size: 1.2rem; font-weight: 800; margin: 35px 0 15px 0; padding-left: 10px; border-left: 4px solid #10b981; }
-        .chart-container {
-            width: 100%; height: 400px; background: #ffffff; border: 1px solid #e2e8f0;
-            border-radius: 20px; padding: 10px; margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-        }
-        
-        .btn-group { display: flex; background: #e2e8f0; padding: 4px; border-radius: 12px; margin-bottom: 15px; }
-        .filter-btn {
-            flex: 1; border: none; background: transparent; padding: 8px 0; font-size: 0.9rem;
-            font-weight: 700; color: #64748b; cursor: pointer; border-radius: 9px; transition: 0.2s;
-        }
-        .filter-btn.active { background: #ffffff; color: #0f172a; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
-
-        /* SEO 텍스트 아코디언 (신규) */
-        .seo-accordion { margin-top: 40px; }
-        details {
-            background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02); overflow: hidden;
-        }
-        summary {
-            padding: 18px 20px; font-weight: 700; font-size: 1rem; color: #1e293b;
-            cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center;
-        }
-        summary::-webkit-details-marker { display: none; }
-        summary::after { content: '+'; font-size: 1.5rem; color: #94a3b8; transition: transform 0.3s; }
-        details[open] summary::after { transform: rotate(45deg); }
-        .details-content {
-            padding: 0 20px 20px 20px; font-size: 0.9rem; line-height: 1.7; color: #475569;
-        }
-        .details-content h4 { color: #0f172a; margin: 15px 0 5px 0; font-size: 0.95rem;}
-
-        /* 모바일 최적화 미디어 쿼리 */
-        @media (max-width: 480px) {
-            .score-value { font-size: 4rem; }
-            .data-item b { font-size: 1.1rem; }
-            .sim-result-box { flex-direction: column; }
-            .chart-container { height: 350px; }
-        }
-    </style>
+  <!-- Google AdSense 공식 스크립트 -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2894031755177844" crossorigin="anonymous"></script>
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>📊 SCHD 배당수익률 RADAR</h1>
-            <p>데이터 기반 미국배당다우존스 최적 매수 타점 분석기</p>
-        </header>
 
-        <!-- [수동 광고 배너 영역] -->
-        <div class="ad-banner-top">
-            <!-- 최상단 광고_[디스플레이, 사각형, 반응형] -->
-            <ins class="adsbygoogle"
-                 style="display:block"
-                 data-ad-client="ca-pub-2894031755177844"
-                 data-ad-slot="3305729383"
-                 data-ad-format="auto"
-                 data-full-width-responsive="true"></ins>
-            <script>
-                 (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
+  <!-- 상단 고정 헤더 -->
+  <header id="appHeader" class="app-header"></header>
+
+  <main class="app-container">
+    <!-- 1. 히어로 요약 카드 (선택 기간 실시간 점수 + 핵심 지표 4종) -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">
+            <span id="heroTfBadge">5년(1,260일) 기준</span> 배당 매력도 진단
+          </div>
+          <div id="updatedAtText" class="card-subtitle">데이터 불러오는 중...</div>
+        </div>
+      </div>
+
+      <div class="hero-grid">
+        <div class="score-display-box">
+          <div id="heroScoreRing" class="score-ring">
+            <span id="heroScoreNum" class="score-number">--</span>
+            <span class="score-unit">/ 100점</span>
+          </div>
+          <div>
+            <span id="heroTierPill" class="status-pill">분석 중</span>
+            <div id="heroActionText" style="font-size: 0.86rem; font-weight: 600;">
+              데이터를 기반으로 현재 타점을 계산하고 있습니다.
+            </div>
+          </div>
         </div>
 
-        <!-- [메인 매수 매력 점수 카드] -->
-        <div class="main-card">
-            <p style="letter-spacing: 1.5px; font-weight: 700; font-size: 0.85rem; color: #64748b; margin: 0;">현재 SCHD 매수 매력 점수</p>
-            <div id="score-value-container" class="score-value">
-                <span id="score-value">--</span><span style="font-size: 1.2rem; color: #94a3b8;"> / 100</span>
-            </div>
-            <div id="status-badge" class="status-badge">데이터 분석 중...</div>
-
-            <div class="data-row">
-                <div class="data-item"><p>현재 주가</p><b id="curr-price">$--</b></div>
-                <div class="data-item"><p>배당수익률(TTM)</p><b id="curr-yield">--%</b></div>
-                <div class="data-item"><p>현재 기준금리</p><b id="curr-fed">--%</b></div>
-                <div class="data-item"><p>금리 보정 점수</p><b id="fed-match-score" style="color:#2563eb;">--점</b></div>
-            </div>
-            <div id="meta-info" class="meta-info"></div>
+        <div class="kpi-mini-grid">
+          <div class="kpi-mini-box">
+            <div class="kpi-label">SCHD 현재 주가</div>
+            <div id="kpiPrice" class="kpi-val">$--</div>
+          </div>
+          <div class="kpi-mini-box">
+            <div class="kpi-label">현재 시가배당률</div>
+            <div id="kpiYield" class="kpi-val" style="color: var(--score-diamond);">--%</div>
+          </div>
+          <div class="kpi-mini-box">
+            <div class="kpi-label">TTM 연간 배당금</div>
+            <div id="kpiDividend" class="kpi-val">$--</div>
+          </div>
+          <div class="kpi-mini-box">
+            <div class="kpi-label">미국 실효 기준금리</div>
+            <div id="kpiFedRate" class="kpi-val">--%</div>
+          </div>
         </div>
+      </div>
+    </section>
 
-        <!-- [체류시간 폭발: 배당 복리 시뮬레이터] -->
-        <div class="sim-card">
-            <div class="sim-title">🔄 현금흐름 펌핑 시뮬레이터</div>
-            <p style="font-size:0.85rem; color:#94a3b8; margin: -10px 0 20px 0; line-height: 1.4;">
-                * 현재 배당수익률과 연평균 배당성장률 8%(보수적) 가정<br>
-                * 배당 재투자(DRIP) 복리 효과 반영
-            </p>
-
-            <div class="slider-group">
-                <div class="slider-label">
-                    <span>초기 목돈 (거치식)</span>
-                    <span><b id="val-lumpsum">1,000</b> 만원</span>
-                </div>
-                <input type="range" id="sim-lumpsum" min="0" max="10000" step="100" value="1000" oninput="updateSimUI()">
-            </div>
-
-            <div class="slider-group">
-                <div class="slider-label">
-                    <span>매월 투자금 (적립식)</span>
-                    <span><b id="val-monthly">50</b> 만원</span>
-                </div>
-                <input type="range" id="sim-monthly" min="0" max="500" step="10" value="50" oninput="updateSimUI()">
-            </div>
-
-            <div class="sim-result-box">
-                <div class="sim-result-item">
-                    <p>5년 뒤 매월 꽂히는 돈</p>
-                    <b id="res-5y">0원</b>
-                </div>
-                <div class="sim-result-item">
-                    <p>10년 뒤 매월 꽂히는 돈</p>
-                    <b id="res-10y">0원</b>
-                </div>
-            </div>
-        </div>
-
-        <!-- [차트 영역] -->
-        <div class="section-header">📈 배당수익률 밴드 & 주가 차트</div>
-        <div class="btn-group">
-            <button class="filter-btn" onclick="changePeriod(252)">1년</button>
-            <button class="filter-btn" onclick="changePeriod(756)">3년</button>
-            <button class="filter-btn active" onclick="changePeriod(1260)">5년</button>
-            <button class="filter-btn" onclick="changePeriod(0)">전체</button>
-        </div>
-        <div id="timeline-chart" class="chart-container"></div>
-
-        <div class="section-header">📊 역사상 배당수익률 분포도</div>
-        <div id="hist-chart" class="chart-container"></div>
-
-        <!-- [SEO & 고단가 금융 광고 타겟팅 텍스트 아코디언] -->
-        <div class="seo-accordion">
-            <div class="section-header" style="border-left-color: #3b82f6;">💡 연금저축/IRP 배당투자 필수 가이드</div>
-            
-            <details>
-                <summary>TIGER, ACE, SOL 미국배당다우존스 전격 비교</summary>
-                <div class="details-content">
-                    SCHD(Schwab US Dividend Equity ETF)와 완벽하게 동일한 'Dow Jones U.S. Dividend 100' 지수를 추종하는 한국판 상장 ETF입니다.<br>
-                    <h4>1. 환율 노출에 따른 전략 (어제/오늘 주가 변동의 핵심)</h4>
-                    최근 원달러 환율이 요동치면서 어제와 오늘 주가가 다르게 움직이는 경험을 하셨을 겁니다. <b>TIGER 미국배당다우존스</b>와 <b>ACE 미국배당다우존스</b>, <b>SOL 미국배당다우존스</b>는 모두 '환노출(UH)' 상품입니다. 즉, 미국 본장 SCHD 주가가 하락하더라도 달러 환율이 오르면 국내 계좌 수익률은 방어되는 훌륭한 헷지 수단이 됩니다. 반대로 환율 하락 시기를 대비한다면 'TIGER 미국배당+7%프리미엄다우존스' 같은 상품도 고려할 수 있습니다.
-                    <h4>2. 운용 보수(TER)와 분배금 차이</h4>
-                    최근 자산운용사 간의 수수료 경쟁으로 인해 실질 부담 비용(TER)은 3개사 모두 0.1% 내외로 극도로 저렴해졌습니다. 매월 분배금(월배당)이 입금되므로 본 레이더의 '매수 매력 점수'가 70점(맛도리 구간) 이상일 때 기계적으로 재투자하는 것이 핵심입니다.
-                </div>
-            </details>
-
-            <details>
-                <summary>연금저축펀드 및 IRP 계좌의 압도적 절세 효과</summary>
-                <div class="details-content">
-                    일반 주식 계좌에서 SCHD 본주를 매수하면 매번 배당금을 받을 때마다 15.4%의 배당소득세를 미국 정부에 떼이게 됩니다. 하지만 <b>연금저축펀드</b>나 <b>IRP(개인형 퇴직연금)</b>, <b>ISA(개인종합자산관리계좌)</b>에서 한국판 SCHD를 모아가면 이야기가 달라집니다.
-                    <h4>과세이연과 복리의 마법</h4>
-                    배당소득세 15.4%를 전혀 떼지 않고 세전 금액 그대로 계좌에 입금됩니다. 이 아낀 세금을 바탕으로 주식을 단 1주라도 더 사서 굴리는 '과세이연' 효과가 장기투자 10년, 20년 뒤에는 엄청난 복리 눈덩이(Snowball)를 만들어 냅니다. 추후 만 55세 이후 연금으로 수령할 때 3.3% ~ 5.5%의 저율 연금소득세만 내면 되기 때문에 금융소득종합과세 폭탄을 피하는 최고의 은퇴 준비 전략입니다.
-                </div>
-            </details>
-
-            <details>
-                <summary>배당수익률 밴드를 활용한 멘탈 관리 매매법</summary>
-                <div class="details-content">
-                    주식 시장이 폭락하여 어제 대비 오늘 주가가 급락했을 때, 일반적인 투자자들은 공포에 질려 패닉 셀을 합니다. 하지만 배당 투자자에게 주가 하락은 곧 <b>'시가 배당수익률의 급등'</b>을 의미합니다.<br><br>
-                    이 페이지에서 제공하는 <b>'배당수익률 밴드'</b>는 과거 10년 치 데이터 통계를 백분위(Percentile)로 역산한 가격선입니다. 현재 주가가 초록색 꿀통 밴드(역사적 상위 10% 배당률)에 근접하거나 뚫고 내려왔다면, 이는 시장의 공포가 만든 일시적 저평가 상태입니다. 이때 연금저축 계좌에 비축해 둔 현금으로 국내 상장 미국배당다우존스를 과감하게 쓸어 담는 것이 워런 버핏식 가치투자의 핵심입니다.
-                </div>
-            </details>
-        </div>
-
-        <p style="text-align: center; color: #94a3b8; font-size: 0.75rem; padding: 30px 0;">© SCHD Investing RADAR | Data by Yahoo Finance & FRED</p>
+    <!-- 2. 샌드위치 배치: 상단 애드센스 광고 슬롯 (3305729383) - Active View 극대화 -->
+    <div class="ad-slot-wrapper">
+      <div class="ad-label">Sponsored</div>
+      <ins class="adsbygoogle"
+           style="display:block; width:100%;"
+           data-ad-client="ca-pub-2894031755177844"
+           data-ad-slot="3305729383"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
     </div>
 
-    <script>
-        let globalRawData = null;
-        let selectedPeriodDays = 1260; // 5년
+    <!-- 3. 7단계 멀티 타임프레임 컨센서스 매트릭스 -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">🧭 7단계 멀티 타임프레임 매트릭스</h2>
+          <p class="card-subtitle">카드를 터치하면 아래 주가 밴드 차트와 적정 주가가 즉시 전환됩니다.</p>
+        </div>
+      </div>
 
-        // [시뮬레이터 로직]
-        let currentYield = 0.035; // 초기 임시값
+      <!-- 7개 타임프레임 히트맵 그리드 -->
+      <div id="matrixGrid" class="matrix-grid"></div>
 
-        function updateSimUI() {
-            let lumpsum = parseInt(document.getElementById('sim-lumpsum').value);
-            let monthly = parseInt(document.getElementById('sim-monthly').value);
-            
-            document.getElementById('val-lumpsum').innerText = lumpsum.toLocaleString();
-            document.getElementById('val-monthly').innerText = monthly.toLocaleString();
+      <!-- 단기 vs 중기 vs 장기 입체 퀀트 해석 박스 -->
+      <div id="consensusCommentary" class="quant-insight-box">
+        멀티 타임프레임 컨센서스를 분석 중입니다...
+      </div>
 
-            // 계산 편의를 위해 만원 단위 -> 원 단위로 환산
-            let principal = lumpsum * 10000;
-            let m_add = monthly * 10000;
-            
-            // 시뮬레이터 함수: 연 8% 배당성장(YOC) + 배당 재투자 가정
-            function calcDiv(years) {
-                let total = principal;
-                let yoc = currentYield;
-                
-                for(let i=0; i<years; i++) {
-                    total += (m_add * 12);
-                    total += (total * yoc); // 배당 재투자(DRIP)
-                    yoc *= 1.08; // 연 8% 배당 성장 (보수적)
-                }
-                return (total * yoc) / 12;
+      <!-- 미국 기준금리(Fed Rate) 유사 시기 보정 비교 바 -->
+      <div class="fed-compare-bar">
+        <div>
+          <div style="font-size: 0.85rem; font-weight: 700;">
+            🏦 미국 기준금리(<span id="fedRateInline">--%</span> ± 0.5%p) 유사 시기 보정 점수:
+            <span id="fedAdjScoreText" style="font-size: 1rem; font-weight: 800; margin-left: 4px;">--점</span>
+          </div>
+          <div id="fedSampleDaysText" style="font-size: 0.75rem; color: var(--text-secondary);">
+            선택 기간 내 유사 금리 영업일 표본 분석 중
+          </div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="applyFedToggle" />
+          <span>금리 보정 점수로 메인 보기</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- 4. 인터랙티브 Yield Band(배당수익률 역산 주가 밴드) & 시계열 차트 -->
+    <section class="card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title">📈 <span id="chartTfTitle">5년</span> 적정 주가 Yield Band</h2>
+          <p class="card-subtitle">과거 배당수익률 분포(상위 10% · 중앙값 · 하위 10%)로 역산한 내재가치 채널</p>
+        </div>
+        <div class="chart-tabs">
+          <button id="tabBtnBand" class="chart-tab-btn active" onclick="switchChartMode('band')">주가 밴드</button>
+          <button id="tabBtnYield" class="chart-tab-btn" onclick="switchChartMode('yield')">배당률·금리</button>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <canvas id="mainQuantChart"></canvas>
+      </div>
+
+      <!-- 현재 배당금 기준 역산 타점 가이드 -->
+      <div class="band-legend-grid">
+        <div class="band-item">
+          <div class="band-item-title">🟢 꿀통 매수선 (상위 10%)</div>
+          <div id="bandBargainPrice" class="band-item-val" style="color: var(--score-diamond);">$--</div>
+          <div id="bandBargainYield" style="font-size: 0.72rem; color: var(--text-secondary);">배당률 --% 이상</div>
+        </div>
+        <div class="band-item">
+          <div class="band-item-title">🟡 역사적 적정 주가 (중앙값)</div>
+          <div id="bandFairPrice" class="band-item-val" style="color: var(--score-neutral);">$--</div>
+          <div id="bandFairYield" style="font-size: 0.72rem; color: var(--text-secondary);">배당률 --%</div>
+        </div>
+        <div class="band-item">
+          <div class="band-item-title">🔴 고평가 경계선 (하위 10%)</div>
+          <div id="bandExpensivePrice" class="band-item-val" style="color: var(--score-hot);">$--</div>
+          <div id="bandExpensiveYield" style="font-size: 0.72rem; color: var(--text-secondary);">배당률 --% 이하</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. 페이지 이동(MPA) & 전면 광고(Vignette) 유도 네이티브 CTA -->
+    <a href="diagnosis.html" class="cta-next-card">
+      <div>
+        <div class="cta-title">🎯 내 SCHD 평단가는 역사상 상위 몇 % 꿀통일까?</div>
+        <div class="cta-desc">내 평단가·수량 입력하고 YOC(투자원금 대비 배당률) 티어 카드 & 추매 물타기 타점 계산하기</div>
+      </div>
+      <div class="cta-arrow">→</div>
+    </a>
+
+    <a href="kschd.html" class="cta-next-card" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(59, 130, 246, 0.14)); border-color: var(--score-diamond);">
+      <div>
+        <div class="cta-title">🇰🇷 연금저축·ISA 국내 미국배당다우존스, 지금 환율에 사도 될까?</div>
+        <div class="cta-desc">원/달러 환율 반영 실질 매수 점수 & 일반계좌 vs ISA vs 연금저축 세후 배당금 비교</div>
+      </div>
+      <div class="cta-arrow" style="color: var(--score-diamond);">→</div>
+    </a>
+
+    <footer class="app-footer">
+      <p>© 2026 dividend.besmelt.com · 데이터 출처: Yahoo Finance (SCHD) & FRED (DFF)</p>
+      <p style="margin-top: 4px;">본 사이트의 모든 지표는 과거 통계에 기반한 참고 자료이며, 투자 판단의 최종 책임은 투자자 본인에게 있습니다.</p>
+    </footer>
+  </main>
+
+  <!-- 하단 고정 네비게이션 바 -->
+  <nav id="bottomNav" class="bottom-nav"></nav>
+
+  <script src="common.js"></script>
+  <script>
+    let globalData = null;
+    let selectedTfKey = SITE_CONFIG.defaultTimeframeKey;
+    let currentChartMode = "band"; // 'band' | 'yield'
+    let quantChartInstance = null;
+    let allTfResults = {};
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      renderAppShell("home");
+      triggerAdSense();
+
+      document.getElementById("applyFedToggle").addEventListener("change", () => {
+        renderSelectedTimeframe();
+      });
+
+      window.addEventListener("themeChanged", () => {
+        if (globalData) renderChart(allTfResults[selectedTfKey]);
+      });
+
+      try {
+        globalData = await loadSchdData();
+        initDashboard();
+      } catch (err) {
+        console.error(err);
+        document.getElementById("updatedAtText").textContent = "데이터 로드 실패: 잠시 후 새로고침 해주세요.";
+      }
+    });
+
+    function initDashboard() {
+      // 최신 지표 바인딩
+      const { price, yield: curYield, ttm_dividend, fed_rate, updated_at } = {
+        ...globalData.latest,
+        updated_at: globalData.updated_at
+      };
+      document.getElementById("updatedAtText").textContent = `업데이트: ${updated_at}`;
+      document.getElementById("kpiPrice").textContent = `$${price.toFixed(2)}`;
+      document.getElementById("kpiYield").textContent = `${curYield.toFixed(2)}%`;
+      document.getElementById("kpiDividend").textContent = `$${ttm_dividend.toFixed(4)}`;
+      document.getElementById("kpiFedRate").textContent = `${fed_rate.toFixed(2)}%`;
+      document.getElementById("fedRateInline").textContent = `${fed_rate.toFixed(2)}%`;
+
+      // 7개 타임프레임 전수 연산
+      TIMEFRAMES.forEach(tf => {
+        allTfResults[tf.key] = analyzeTimeframe(globalData, tf.key);
+      });
+
+      renderMatrixGrid();
+      renderConsensusCommentary();
+      renderSelectedTimeframe();
+    }
+
+    function renderMatrixGrid() {
+      const container = document.getElementById("matrixGrid");
+      container.innerHTML = TIMEFRAMES.map(tf => {
+        const res = allTfResults[tf.key];
+        const meta = getScoreMeta(res.rawScore);
+        const isActive = tf.key === selectedTfKey ? "active" : "";
+        return `
+          <div class="matrix-cell ${isActive}" onclick="selectTimeframe('${tf.key}')">
+            <div class="matrix-tf-label">${tf.label}</div>
+            <div class="matrix-tf-score" style="color: ${meta.color};">${res.rawScore}점</div>
+            <span class="matrix-tf-tag" style="background: ${meta.bg}; color: ${meta.color};">
+              ${meta.shortTag}
+            </span>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderConsensusCommentary() {
+      const shortAvg = Math.round((allTfResults["1M"].rawScore + allTfResults["3M"].rawScore) / 2);
+      const midAvg = Math.round((allTfResults["1Y"].rawScore + allTfResults["3Y"].rawScore + allTfResults["5Y"].rawScore) / 3);
+      const longAvg = Math.round((allTfResults["10Y"].rawScore + allTfResults["MAX"].rawScore) / 2);
+
+      let msg = "";
+      if (shortAvg >= 65 && midAvg >= 65 && longAvg >= 65) {
+        msg = `🔥 <strong>[전 구간 매수 골든크로스]</strong> 단기(${shortAvg}점) · 중기(${midAvg}점) · 장기(${longAvg}점) 모두 65점 이상 저평가 구간입니다. 역사적 배당 성장 대비 주가가 눌려 있어 적립식 및 추가 비중 확대에 매우 유리한 시점입니다.`;
+      } else if (longAvg >= 70 && shortAvg < 45) {
+        msg = `💡 <strong>[장기 저평가 · 단기 반등 구간]</strong> 10년 이상 장기 관점(${longAvg}점)에서는 여전히 훌륭한 꿀통 구간이지만, 최근 1 ~ 3개월 단기(${shortAvg}점) 주가 반등으로 단기 배당률 매력은 다소 낮아졌습니다. 한 번에 목돈을 넣기보다 <strong>3 ~ 5회 분할 매수</strong>로 접근하는 전략이 유효합니다.`;
+      } else if (longAvg < 50 && shortAvg >= 65) {
+        msg = `📉 <strong>[단기 조정 발생 · 기술적 눌림목]</strong> 장기 평균(${longAvg}점) 대비 최근 1 ~ 3개월(${shortAvg}점) 사이 유의미한 주가 조정이 발생해 단기 배당 매력이 급등했습니다. 현금 비중이 있다면 단기 물타기 타점으로 활용할 수 있습니다.`;
+      } else {
+        msg = `⚖️ <strong>[타임프레임 종합 진단]</strong> 단기 평균 <strong>${shortAvg}점</strong> · 중기(1 ~ 5년) 평균 <strong>${midAvg}점</strong> · 장기(10년 ~ 전체) 평균 <strong>${longAvg}점</strong>입니다. 흔들리지 않고 정해진 날짜에 기계적으로 수량을 늘려가는 정석 적립식 투자가 적합한 구간입니다.`;
+      }
+      document.getElementById("consensusCommentary").innerHTML = msg;
+    }
+
+    function selectTimeframe(tfKey) {
+      selectedTfKey = tfKey;
+      renderMatrixGrid();
+      renderSelectedTimeframe();
+    }
+
+    function renderSelectedTimeframe() {
+      const res = allTfResults[selectedTfKey];
+      const useFedAdjusted = document.getElementById("applyFedToggle").checked;
+      const activeScore = useFedAdjusted ? res.fedAdjustedScore : res.rawScore;
+      const meta = getScoreMeta(activeScore);
+
+      document.getElementById("heroTfBadge").textContent =
+        `${res.tf.label}(${res.sliceCount.toLocaleString()}영업일)${useFedAdjusted ? " · 금리보정" : ""} 기준`;
+      document.getElementById("chartTfTitle").textContent = res.tf.label;
+
+      const scoreNumEl = document.getElementById("heroScoreNum");
+      const scoreRingEl = document.getElementById("heroScoreRing");
+      const tierPillEl = document.getElementById("heroTierPill");
+
+      scoreNumEl.textContent = activeScore;
+      scoreNumEl.style.color = meta.color;
+      scoreRingEl.style.borderColor = meta.color;
+      scoreRingEl.style.background = meta.bg;
+
+      tierPillEl.textContent = meta.tier;
+      tierPillEl.style.background = meta.bg;
+      tierPillEl.style.color = meta.color;
+      document.getElementById("heroActionText").textContent = meta.action;
+
+      // 금리 보정 텍스트 업데이트
+      const fedMeta = getScoreMeta(res.fedAdjustedScore);
+      const fedScoreEl = document.getElementById("fedAdjScoreText");
+      fedScoreEl.textContent = `${res.fedAdjustedScore}점 (${fedMeta.shortTag})`;
+      fedScoreEl.style.color = fedMeta.color;
+      document.getElementById("fedSampleDaysText").textContent =
+        `${res.tf.label} ${res.sliceCount.toLocaleString()}영업일 중 현재 금리(±0.5%p) 유사 시기 총 ${res.similarFedDays.toLocaleString()}영업일 추출 비교`;
+
+      // 하단 역산 주가 밴드 수치 업데이트
+      document.getElementById("bandBargainPrice").textContent = `$${res.bargainPrice.toFixed(2)}`;
+      document.getElementById("bandBargainYield").textContent = `배당률 ${res.yieldP90.toFixed(2)}% 이상`;
+
+      document.getElementById("bandFairPrice").textContent = `$${res.fairPrice.toFixed(2)}`;
+      document.getElementById("bandFairYield").textContent = `배당률 ${res.yieldP50.toFixed(2)}%`;
+
+      document.getElementById("bandExpensivePrice").textContent = `$${res.expensivePrice.toFixed(2)}`;
+      document.getElementById("bandExpensiveYield").textContent = `배당률 ${res.yieldP10.toFixed(2)}% 이하`;
+
+      renderChart(res);
+    }
+
+    function switchChartMode(mode) {
+      currentChartMode = mode;
+      document.getElementById("tabBtnBand").classList.toggle("active", mode === "band");
+      document.getElementById("tabBtnYield").classList.toggle("active", mode === "yield");
+      renderChart(allTfResults[selectedTfKey]);
+    }
+
+    function renderChart(res) {
+      const ctx = document.getElementById("mainQuantChart").getContext("2d");
+      if (quantChartInstance) quantChartInstance.destroy();
+
+      // 모바일 렌더링 성능 최적화를 위한 데이터 다운샘플링 (최대 260포인트)
+      const step = Math.max(1, Math.floor(res.dates.length / 260));
+      const labels = [];
+      const priceSeries = [];
+      const bargainBand = [];
+      const fairBand = [];
+      const expensiveBand = [];
+      const yieldSeries = [];
+      const fedSeries = [];
+
+      for (let i = 0; i < res.dates.length; i += step) {
+        labels.push(res.dates[i]);
+        priceSeries.push(res.prices[i]);
+        const d = res.divs[i];
+        bargainBand.push(res.yieldP90 > 0 ? +(d / (res.yieldP90 / 100)).toFixed(2) : null);
+        fairBand.push(res.yieldP50 > 0 ? +(d / (res.yieldP50 / 100)).toFixed(2) : null);
+        expensiveBand.push(res.yieldP10 > 0 ? +(d / (res.yieldP10 / 100)).toFixed(2) : null);
+        yieldSeries.push(res.yields[i]);
+        fedSeries.push(res.fedRates[i]);
+      }
+
+      // 마지막 영업일 누락 방지
+      if (labels[labels.length - 1] !== res.dates[res.dates.length - 1]) {
+        const lastIdx = res.dates.length - 1;
+        labels.push(res.dates[lastIdx]);
+        priceSeries.push(res.prices[lastIdx]);
+        const d = res.divs[lastIdx];
+        bargainBand.push(+(d / (res.yieldP90 / 100)).toFixed(2));
+        fairBand.push(+(d / (res.yieldP50 / 100)).toFixed(2));
+        expensiveBand.push(+(d / (res.yieldP10 / 100)).toFixed(2));
+        yieldSeries.push(res.yields[lastIdx]);
+        fedSeries.push(res.fedRates[lastIdx]);
+      }
+
+      const isLight = document.documentElement.getAttribute("data-theme") === "light";
+      const gridColor = isLight ? "rgba(15, 23, 42, 0.07)" : "rgba(148, 163, 184, 0.1)";
+      const tickColor = isLight ? "#475569" : "#94a3b8";
+
+      const datasets = currentChartMode === "band"
+        ? [
+            {
+              label: "SCHD 종가 ($)",
+              data: priceSeries,
+              borderColor: "#3b82f6",
+              backgroundColor: "rgba(59, 130, 246, 0.08)",
+              borderWidth: 2.3,
+              pointRadius: 0,
+              tension: 0.15
+            },
+            {
+              label: "꿀통 매수선 (상위 10% 배당률)",
+              data: bargainBand,
+              borderColor: "#10b981",
+              borderDash: [5, 5],
+              borderWidth: 1.6,
+              pointRadius: 0,
+              tension: 0.15
+            },
+            {
+              label: "적정 주가선 (중앙값 배당률)",
+              data: fairBand,
+              borderColor: "#f59e0b",
+              borderDash: [4, 4],
+              borderWidth: 1.5,
+              pointRadius: 0,
+              tension: 0.15
+            },
+            {
+              label: "고평가 경계선 (하위 10% 배당률)",
+              data: expensiveBand,
+              borderColor: "#ef4444",
+              borderDash: [5, 5],
+              borderWidth: 1.5,
+              pointRadius: 0,
+              tension: 0.15
             }
-
-            let div5 = calcDiv(5);
-            let div10 = calcDiv(10);
-
-            // 원 단위 포맷팅 (만원 단위로 변환해 깔끔하게 표시)
-            const formatWon = (num) => {
-                if(num >= 10000) return Math.floor(num/10000).toLocaleString() + '만 원';
-                return Math.floor(num).toLocaleString() + '원';
-            };
-
-            document.getElementById('res-5y').innerText = formatWon(div5);
-            document.getElementById('res-10y').innerText = formatWon(div10);
-        }
-
-
-        // [메인 데이터 로드 및 렌더링]
-        async function initApp() {
-            try {
-                const response = await fetch('schd_data.json');
-                if (!response.ok) throw new Error("JSON 파일을 찾을 수 없습니다.");
-                globalRawData = await response.json();
-            } catch (err) {
-                console.warn("로컬 테스트용 더미 생성");
-                globalRawData = generateFallbackData();
+          ]
+        : [
+            {
+              label: "SCHD 시가배당률 (%)",
+              data: yieldSeries,
+              borderColor: "#10b981",
+              backgroundColor: "rgba(16, 185, 129, 0.12)",
+              fill: true,
+              borderWidth: 2.2,
+              pointRadius: 0,
+              yAxisID: "y"
+            },
+            {
+              label: "미국 기준금리 (%)",
+              data: fedSeries,
+              borderColor: "#f59e0b",
+              borderWidth: 1.6,
+              borderDash: [4, 4],
+              pointRadius: 0,
+              yAxisID: "y1"
             }
-            renderDashboard();
-        }
+          ];
 
-        function changePeriod(days) {
-            selectedPeriodDays = days;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-            renderDashboard();
-        }
-
-        function renderDashboard() {
-            if (!globalRawData) return;
-
-            const allDates = globalRawData.dates;
-            const allPrices = globalRawData.prices;
-            const allYields = globalRawData.yields;
-            const allDivs = globalRawData.ttm_dividends;
-            const allFedRates = globalRawData.fed_rates;
-
-            const startIndex = selectedPeriodDays === 0 ? 0 : Math.max(0, allDates.length - selectedPeriodDays);
-            const dates = allDates.slice(startIndex);
-            const prices = allPrices.slice(startIndex);
-            const yields = allYields.slice(startIndex);
-            const ttmDivs = allDivs.slice(startIndex);
-            const fedRates = allFedRates.slice(startIndex);
-
-            const curr_p = prices[prices.length - 1];
-            const curr_y = yields[yields.length - 1];
-            const curr_fed = fedRates[fedRates.length - 1];
-            const lastDate = dates[dates.length - 1];
-
-            // 시뮬레이터 전역 변수 업데이트
-            currentYield = curr_y / 100;
-            updateSimUI(); 
-
-            // 점수 계산
-            const cheaperDays = yields.filter(y => y > curr_y).length;
-            const cheaperPct = (cheaperDays / yields.length) * 100;
-            const buy_score = Math.round(100 - cheaperPct);
-
-            let fed_score = buy_score;
-            const similarFedIndices = [];
-            for (let i = 0; i < fedRates.length; i++) {
-                if (Math.abs(fedRates[i] - curr_fed) <= 0.5) similarFedIndices.push(i);
+      quantChartInstance = new Chart(ctx, {
+        type: "line",
+        data: { labels, datasets },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: { mode: "index", intersect: false },
+          plugins: {
+            legend: {
+              labels: { color: tickColor, boxWidth: 12, font: { size: 11 } }
             }
-            if (similarFedIndices.length > 20) {
-                const similarYields = similarFedIndices.map(idx => yields[idx]);
-                const fedCheaper = similarYields.filter(y => y > curr_y).length;
-                fed_score = Math.round(100 - (fedCheaper / similarYields.length) * 100);
-            }
-
-            // UI 바인딩
-            let status, color;
-            if (buy_score >= 90) { status = "🍯 전설의 꿀통 매수"; color = "#b45309"; } 
-            else if (buy_score >= 70) { status = "😋 맛도리 적립 구간"; color = "#15803d"; } 
-            else if (buy_score >= 40) { status = "⚖️ 합리적 정가 매수"; color = "#b45309"; } 
-            else { status = "🚨 고평가 주의 / 관망"; color = "#b91c1c"; }
-
-            document.getElementById('score-value').innerText = buy_score;
-            document.getElementById('score-value-container').style.color = color;
-            
-            const badge = document.getElementById('status-badge');
-            badge.innerText = status; badge.style.color = color; badge.style.borderColor = color;
-
-            document.getElementById('curr-price').innerText = `$${curr_p.toFixed(2)}`;
-            document.getElementById('curr-yield').innerText = `${curr_y.toFixed(2)}%`;
-            document.getElementById('curr-fed').innerText = `${curr_fed.toFixed(2)}%`;
-            document.getElementById('fed-match-score').innerText = `${fed_score}점`;
-
-            const updatedAtStr = globalRawData.updated_at || "업데이트 정보 없음";
-            document.getElementById('meta-info').innerHTML = 
-                `📡 <b style="color: #475569;">데이터 갱신: ${updatedAtStr}</b><br>` +
-                `최근 반영일: ${lastDate} | 상위 ${cheaperPct.toFixed(1)}% 저렴함`;
-
-            renderTimeline(dates, prices, ttmDivs, yields);
-            renderHist(yields, curr_y);
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: tickColor, maxTicksLimit: 6, font: { size: 10 } }
+            },
+            y: {
+              grid: { color: gridColor },
+              ticks: {
+                color: tickColor,
+                font: { size: 11 },
+                callback: v => currentChartMode === "band" ? `$${v}` : `${v}%`
+              }
+            },
+            ...(currentChartMode === "yield" ? {
+              y1: {
+                position: "right",
+                grid: { drawOnChartArea: false },
+                ticks: { color: "#f59e0b", font: { size: 10 }, callback: v => `${v}%` }
+              }
+            } : {})
+          }
         }
-
-        // [모바일 최적화 Plotly 차트]
-        function renderTimeline(dates, prices, ttmDivs, yields) {
-            const sorted = [...yields].sort((a, b) => a - b);
-            const yP10 = sorted[Math.floor(sorted.length * 0.10)];
-            const yP50 = sorted[Math.floor(sorted.length * 0.50)];
-            const yP90 = sorted[Math.floor(sorted.length * 0.90)];
-
-            const hPrices = ttmDivs.map(d => Number((d / (yP90 / 100)).toFixed(2)));
-            const fPrices = ttmDivs.map(d => Number((d / (yP50 / 100)).toFixed(2)));
-            const rPrices = ttmDivs.map(d => Number((d / (yP10 / 100)).toFixed(2)));
-
-            const traces = [
-                { x: dates, y: prices, name: '실제 주가($)', type: 'scatter', mode: 'lines', line: { color: '#0f172a', width: 2 } },
-                { x: dates, y: hPrices, name: `꿀통선(${yP90.toFixed(2)}%)`, type: 'scatter', mode: 'lines', line: { color: '#16a34a', width: 1.5, dash: 'dash' } },
-                { x: dates, y: fPrices, name: `정가선(${yP50.toFixed(2)}%)`, type: 'scatter', mode: 'lines', line: { color: '#eab308', width: 1.2, dash: 'dot' } },
-                { x: dates, y: rPrices, name: `고평가선(${yP10.toFixed(2)}%)`, type: 'scatter', mode: 'lines', line: { color: '#ef4444', width: 1.2, dash: 'dash' } }
-            ];
-
-            const layout = {
-                margin: { l: 30, r: 15, t: 30, b: 30 }, // 모바일 여백 극대화
-                hovermode: "x unified",
-                dragmode: false, // 모바일 스크롤 시 화면 찌그러짐 방지
-                hoverlabel: { bgcolor: "#fff", font: { size: 12, family: "Pretendard" } },
-                legend: { orientation: "h", y: 1.15, x: 0.5, xanchor: 'center', font: {size: 10} },
-                xaxis: { showgrid: false, fixedrange: true }, // 모바일 줌인 방지
-                yaxis: { showgrid: true, gridcolor: '#f1f5f9', fixedrange: true } // 모바일 줌인 방지
-            };
-            const config = { responsive: true, displayModeBar: false };
-            Plotly.react('timeline-chart', traces, layout, config);
-        }
-
-        function renderHist(yields, curr_y) {
-            const trace = {
-                x: yields, type: 'histogram',
-                marker: { color: '#3b82f6', line: { color: 'white', width: 0.5 } },
-                xbins: { size: 0.05 }
-            };
-
-            const layout = {
-                margin: { l: 30, r: 20, t: 30, b: 30 },
-                dragmode: false,
-                xaxis: { title: '배당수익률 (%)', tickformat: '.2f', fixedrange: true },
-                yaxis: { fixedrange: true },
-                shapes: [{
-                    type: 'line', x0: curr_y, x1: curr_y, y0: 0, y1: 1, yref: 'paper',
-                    line: { color: '#dc2626', width: 2.5, dash: 'dash' }
-                }],
-                annotations: [{
-                    x: curr_y, y: 1, yref: 'paper', text: `오늘(${curr_y.toFixed(2)}%)`,
-                    showarrow: true, arrowhead: 2, arrowcolor: '#dc2626', ax: 0, ay: -25,
-                    font: { color: 'white', size: 11 }, bgcolor: '#dc2626', borderpad: 3
-                }]
-            };
-            const config = { responsive: true, displayModeBar: false };
-            Plotly.react('hist-chart', [trace], layout, config);
-        }
-
-        function generateFallbackData() {
-            const dates = [], prices = [], ttm_dividends = [], yields = [], fed_rates = [];
-            let p = 25.0, d = 0.85; const now = new Date();
-            for (let i = 2500; i >= 0; i--) {
-                const day = new Date(now); day.setDate(day.getDate() - i);
-                p = p * (1 + (Math.random() - 0.496) * 0.012);
-                d = d * (1 + 0.00015);
-                dates.push(day.toISOString().split('T')[0]); prices.push(Number(p.toFixed(2)));
-                ttm_dividends.push(Number(d.toFixed(4))); yields.push(Number((d/p*100).toFixed(2))); fed_rates.push(4.75);
-            }
-            return { dates, prices, ttm_dividends, yields, fed_rates, updated_at: "로컬 테스트 모드" };
-        }
-
-        window.onload = initApp;
-    </script>
+      });
+    }
+  </script>
 </body>
 </html>
