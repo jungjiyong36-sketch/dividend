@@ -107,7 +107,7 @@
             --card-shadow: 0 8px 20px rgba(0,0,0,0.28);
         }
 
-        /* 40 ~ 50대 직장인을 위한 고대비 라이트(화이트) 테마 변수 */
+        /* 고대비 라이트(화이트) 테마 변수 */
         html[data-theme="light"] {
             --bg-main: #f1f5f9;
             --bg-card: #ffffff;
@@ -124,7 +124,7 @@
             --card-shadow: 0 4px 16px rgba(15,23,42,0.06);
         }
 
-        /* 40 ~ 50대 시인성 강화를 위한 큰글씨 모드 */
+        /* 시인성 강화를 위한 글씨 크기 모드 */
         html { font-size: 16px; transition: font-size 0.15s ease; }
         html[data-font="large"] { font-size: 18px; }
 
@@ -141,7 +141,7 @@
         
         .container { max-width: 880px; margin: 0 auto; padding: 14px 16px; }
 
-        /* 상단 헤더 & 4050 가독성 툴바 */
+        /* 상단 헤더 & 가독성 툴바 */
         .top-nav {
             display: flex; flex-direction: column; gap: 8px;
             padding: 8px 0 14px 0; border-bottom: 1px solid var(--border); margin-bottom: 14px;
@@ -428,7 +428,7 @@
 </head>
 <body>
     <div class="container">
-        <!-- 상단 헤더: h1 태그 + 4050 맞춤형 밝은화면/큰글씨 토글 + 스레드 링크 -->
+        <!-- 상단 헤더 -->
         <header class="top-nav">
             <div class="brand-row">
                 <div class="brand-left">
@@ -447,7 +447,7 @@
             <div class="onboarding-chips">
                 <span class="chip">✔️ 10년 연속 배당 우량주 100선</span>
                 <span class="chip">✔️ 국내 3대장(TIGER·ACE·SOL) 실데이터 연동</span>
-                <span class="chip">✔️ 연 1,500만 원 연금세금·건보료 판독</span>
+                <span class="chip">✔️ 연 1,500만 원 연금세금 및 절세 배분 판독</span>
             </div>
         </header>
 
@@ -462,7 +462,7 @@
         </div>
 
         <!-- ================================================================= -->
-        <!-- [TAB 1] 레이더 홈 (핵심 백분위 점수 + 실전 행동 지침 + Yield Band) -->
+        <!-- [TAB 1] 레이더 홈 -->
         <!-- ================================================================= -->
         <div id="tab-home" class="tab-pane active">
             <div class="card">
@@ -479,13 +479,11 @@
                     </p>
                 </div>
 
-                <!-- 점수 구간별 구체적 행동 지침 (Action Plan) -->
                 <div id="action-plan-box" class="action-plan-box">
                     <div id="action-plan-title" class="action-plan-title">💡 오늘의 실전 매수 & 현금 비중 가이드</div>
                     <div id="action-plan-text">데이터를 바탕으로 최적의 매수 비중을 계산 중입니다...</div>
                 </div>
 
-                <!-- 다음 배당락일 D-Day 안내 바 -->
                 <div class="dday-bar">
                     <div class="dday-item">
                         <span>🇺🇸 <b>SCHD 본주</b> 다음 예상 배당락일</span>
@@ -497,7 +495,6 @@
                     </div>
                 </div>
 
-                <!-- 비교 기간 선택 컨트롤러 -->
                 <div class="period-selector-wrap">
                     <div class="period-selector-header">
                         <span>🔎 비교 기준 기간 선택</span>
@@ -563,7 +560,6 @@
                     </div>
                 </div>
 
-                <!-- 내부 탭 이동 유도 CTA 링크 (클릭 시 실제 페이지 이동으로 애드센스 전면광고 트리거) -->
                 <div class="cta-btn-grid">
                     <a href="?tab=myprice" class="cta-nav-btn">
                         🎯 내 평단가($ · TIGER · ACE · SOL) 물타기 계산기 →
@@ -573,12 +569,10 @@
                     </a>
                 </div>
 
-                <!-- 스레드·단톡방 원클릭 브리핑 복사 버튼 -->
                 <button type="button" class="viral-share-btn" onclick="copyTodayBriefing()">
                     📋 오늘의 SCHD 퀀트 점수 요약 복사하기 (스레드·단톡방 공유용)
                 </button>
 
-                <!-- 데이터 최신화 스케줄 및 퀀트 산출 주석 (+ 파이썬 정적 SEO 베이킹 슬롯) -->
                 <div class="quant-trust-box">
                     📡 <b>최종 데이터 동기화:</b> <span id="updated-at-text">로딩 중...</span> (기준 영업일: <span id="ref-date-text">--</span>)<br>
                     ⏱️ <b>데이터 갱신 스케줄 (평일 일 5회):</b> 미국 정규장 중 2시간 간격(23:00, 01:00, 03:00 KST) 및 미국장 마감 직후(05:15, 06:15 KST) 자동 최신화됩니다.<br>
@@ -591,7 +585,7 @@
                 </div>
             </div>
 
-            <!-- [구글 애드센스 중간 인피드 슬롯 #2: 가장 유효 노출률(Active View)이 높은 핵심 구역] -->
+            <!-- [구글 애드센스 중간 인피드 슬롯 #2] -->
             <div class="ad-slot-box">
                 <ins class="adsbygoogle"
                      style="display:block; width:100%;"
@@ -663,7 +657,7 @@
         </div>
 
         <!-- ================================================================= -->
-        <!-- [TAB 2] 내 평단 진단 (미국 직투 $ vs 국내 3대장 실시간 자동 연동) -->
+        <!-- [TAB 2] 내 평단 진단 -->
         <!-- ================================================================= -->
         <div id="tab-myprice" class="tab-pane">
             <div class="card">
@@ -672,13 +666,11 @@
                     미국 직투(SCHD)는 물론 연금저축 · IRP · ISA에서 모아가는 국내 3대장(TIGER · ACE · SOL) 실시간 주가를 자동 연동합니다.
                 </p>
 
-                <!-- 통화/시장 선택 스위치 -->
                 <div class="mode-switch" style="margin-bottom: 16px;">
                     <button id="btn-my-us" class="mode-btn active" onclick="switchMyPriceMarket('US')">🇺🇸 미국 직투 (SCHD, $)</button>
                     <button id="btn-my-kr" class="mode-btn" onclick="switchMyPriceMarket('KR')">🇰🇷 국내 상장 3대장 (원화 자동연동)</button>
                 </div>
 
-                <!-- [미국 직투($) 입력 영역] -->
                 <div id="my-us-inputs">
                     <div class="input-grid">
                         <div class="input-group">
@@ -692,7 +684,6 @@
                     </div>
                 </div>
 
-                <!-- [국내 상장 ETF(원) 원클릭 선택 및 입력 영역] -->
                 <div id="my-kr-inputs" style="display: none;">
                     <div style="font-size: 0.82rem; font-weight: 700; color: var(--text-body); margin-bottom: 6px;">
                         📌 보유 중인 국내 미국배당다우존스 종목 터치 (오늘자 실제 종가 자동 입력)
@@ -759,7 +750,6 @@
                     </div>
                 </div>
 
-                <!-- 월 배당 목표 달성 프로그레스 바 -->
                 <div class="goal-progress-wrap">
                     <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.84rem; font-weight: 800;">
                         <span>🏁 월 배당 50만 원 목표 달성률 (추매 포함)</span>
@@ -775,12 +765,10 @@
 
                 <div id="my-diagnosis-comment" class="quant-trust-box" style="margin-top: 14px;"></div>
 
-                <!-- 스레드 댓글/본문 자랑용 성적표 복사 버튼 -->
                 <button type="button" class="viral-share-btn" onclick="copyMyTierReport()">
                     🏆 내 평단가 상위 % 성적표 복사하기 (스레드·단톡방 인증용)
                 </button>
 
-                <!-- 재방문율(Retention) 락인 장치: 내 배당 자산 성장 히스토리 스탬프 -->
                 <div class="quant-trust-box" style="margin-top: 16px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
                         <b>📅 나의 배당 성장 누적 기록장 (브라우저 자동 보관)</b>
@@ -807,7 +795,6 @@
                     </div>
                 </div>
 
-                <!-- 탭 2 하단 순환형 CTA 링크 (전면광고 트리거) -->
                 <div class="cta-btn-grid">
                     <a href="?tab=kretf" class="cta-nav-btn">
                         🇰🇷 지금 환율에 미국 직투 vs 연금계좌 3대장 어디가 유리할까? →
@@ -820,7 +807,7 @@
         </div>
 
         <!-- ================================================================= -->
-        <!-- [TAB 3] 국내ETF·환율 (TIGER·ACE·SOL 실데이터 비교 & IRP 70:30 계산기) -->
+        <!-- [TAB 3] 국내ETF·환율 -->
         <!-- ================================================================= -->
         <div id="tab-kretf" class="tab-pane">
             <div class="card">
@@ -829,7 +816,6 @@
                     SCHD 본주 가치와 원/달러 환율 백분위를 결합해 미국 직투 vs 연금저축·IRP(TIGER · ACE · SOL) 최적 전략을 판독합니다.
                 </p>
 
-                <!-- 국내 상장 3대장 실시간 시세 요약 보드 -->
                 <div id="kr-etf-cards-grid" class="band-summary-grid" style="margin-bottom: 16px;"></div>
 
                 <div class="slider-group">
@@ -855,7 +841,6 @@
 
                 <div id="kr-matrix-verdict" class="quant-trust-box" style="margin-top: 16px; border-left: 4px solid var(--accent);"></div>
 
-                <!-- 4050 직장인 필수: IRP 안전자산 30% 의무비율 자동 매수 계산기 -->
                 <h3 style="font-size: 0.96rem; margin: 22px 0 8px 0;">⚖️ 퇴직연금(IRP · DC형) 위험자산 70% : 안전자산 30% 매수 계산기</h3>
                 <div class="quant-trust-box" style="margin-top: 0;">
                     <div class="input-grid" style="margin-bottom: 10px;">
@@ -877,7 +862,6 @@
                     </div>
                 </div>
 
-                <!-- 계좌별 세후 배당금 & 건보료 안전도 실시간 비교 계산기 -->
                 <h3 style="font-size: 0.96rem; margin: 22px 0 10px 0;">💰 내 투자금 기준 계좌별 세후 배당금 & 건보료 안전도 비교</h3>
                 <div class="slider-group" style="margin-bottom: 12px;">
                     <div class="slider-label">
@@ -901,7 +885,6 @@
                     </table>
                 </div>
 
-                <!-- 탭 3 하단 순환형 CTA 링크 (전면광고 트리거) -->
                 <div class="cta-btn-grid">
                     <a href="?tab=timemachine" class="cta-nav-btn">
                         🚀 연 1,500만 원 세금 절벽 피하는 은퇴 월배당 시뮬레이터 →
@@ -914,13 +897,13 @@
         </div>
 
         <!-- ================================================================= -->
-        <!-- [TAB 4] 은퇴 타임머신 (사적연금 1,500만 원 & 건보료 2,000만 원 판독 탑재) -->
+        <!-- [TAB 4] 은퇴 타임머신 -->
         <!-- ================================================================= -->
         <div id="tab-timemachine" class="tab-pane">
             <div class="card">
                 <h2 class="card-header-title">🚀 연금저축 · IRP · ISA 배당 복리 & 세금 절벽 판독기</h2>
                 <p class="card-header-sub">
-                    20년 복리 시뮬레이션과 함께 40 ~ 50대 은퇴자의 핵심 기준선인 <b>사적연금 저율과세 한도(연 1,500만 원 · 월 125만 원)</b>와 <b>건보료 피부양자 탈락 경계선(연 2,000만 원 · 월 166만 원)</b>을 동시에 판독합니다.
+                    20년 복리 시뮬레이션과 함께 은퇴 설계의 핵심 기준선인 <b>사적연금 저율과세 한도(연 1,500만 원 · 월 125만 원)</b>와 <b>건강보험료 기준선(연 2,000만 원 · 월 166만 원)</b>을 동시에 판독합니다.
                 </p>
 
                 <div class="slider-group">
@@ -959,7 +942,6 @@
                     목표 월 배당금 도달 시점을 계산 중입니다...
                 </div>
 
-                <!-- 4050 맞춤형 사적연금 1,500만 원 & 건보료 2,000만 원 절세 배분 가이드 -->
                 <div id="tax-cliff-alert-box" class="quant-trust-box" style="margin-top: 0; margin-bottom: 14px; border-left: 4px solid var(--yellow);">
                     연금 세금 및 건강보험료 안전 한도를 분석 중입니다...
                 </div>
@@ -983,7 +965,6 @@
                     📐 <b>시뮬레이션 수식 검증:</b> 매년 발생하는 배당금 $D_t = D_{t-1} \times (1 + g) + (\text{연간 신규 적립금} + \text{재투자 배당금}) \times Y_{\text{current}}$ 모델을 적용하며, 차트 내 주황색 점선(<b>월 125만 원</b>)은 사적연금 분리과세 한도(연 1,500만 원), 빨간색 점선(<b>월 166만 원</b>)은 일반계좌 금융소득종합과세 및 건보료 기준(연 2,000만 원)을 나타냅니다.
                 </div>
 
-                <!-- 탭 4 하단 순환형 CTA 링크 (전면광고 트리거) -->
                 <div class="cta-btn-grid">
                     <a href="?tab=home" class="cta-nav-btn">
                         📊 오늘 SCHD 적정주가 밴드 & 매수 점수 다시 확인하기 →
@@ -995,7 +976,7 @@
             </div>
         </div>
 
-        <!-- [구글 애드센스 하단 공통 슬롯 #3 (탭 전환 시에도 상시 노출)] -->
+        <!-- [구글 애드센스 하단 공통 슬롯 #3] -->
         <div class="ad-slot-box">
             <ins class="adsbygoogle"
                  style="display:block; width:100%;"
@@ -1005,11 +986,9 @@
                  data-full-width-responsive="true"></ins>
         </div>
 
-        <!-- ================================================================= -->
-        <!-- [공통 하단] 데이터 무결성 원장 검증표 & 고단가 SEO 가이드 아코디언 -->
-        <!-- ================================================================= -->
+        <!-- 하단 SEO 및 원장 검증 아코디언 -->
         <div style="margin-top: 20px;">
-            <h3 style="font-size: 1.02rem; margin-bottom: 10px; color: var(--text-main);">🔍 퀀트 데이터 무결성 검증 & 4050 연금 투자 핵심 가이드</h3>
+            <h3 style="font-size: 1.02rem; margin-bottom: 10px; color: var(--text-main);">🔍 퀀트 데이터 무결성 검증 & 연금 투자 핵심 가이드</h3>
             
             <details>
                 <summary>📋 실제 반영된 SCHD 최근 분기별 배당금 원장 확인하기</summary>
@@ -1046,7 +1025,7 @@
                     <h4>1. 연말정산 세액공제 (연간 최대 900만 원 한도)</h4>
                     연금저축(연 600만 원)과 IRP를 합산해 연간 최대 900만 원까지 납입액의 13.2% ~ 16.5%를 연말정산 시 환급받습니다.
                     <h4>2. 사적연금 연 1,500만 원(월 125만 원) 분리과세 한도 활용</h4>
-                    55세 이후 연금 수령 시 연간 1,500만 원 이하까지는 3.3% ~ 5.5% 저율 과세로 종결되며 건강보험료 피부양자 소득 산정에서도 제외(사적연금 비포함 원칙)됩니다. 목표 월 배당이 125만 원을 초과할 경우 <b>ISA 비과세 계좌</b> 및 <b>배우자 명의 연금계좌</b>로 자산을 분산하면 세금을 최소화할 수 있습니다.
+                    55세 이후 연금 수령 시 연간 1,500만 원 이하까지는 3.3% ~ 5.5% 저율 과세로 종결되며 건강보험료 소득 산정에서도 제외됩니다. 목표 월 배당이 125만 원을 초과할 경우 <b>ISA 비과세 계좌</b> 및 <b>배우자 명의 연금계좌</b>로 자산을 분산하면 세금을 최소화할 수 있습니다.
                 </div>
             </details>
         </div>
@@ -1059,7 +1038,7 @@
         </p>
     </div>
 
-    <!-- 하단 고정 4탭 네비게이션 바 (전면광고 트리거용 실제 a 링크 적용) -->
+    <!-- 하단 고정 4탭 네비게이션 바 -->
     <nav class="bottom-nav">
         <a href="?tab=home" id="nav-link-home" class="nav-tab active">
             <span class="icon">📊</span>
@@ -1083,14 +1062,14 @@
         let selectedPeriodDays = 1260;
         let selectedPeriodLabel = '최근 5년';
         let currentChartMode = 'band';
-        let currentMyPriceMarket = 'US'; // 'US' 또는 'KR'
+        let currentMyPriceMarket = 'US';
         let currentActiveTab = 'home';
         let currentYieldDecimal = 0.035;
         let latestBriefingCache = '';
         let latestMyTierCache = '';
 
         const SESSION_CACHE_KEY = 'SCHD_QUANT_DATA_CACHE_V4';
-        const SESSION_CACHE_TTL = 1000 * 60 * 15; // 15분 세션 캐시 유지
+        const SESSION_CACHE_TTL = 1000 * 60 * 15;
 
         const periodGuideMessages = {
             21: "💬 <b>최근 1개월(21 영업일) 기준:</b> 한 달 이내에 단기 급락(눌림목)이 나왔는지 확인합니다. 단기 타이밍을 노리는 분들에게 적합합니다.",
@@ -1102,7 +1081,6 @@
             0: "💬 <b>상장 이후 전체(2011년 ~ 현재) 기준:</b> SCHD가 세상에 나온 이후 모든 거래일과 비교해 역사적 바겐세일 구간인지 판독합니다."
         };
 
-        // 0. 애드센스 슬롯 안전 초기화 & 다크/라이트 테마, 큰글씨 모드 초기화
         function initAdSenseSlots() {
             try {
                 const ads = document.querySelectorAll('.adsbygoogle');
@@ -1155,7 +1133,6 @@
             }
         }
 
-        // 1. 스파이크 자동 평활화 필터 및 최신 환율 호환 보정
         function sanitizeSpikes(data) {
             const divs = [...data.ttm_dividends];
             const prices = data.prices;
@@ -1183,7 +1160,6 @@
             return data;
         }
 
-        // 2. 다음 배당락일 D-Day 계산기
         function updateDividendDday() {
             const now = new Date();
             const year = now.getFullYear();
@@ -1208,7 +1184,6 @@
             document.getElementById('kr-dday-badge').innerText = `D-${krDiff} (매월 말 기준)`;
         }
 
-        // 3. 세션 캐시 기반 초고속 데이터 로더
         async function fetchQuantDataWithCache() {
             try {
                 const cachedStr = sessionStorage.getItem(SESSION_CACHE_KEY);
@@ -1235,7 +1210,6 @@
             return sanitized;
         }
 
-        // 4. 초기 구동 함수
         async function initApp() {
             initAdSenseSlots();
             initUserSettings();
@@ -1282,7 +1256,6 @@
             renderDividendHistoryTable();
         }
 
-        // 5. 사용자 입력값 로컬스토리지 저장/복원
         function loadSavedUserInputs() {
             const keys = [
                 ['schd_my_avg', 'my-avg-price'],
@@ -1357,7 +1330,6 @@
             runMyPriceDiagnosis();
         }
 
-        // 6. 전체 대시보드 통합 렌더링
         function renderAll() {
             if (!globalRawData) return;
 
@@ -1481,7 +1453,6 @@
             updateSimUI();
         }
 
-        // 7. 메인 차트 렌더링
         function renderMainChart(dates, prices, ttmDivs, yields, fedRates, yP10, yP50, yP90, curr_y) {
             const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
             const fontColor = isDark ? '#94a3b8' : '#475569';
@@ -1558,7 +1529,6 @@
             }
         }
 
-        // 8. 7대 기간 멀티 매트릭스 테이블 & 단·중·장기 컨센서스 분석
         function renderMultiPeriodMatrix(allYields, curr_y, curr_div) {
             const periods = [
                 { days: 21, label: '최근 1개월 (단기)' },
@@ -1617,7 +1587,6 @@
             document.getElementById('multi-consensus-banner').innerHTML = consensusHtml;
         }
 
-        // 9. 배당 원장 검증 테이블
         function renderDivLedgerTable(curr_div) {
             const tbody = document.getElementById('div-ledger-tbody');
             if (globalRawData.div_ledger && globalRawData.div_ledger.length >= 4) {
@@ -1635,7 +1604,6 @@
             }
         }
 
-        // 10. [탭 2] 내 평단 진단 & 월 배당 50만 원 목표 역산
         function runMyPriceDiagnosis() {
             if (!globalRawData) return;
 
@@ -1760,7 +1728,6 @@
             }
         }
 
-        // 11. [탭 3] 국내 ETF & 환율 매트릭스 + IRP 70:30 계산기
         function runKrEtfAnalysis() {
             if (!globalRawData) return;
             const currFx = parseFloat(document.getElementById('fx-rate-slider').value) || 1380;
@@ -1795,7 +1762,6 @@
             }
             document.getElementById('kr-matrix-verdict').innerHTML = verdict;
 
-            // 국내 3대장 카드 그리드 렌더링
             if (globalRawData.kr_etfs) {
                 const etfs = globalRawData.kr_etfs;
                 let cardsHtml = '';
@@ -1811,23 +1777,20 @@
                 document.getElementById('kr-etf-cards-grid').innerHTML = cardsHtml;
             }
 
-            // IRP 70:30 의무비율 계산기
             const irpTotalMan = parseFloat(document.getElementById('irp-total-input').value) || 75;
             localStorage.setItem('schd_irp_total', irpTotalMan);
             const selectedEtfKey = document.getElementById('irp-etf-select').value || 'TIGER';
             const etfPrice = (globalRawData.kr_etfs && globalRawData.kr_etfs[selectedEtfKey]) ? globalRawData.kr_etfs[selectedEtfKey].price : 13800;
 
-            const riskMoneyWon = (irpTotalMan * 10000) * 0.70; // 70% 위험자산
-            const safeMoneyWon = (irpTotalMan * 10000) * 0.30; // 30% 안전자산
+            const riskMoneyWon = (irpTotalMan * 10000) * 0.70;
+            const safeMoneyWon = (irpTotalMan * 10000) * 0.30;
             const riskShares = Math.floor(riskMoneyWon / etfPrice);
-            const safeSharesApprox = Math.floor(safeMoneyWon / 100000); // 10만 원짜리 파킹형 ETF 가정
 
             document.getElementById('irp-result-box').innerHTML = 
                 `⚖️ <b>IRP 월 납입금 ${irpTotalMan}만 원 배분 가이드:</b><br>` +
                 `• <b>위험자산 70% (${Math.round(riskMoneyWon/10000).toLocaleString()}만 원):</b> ${selectedEtfKey} 미국배당다우존스 <b>약 ${riskShares}주</b> 매수<br>` +
                 `• <b>안전자산 30% (${Math.round(safeMoneyWon/10000).toLocaleString()}만 원):</b> 단기채권 / TDF / KOFR 파킹형 ETF에 배분하여 법적 한도 준수`;
 
-            // 계좌별 세후 배당금 비교 테이블
             const preTaxAnnualWon = Math.round(investMan * 10000 * (curr_y / 100));
             const rows = [
                 { name: '일반계좌 (SCHD 직투)', tax: '15.0% 원천징수', ratio: 0.85, color: 'var(--text-body)' },
@@ -1846,7 +1809,6 @@
             }).join('');
         }
 
-        // 12. [탭 4] 은퇴 타임머신 (사적연금 1,500만 원 & 건보료 2,000만 원 경고선 탑재)
         function updateSimUI() {
             const lumpsum = parseInt(document.getElementById('sim-lumpsum').value);
             const monthly = parseInt(document.getElementById('sim-monthly').value);
@@ -1920,15 +1882,14 @@
                 bannerEl.innerHTML = `💡 <b>은퇴 타임머신 판독:</b> 현재 조건으로 20년 후 예상 월 배당금은 <b>${taxFreeMonthly[19].toLocaleString()}만 원</b>입니다. 월 적립금을 늘리거나 70점 이상 저평가 구간에서 비중을 확대하면 달성 시점을 앞당길 수 있습니다.`;
             }
 
-            // 사적연금 1500만 원 & 건보료 2000만 원 경고선 판독
             const finalMonthMan = taxFreeMonthly[19];
-            let taxAlertHtml = `🛡️ <b>4050 은퇴 세무 가이드 (20년 후 기준 월 ${finalMonthMan}만 원 수령 시):</b><br>`;
+            let taxAlertHtml = `🛡️ <b>은퇴 세무 가이드 (20년 후 기준 월 ${finalMonthMan}만 원 수령 시):</b><br>`;
             if (finalMonthMan <= 125) {
-                taxAlertHtml += `• ✅ <b>사적연금 저율과세 안전 (월 125만 원 이내):</b> 20년 뒤 수령액이 연 1,500만 원(월 125만 원) 이하로 <b>3.3% ~ 5.5% 저율 분리과세 혜택</b>을 온전히 누리며 건강보험료 소득 합산에서도 안전합니다.`;
+                taxAlertHtml += `• ✅ <b>사적연금 저율과세 안전 (월 125만 원 이내):</b> 연간 연금 수령액이 1,500만 원(월 125만 원) 이하로 <b>3.3% ~ 5.5% 저율 분리과세 혜택</b>을 온전히 누리며 건강보험료 소득 산정에서도 안전합니다.`;
             } else if (finalMonthMan <= 166) {
-                taxAlertHtml += `• ⚠️ <b>연금 분리과세 한도 초과 주의 (월 125만 원 돌파):</b> 수령액이 연 1,500만 원을 넘어 16.5% 분리과세(또는 종합소득 합산) 선택 구간에 진입합니다. <b>부부 명의로 연금계좌를 쪼개서 수령</b>하면 세금을 대폭 아낄 수 있습니다.`;
+                taxAlertHtml += `• ⚠️ <b>연금 분리과세 한도 초과 주의 (월 125만 원 돌파):</b> 수령액이 연 1,500만 원을 넘어 16.5% 분리과세(또는 종합소득 합산) 선택 구간에 진입합니다. <b>부부 명의로 연금계좌를 분산 수령</b>하면 세금을 크게 아낄 수 있습니다.`;
             } else {
-                taxAlertHtml += `• 🚨 <b>금융소득종합과세 & 건보료 주의 경고 (월 166만 원 돌파):</b> 연간 수령액이 2,000만 원을 초과하여 <b>건강보험료 피부양자 탈락 및 종합소득세 합산 과세 대상</b>이 됩니다. ISA 계좌 및 비과세 상품으로 자산을 분산 관리하십시오.`;
+                taxAlertHtml += `• 🚨 <b>금융소득종합과세 & 건보료 주의 경고 (월 166만 원 돌파):</b> 연간 수령액이 2,000만 원을 초과하여 <b>건강보험료 피부양자 자격 변동 및 종합소득세 합산 과세 대상</b>이 됩니다. ISA 계좌 및 비과세 상품으로 자산을 분산 관리하십시오.`;
             }
             document.getElementById('tax-cliff-alert-box').innerHTML = taxAlertHtml;
 
@@ -1962,7 +1923,6 @@
             }
         }
 
-        // 13. 클립보드 복사 함수 (스레드 & 단톡방 바이럴용)
         function copyTodayBriefing() {
             if (!latestBriefingCache) return;
             navigator.clipboard.writeText(latestBriefingCache).then(() => {
@@ -1981,7 +1941,6 @@
             });
         }
 
-        // 14. 재방문율(Retention) 락인 장치: 내 배당 자산 누적 기록장
         const STORAGE_HISTORY_KEY = 'SCHD_DIVIDEND_HISTORY_LOG';
 
         function saveDividendStamp() {
@@ -1992,13 +1951,11 @@
             if (marketType === 'US') {
                 shares = parseFloat(document.getElementById('my-shares').value) || 0;
                 avgPrice = parseFloat(document.getElementById('my-avg-price').value) || 0;
-                const matchText = document.getElementById('my-monthly-krw').innerText;
-                monthlyDiv = matchText;
+                monthlyDiv = document.getElementById('my-monthly-krw').innerText;
             } else {
                 shares = parseFloat(document.getElementById('my-kr-shares').value) || 0;
                 avgPrice = parseFloat(document.getElementById('my-kr-avg').value) || 0;
-                const matchText = document.getElementById('my-monthly-krw').innerText;
-                monthlyDiv = matchText;
+                monthlyDiv = document.getElementById('my-monthly-krw').innerText;
             }
 
             if (shares <= 0 || avgPrice <= 0) {
@@ -2065,7 +2022,6 @@
             `).join('');
         }
 
-        // 15. 폴백 데이터 생성기
         function generateFallbackData() {
             const dates = [], prices = [], ttm_dividends = [], yields = [], fed_rates = [], fx_rates = [];
             let p = 24.0, d = 0.78;
