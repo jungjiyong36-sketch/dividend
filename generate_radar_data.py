@@ -84,7 +84,7 @@ def update_index_html_seo_summary(html_path: str, summary_data: dict):
             "<!-- SEO_LIVE_SUMMARY_START -->\n"
             '                <div id="seo-live-summary" style="font-size:0.78rem; color:#94a3b8; margin-top:10px; line-height:1.5;">\n'
             f'                    📌 <b>실시간 퀀트 요약 ({summary_data["date"]} 기준):</b> 현재 SCHD 주가는 <b>${summary_data["price"]:.2f}</b>, '
-            f'직전 4분기 확정 연 배당금은 <b>${summary_data["ttm_div"]:.4f}</b>(시가배당률 <b>${summary_data["yield"]:.2f}%</b>)이며, '
+            f'직전 4분기 확정 연 배당금은 <b>${summary_data["ttm_div"]:.4f}</b>(시가배당률 <b>{summary_data["yield"]:.2f}%</b>)이며, '
             f'최근 5년 대비 매수 매력 점수는 <b>{summary_data["score_5y"]}점</b>(5년 중앙 적정주가 <b>${summary_data["fair_5y"]:.2f}</b>, '
             f'상위 10% 꿀통 매수선 <b>${summary_data["honey_5y"]:.2f}</b>, 원/달러 환율 <b>{summary_data["usdkrw"]:.1f}원</b>, '
             f'TIGER 현재가 <b>{summary_data["tiger_price"]:,}원</b>)입니다.\n'
