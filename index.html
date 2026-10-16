@@ -1184,31 +1184,46 @@
             document.getElementById('kr-dday-badge').innerText = `D-${krDiff} (매월 말 기준)`;
         }
 
+                // 3. 스마트 파일 변경 감지 캐시 로더 (GitHub 무료 액션스 스케줄 5회 완벽 호환)
         async function fetchQuantDataWithCache() {
+            const staticCacheKey = 'SCHD_QUANT_FILE_CACHE_V5';
+            
             try {
-                const cachedStr = sessionStorage.getItem(SESSION_CACHE_KEY);
-                if (cachedStr) {
-                    const parsed = JSON.parse(cachedStr);
-                    if (Date.now() - parsed.timestamp < SESSION_CACHE_TTL && parsed.payload) {
-                        return parsed.payload;
-                    }
+                // 1) 서버에 HEAD 요청을 날려 schd_data.json의 실제 파일 수정 시각(Last-Modified) 확인
+                const headRes = await fetch('schd_data.json', { method: 'HEAD' });
+                const lastModified = headRes.headers.get('Last-Modified') || 'static';
+
+                // 2) 브라우저 세션에 저장된 마지막 수정 시각과 비교
+                const cachedMeta = sessionStorage.getItem(`${staticCacheKey}_meta`);
+                const cachedPayload = sessionStorage.getItem(`${staticCacheKey}_payload`);
+
+                if (cachedMeta === lastModified && cachedPayload) {
+                    // 파일 수정 시각이 동일하다면 네트워크 낭비 없이 세션 캐시 즉시 반환 (0.01초 컷)
+                    return JSON.parse(cachedPayload);
                 }
-            } catch (e) {}
 
-            const response = await fetch('schd_data.json');
-            if (!response.ok) throw new Error("JSON 로드 실패");
-            const raw = await response.json();
-            const sanitized = sanitizeSpikes(raw);
+                // 3) 파일이 새로 업데이트되었다면 최신 JSON 다운로드 후 세션 갱신
+                const response = await fetch('schd_data.json');
+                if (!response.ok) throw new Error("JSON 로드 실패");
+                const raw = await response.json();
+                const sanitized = sanitizeSpikes(raw);
 
-            try {
-                sessionStorage.setItem(SESSION_CACHE_KEY, JSON.stringify({
-                    timestamp: Date.now(),
-                    payload: sanitized
-                }));
-            } catch (e) {}
+                sessionStorage.setItem(`${staticCacheKey}_meta`, lastModified);
+                sessionStorage.setItem(`${staticCacheKey}_payload`, JSON.stringify(sanitized));
 
-            return sanitized;
+                return sanitized;
+            } catch (e) {
+                // 네트워크 에러 등의 예외 상황 시 기존 세션 캐시 폴백
+                const fallback = sessionStorage.getItem(`${staticCacheKey}_payload`);
+                if (fallback) return JSON.parse(fallback);
+                
+                // 캐시마저 없으면 직접 fetch 시도
+                const response = await fetch('schd_data.json');
+                const raw = await response.json();
+                return sanitizeSpikes(raw);
+            }
         }
+
 
         async function initApp() {
             initAdSenseSlots();
