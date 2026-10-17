@@ -6,37 +6,60 @@ import numpy as np
 import pandas as pd
 import yfinance as yf
 
-# 국내 상장 미국배당다우존스 3대장 티커 정의
+# 국내 상장 미국배당다우존스 4대장 티커 정의 (KRX 표준코드 기준)
 KR_ETF_LIST = [
-    {"key": "TIGER", "ticker": "458730.KS", "code": "458730", "name": "TIGER 미국배당다우존스", "default_price": 13800},
-    {"key": "ACE",   "ticker": "402970.KS", "code": "402970", "name": "ACE 미국배당다우존스",   "default_price": 13600},
-    {"key": "SOL",   "ticker": "446720.KS", "code": "446720", "name": "SOL 미국배당다우존스",   "default_price": 11300},
+    {"key": "TIGER", "ticker": "458730.KS", "code": "458730", "name": "TIGER 미국배당다우존스", "default_price": 14400},
+    {"key": "SOL",   "ticker": "446720.KS", "code": "446720", "name": "SOL 미국배당다우존스",   "default_price": 11800},
+    {"key": "KODEX", "ticker": "489250.KS", "code": "489250", "name": "KODEX 미국배당다우존스", "default_price": 10800},
+    {"key": "ACE",   "ticker": "402970.KS", "code": "402970", "name": "ACE 미국배당다우존스",   "default_price": 14100},
 ]
 
-def fetch_fed_rates_safe(start_date: str) -> pd.Series:
+def fetch_fed_rates_official(start_date: str) -> pd.Series:
+    """
+    별도 외부 패키지(pandas_datareader) 없이 FRED 공식 CSV URL에서
+    실제 미국 실효 연방기금금리(DFF) 데이터를 직접 가져옵니다.
+    """
     try:
-        irx = yf.Ticker("^IRX").history(start=start_date, auto_adjust=False)
-        if not irx.empty:
-            s = irx["Close"].dropna() / 4.0
-            s.index = pd.to_datetime(s.index).tz_localize(None)
-            return s
+        fred_csv_url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=DFF"
+        df_fed = pd.read_csv(fred_csv_url)
+        date_col = df_fed.columns[0]
+        val_col = df_fed.columns[1]
+        df_fed[date_col] = pd.to_datetime(df_fed[date_col], errors="coerce")
+        df_fed[val_col] = pd.to_numeric(df_fed[val_col], errors="coerce")
+        df_fed = df_fed.dropna(subset=[date_col, val_col])
+        df_fed = df_fed[df_fed[date_col] >= pd.Timestamp(start_date)]
+        s = pd.Series(df_fed[val_col].values, index=df_fed[date_col])
+        return s.sort_index()
     except Exception as e:
-        print(f"[Warning] 기준금리 대체 수집 경고: {e}")
+        print(f"[Warning] FRED 공식 CSV 로드 실패, 13주 단기국채(^IRX) 폴백 실행: {e}")
+        try:
+            irx = yf.Ticker("^IRX").history(start=start_date, auto_adjust=False)
+            if not irx.empty:
+                s = irx["Close"].dropna().astype(float)
+                s.index = pd.to_datetime(s.index).tz_localize(None)
+                return s
+        except Exception:
+            pass
     return pd.Series(dtype=float)
 
 def fetch_usdkrw_series(start_date: str) -> pd.Series:
+    """실제 원/달러 환율(KRW=X) 시계열을 수집합니다."""
     try:
         krw = yf.Ticker("KRW=X").history(start=start_date, auto_adjust=False)
         if not krw.empty:
             s = krw["Close"].dropna().astype(float)
             s.index = pd.to_datetime(s.index).tz_localize(None)
-            s = s[(s >= 900) & (s <= 2000)]
-            return s
+            s = s[(s >= 900.0) & (s <= 2000.0)]
+            return s.sort_index()
     except Exception as e:
         print(f"[Warning] 원/달러 환율 시계열 수집 경고: {e}")
     return pd.Series(dtype=float)
 
 def fetch_kr_etfs(schd_current_yield: float) -> dict:
+    """
+    국내 상장 4대장(TIGER, SOL, KODEX, ACE)의 실제 한국장 마감 종가, 전일 종가,
+    마감 기준일 및 연간 분배금 데이터를 수집합니다.
+    """
     result = {}
     fallback_yield = max(2.8, min(5.0, schd_current_yield))
 
@@ -44,36 +67,54 @@ def fetch_kr_etfs(schd_current_yield: float) -> dict:
         key = item["key"]
         ticker = item["ticker"]
         cur_price = item["default_price"]
+        prev_price = cur_price
+        close_date_str = "--"
         ttm_div = int(round(cur_price * (fallback_yield / 100.0)))
         etf_yield = round(fallback_yield, 2)
+        is_est_div = True
 
         try:
             hist = yf.Ticker(ticker).history(period="1y", auto_adjust=False)
             if not hist.empty:
+                hist.index = pd.to_datetime(hist.index).tz_localize(None)
                 closes = hist["Close"].dropna()
                 if not closes.empty:
                     cur_price = int(round(float(closes.iloc[-1])))
+                    prev_price = int(round(float(closes.iloc[-2]))) if len(closes) >= 2 else cur_price
+                    close_date_str = closes.index[-1].strftime("%Y-%m-%d")
+
                 divs = hist["Dividends"].dropna()
                 divs_pos = divs[divs > 0]
-                if len(divs_pos) >= 4:
+                if len(divs_pos) >= 6:
                     raw_div_sum = float(divs_pos.sum())
                     calc_yield = (raw_div_sum / cur_price) * 100.0
                     if 2.0 <= calc_yield <= 6.5:
                         ttm_div = int(round(raw_div_sum))
                         etf_yield = round(calc_yield, 2)
+                        is_est_div = False
+                    else:
+                        ttm_div = int(round(cur_price * (fallback_yield / 100.0)))
+                        etf_yield = round(fallback_yield, 2)
+                else:
+                    ttm_div = int(round(cur_price * (fallback_yield / 100.0)))
+                    etf_yield = round(fallback_yield, 2)
         except Exception as e:
-            print(f"[Warning] {key} 데이터 수집 경고: {e}")
+            print(f"[Warning] {key} ({ticker}) 데이터 수집 경고: {e}")
 
         result[key] = {
             "code": item["code"],
             "name": item["name"],
             "price": cur_price,
+            "prev_price": prev_price,
+            "close_date": close_date_str,
             "ttm_div": ttm_div,
-            "yield": etf_yield
+            "yield": etf_yield,
+            "is_est_div": is_est_div
         }
     return result
 
 def update_index_html_seo_summary(html_path: str, summary_data: dict):
+    """index.html 내부의 <!-- SEO_LIVE_SUMMARY_START --> 정적 텍스트를 최신 팩트로 갱신합니다."""
     if not os.path.exists(html_path):
         return
     try:
@@ -83,11 +124,11 @@ def update_index_html_seo_summary(html_path: str, summary_data: dict):
         new_block = (
             "<!-- SEO_LIVE_SUMMARY_START -->\n"
             '                <div id="seo-live-summary" style="font-size:0.78rem; color:#94a3b8; margin-top:10px; line-height:1.5;">\n'
-            f'                    📌 <b>실시간 퀀트 요약 ({summary_data["date"]} 기준):</b> 현재 SCHD 주가는 <b>${summary_data["price"]:.2f}</b>, '
-            f'직전 4분기 확정 연 배당금은 <b>${summary_data["ttm_div"]:.4f}</b>(시가배당률 <b>{summary_data["yield"]:.2f}%</b>)이며, '
-            f'최근 5년 대비 매수 매력 점수는 <b>{summary_data["score_5y"]}점</b>(5년 중앙 적정주가 <b>${summary_data["fair_5y"]:.2f}</b>, '
-            f'상위 10% 꿀통 매수선 <b>${summary_data["honey_5y"]:.2f}</b>, 원/달러 환율 <b>{summary_data["usdkrw"]:.1f}원</b>, '
-            f'TIGER 현재가 <b>{summary_data["tiger_price"]:,}원</b>)입니다.\n'
+            f'                    📌 <b>실시간 퀀트 요약 ({summary_data["date"]} 기준):</b> 현재 SCHD 주가는 <b>${summary_data["price"]:.2f}</b>'
+            f'(일간 <b>{summary_data["change_pct"]:+.2f}%</b>), 직전 4분기 확정 연 배당금은 <b>${summary_data["ttm_div"]:.4f}</b>'
+            f'(시가배당률 <b>{summary_data["yield"]:.2f}%</b>)이며, 최근 5년 대비 매수 매력 점수는 <b>{summary_data["score_5y"]}점</b>'
+            f'(5년 중앙 적정주가 <b>${summary_data["fair_5y"]:.2f}</b>, 상위 10% 꿀통 매수선 <b>${summary_data["honey_5y"]:.2f}</b>, '
+            f'최근 환율 <b>{summary_data["usdkrw"]:.1f}원</b>, TIGER 종가 <b>{summary_data["tiger_price"]:,}원</b>)입니다.\n'
             "                </div>\n"
             "                <!-- SEO_LIVE_SUMMARY_END -->"
         )
@@ -97,13 +138,11 @@ def update_index_html_seo_summary(html_path: str, summary_data: dict):
             updated_content = pattern.sub(new_block, content)
             with open(html_path, "w", encoding="utf-8") as f:
                 f.write(updated_content)
-        else:
-            print("[Info] index.html 내 SEO_LIVE_SUMMARY 주석 마커를 찾지 못해 갱신을 생략합니다.")
     except Exception as e:
         print(f"[Warning] SEO 요약 갱신 경고 (무시됨): {e}")
 
 def generate_schd_data(output_path: str = "schd_data.json"):
-    print("1. SCHD 상장 이후 전체 데이터 수집 중...")
+    print("1. SCHD 상장 이후 전체(period='max', auto_adjust=False) 실제 데이터 수집 중...")
     schd = yf.Ticker("SCHD")
     hist = schd.history(period="max", auto_adjust=False)
     if hist.empty:
@@ -116,11 +155,12 @@ def generate_schd_data(output_path: str = "schd_data.json"):
     df["price"] = hist["Close"].astype(float)
     df["dividend"] = hist["Dividends"].fillna(0.0).astype(float)
 
-    print("2. 직전 4개 분기 확정 배당금 합산 계산 중...")
+    print("2. 직전 4개 분기 확정 배당금 합산(4Q Discrete Rolling TTM) 계산 중...")
     div_events = df[df["dividend"] > 0]["dividend"].copy()
     rolling_4q = div_events.rolling(4).sum()
     df["ttm_dividend"] = rolling_4q.reindex(df.index).ffill()
 
+    # 첫 4분기 배당이 온전히 누적된 2012-10-01 이후 영업일부터 사용
     df = df[df.index >= pd.Timestamp("2012-10-01")].copy()
     df = df.dropna(subset=["price", "ttm_dividend"])
     df["yield"] = np.where(df["price"] > 0, (df["ttm_dividend"] / df["price"]) * 100.0, 0.0)
@@ -131,8 +171,10 @@ def generate_schd_data(output_path: str = "schd_data.json"):
         for idx, val in recent_divs.items()
     ]
 
-    latest_q_div = float(div_events.iloc[-1]) if not div_events.empty else 0.75
-    latest_price = float(df["price"].iloc[-1]) if not df["price"].empty else 70.0
+    latest_q_div = float(div_events.iloc[-1]) if not div_events.empty else 0.26
+    latest_price = float(df["price"].iloc[-1])
+    prev_schd_price = float(df["price"].iloc[-2]) if len(df["price"]) >= 2 else latest_price
+    schd_change_pct = round(((latest_price - prev_schd_price) / prev_schd_price) * 100.0, 2) if prev_schd_price > 0 else 0.0
     forward_yield = round(((latest_q_div * 4.0) / latest_price) * 100.0, 2)
 
     if len(rolling_4q) >= 21:
@@ -142,10 +184,10 @@ def generate_schd_data(output_path: str = "schd_data.json"):
     else:
         cagr_5y = 11.0
 
-    print("3. 기준금리 및 원/달러 환율 시계열 병합 중...")
+    print("3. 미국 실효 기준금리(FRED DFF) 및 원/달러 환율(KRW=X) 실제 시계열 병합 중...")
     start_str = df.index.min().strftime("%Y-%m-%d")
 
-    fed_series = fetch_fed_rates_safe(start_str)
+    fed_series = fetch_fed_rates_official(start_str)
     if not fed_series.empty:
         full_idx = df.index.union(fed_series.index).sort_values()
         df["fed_rate"] = fed_series.reindex(full_idx).ffill().bfill().reindex(df.index).fillna(4.5)
@@ -159,8 +201,8 @@ def generate_schd_data(output_path: str = "schd_data.json"):
     else:
         df["fx_rate"] = 1380.0
 
-    print("4. 국내 3대장 실시간 데이터 수집 중...")
-    cur_yield_val = round(float(df["yield"].iloc[-1]), 2) if not df["yield"].empty else 3.2
+    print("4. 국내 4대장(TIGER, SOL, KODEX, ACE) 확정 종가 수집 중...")
+    cur_yield_val = round(float(df["yield"].iloc[-1]), 2)
     kr_etfs_data = fetch_kr_etfs(cur_yield_val)
 
     dates_list = df.index.strftime("%Y-%m-%d").tolist()
@@ -170,7 +212,8 @@ def generate_schd_data(output_path: str = "schd_data.json"):
     fed_rates_list = [round(float(x), 2) for x in df["fed_rate"].tolist()]
     fx_rates_list = [round(float(x), 1) for x in df["fx_rate"].tolist()]
 
-    usdkrw_latest = fx_rates_list[-1] if fx_rates_list else 1380.0
+    usdkrw_latest = fx_rates_list[-1]
+    usdkrw_prev = fx_rates_list[-2] if len(fx_rates_list) >= 2 else usdkrw_latest
     usdkrw_1y_avg = round(float(np.mean(fx_rates_list[-252:])), 1) if len(fx_rates_list) >= 252 else usdkrw_latest
 
     y_5y = yields_list[-1260:] if len(yields_list) >= 1260 else yields_list
@@ -189,12 +232,16 @@ def generate_schd_data(output_path: str = "schd_data.json"):
         "cagr_5y": cagr_5y,
         "latest": {
             "price": prices_list[-1],
+            "prev_price": round(prev_schd_price, 2),
+            "change_pct": schd_change_pct,
             "yield": yields_list[-1],
             "forward_yield": forward_yield,
             "ttm_dividend": ttm_divs_list[-1],
             "fed_rate": fed_rates_list[-1],
             "date": dates_list[-1],
+            "prev_date": dates_list[-2] if len(dates_list) >= 2 else dates_list[-1],
             "usdkrw": usdkrw_latest,
+            "prev_usdkrw": usdkrw_prev,
             "usdkrw_1y_avg": usdkrw_1y_avg
         },
         "kr_etfs": kr_etfs_data,
@@ -210,22 +257,20 @@ def generate_schd_data(output_path: str = "schd_data.json"):
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(output_data, f, ensure_ascii=False, separators=(",", ":"))
 
-    try:
-        update_index_html_seo_summary("index.html", {
-            "date": dates_list[-1],
-            "price": prices_list[-1],
-            "ttm_div": ttm_divs_list[-1],
-            "yield": yields_list[-1],
-            "score_5y": score_5y,
-            "fair_5y": fair_5y,
-            "honey_5y": honey_5y,
-            "usdkrw": usdkrw_latest,
-            "tiger_price": kr_etfs_data["TIGER"]["price"]
-        })
-    except Exception as e:
-        print(f"[Info] SEO 요약 업데이트 스킵: {e}")
+    update_index_html_seo_summary("index.html", {
+        "date": dates_list[-1],
+        "price": prices_list[-1],
+        "change_pct": schd_change_pct,
+        "ttm_div": ttm_divs_list[-1],
+        "yield": yields_list[-1],
+        "score_5y": score_5y,
+        "fair_5y": fair_5y,
+        "honey_5y": honey_5y,
+        "usdkrw": usdkrw_latest,
+        "tiger_price": kr_etfs_data["TIGER"]["price"]
+    })
 
-    print(f"✅ 생성 완료: {output_path}")
+    print(f"✅ 데이터 생성 완료: {output_path} (SCHD 일간 등락률: {schd_change_pct:+.2f}%)")
 
 if __name__ == "__main__":
     generate_schd_data()
